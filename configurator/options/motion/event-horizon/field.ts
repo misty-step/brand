@@ -63,9 +63,18 @@ void main() {
   gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
-/** The hole sits beside the copy on wide full-bleed hosts and low on phones; panels centre it. */
+/**
+ * The hole sits in the strip the hero copy leaves clear; without one, beside the copy on wide
+ * full-bleed hosts and low on phones. Panels centre it.
+ */
 function place(f: Frame): [number, number, number] {
-  const W = f.cssW, H = f.cssH;
+  const W = f.cssW, H = f.cssH, b = f.band;
+  // the drawing spans about 8.8 shadow radii across (the disc) and 3.4 down (lensed arc to under-arc)
+  if (b && b.h >= H) { const rs = Math.min(b.w / 8.8, H * 0.13); return [b.x + b.w / 2, H * 0.5, rs]; }
+  if (b) {
+    const rs = Math.min(b.h / 4.4, W / 9.2);
+    return [Math.min(W - rs * 3.2, Math.max(rs * 3.2, b.w * b.along)), b.y + b.h * 0.52, rs];
+  }
   if (f.kind !== 'panel') {
     if (W >= 700) { const rs = Math.min(W * 0.068, H * 0.13); return [W - rs * 4.1, H * 0.5, rs]; }
     const rs = W * 0.11; return [W * 0.56, H - rs * 2.6, rs];

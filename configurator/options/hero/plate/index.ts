@@ -3,7 +3,7 @@ import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
 import { title, sub, actions, proof, slot, enter, fit, markPair, markPairCss, EDGE, GUTTER } from '../shared';
 
-const S = 'html[data-hero="plate"]';
+const S = 'html[data-hero="plate"] .hero';
 
 /** Spec rows, every value from facts.ts: the offer's terms on the studio page, the stack's counts and harnesses on the stack page. */
 function rows(ctx: HeroCtx): [string, string][] {
@@ -31,7 +31,7 @@ export default {
   ],
   motionHost: 'panel',
   render: ctx => `<div class="pl-plate"><div class="pl-head"><span class="pl-brand" aria-hidden="true"><span class="pl-mark">${ctx.mark(32)}</span><span class="pl-name">${ctx.wordmark()}</span></span>${proof(ctx)}</div><div class="pl-main">${title(ctx)}${sub(ctx)}${actions(ctx)}</div><div class="pl-window" ${enter(4)}><div class="pl-emblem" aria-hidden="true">${markPair(ctx, 128, 96)}</div>${slot()}</div><dl class="pl-spec" ${enter(5)}>${rows(ctx).map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('')}</dl></div>`,
-  css: `${S} .hero{padding:clamp(24px,5vh,48px) ${EDGE} clamp(48px,9vh,96px)}
+  css: `${S}{padding:clamp(24px,5vh,48px) ${EDGE} clamp(48px,9vh,96px)}
 ${S} .pl-plate{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);overflow:hidden;background:var(--bg-2);border:max(var(--rule,1px),2px) solid var(--ink);border-radius:var(--radius,0)}
 ${S} .pl-head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 32px;min-height:64px;padding:12px clamp(20px,2.4vw,32px);background:var(--ink);color:var(--bg)}
 ${S} .pl-brand{display:inline-flex;align-items:center;gap:12px}
@@ -52,7 +52,7 @@ ${S} .pl-spec>div{padding:16px clamp(16px,2vw,28px) 20px;background:var(--bg-2)}
 ${S} .pl-spec dt{font-size:var(--step--1);color:var(--ink-2)}
 ${S} .pl-spec dd{margin:6px 0 0;font-size:var(--step-1);line-height:1.3;font-variant-numeric:tabular-nums;text-wrap:balance}
 @media (max-width:1000px){${S} .pl-spec{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:700px){${S} .hero{padding:16px ${GUTTER} 48px}
+@media (max-width:700px){${S}{padding:16px ${GUTTER} 48px}
 ${S} .pl-plate{grid-template-columns:minmax(0,1fr)}
 ${S} .pl-head{min-height:0;padding:12px 16px}
 ${S} .hero-proof{text-align:left}

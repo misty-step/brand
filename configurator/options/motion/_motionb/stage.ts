@@ -24,7 +24,15 @@ export interface Frame {
   /** pointer in CSS px from the host's top-left; s eases 0..1 while a fine pointer is near */
   ptr: { x: number; y: number; s: number };
   ctx: MotionCtx;
+  /** Full and page hosts: the widest strip clear of the hero copy, where the focal object goes. */
+  band: Band | null;
 }
+/**
+ * A full-width row or full-height column of the host, in CSS px, with nothing of the hero copy in
+ * it. `along` is where along the strip's long axis the focal object sits best (0..1), away from
+ * the copy's centre of mass.
+ */
+export interface Band { x: number; y: number; w: number; h: number; along: number }
 export interface Stage extends Frame { gl: WebGLRenderingContext; canvas: HTMLCanvasElement; host: HTMLElement }
 export interface Pixels { data: Uint8ClampedArray; width: number; height: number }
 
@@ -140,9 +148,53 @@ function fit(f: Frame, canvas: HTMLCanvasElement, host: HTMLElement, scene: Scen
   const px = scene.scale(f.tier, dpr, Math.min(f.ctx.dprCap || 1.5, 1.5));
   const w = Math.max(1, Math.floor(r.width * px)), h = Math.max(1, Math.floor(r.height * px));
   f.px = px; f.w = w; f.h = h; f.cssW = w / px; f.cssH = h / px;
+  f.band = f.kind === 'panel' ? null : clearBand(host, f.cssW, f.cssH);
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
   canvas.style.width = f.cssW + 'px';
   canvas.style.height = f.cssH + 'px';
+}
+
+/** The hero's own words and pieces, which a full-bleed field composes around (the visual panel is not copy). */
+const COPY = '[data-hero-root] :is(.hero-title, .hero-sub, .actions, .hero-proof, [data-enter]:not(.hero-visual))';
+
+/**
+ * The widest row or column of the host that none of the hero copy crosses, or null when no strip
+ * is at least 30% of the host's short side (the copy fills the hero; the scene keeps its default).
+ */
+export function clearBand(host: HTMLElement, W: number, H: number): Band | null {
+  const hr = host.getBoundingClientRect(), boxes: [number, number, number, number][] = [];
+  for (const el of document.querySelectorAll(COPY)) {
+    const b = el.getBoundingClientRect();
+    const x0 = Math.max(0, b.left - hr.left), y0 = Math.max(0, b.top - hr.top), x1 = Math.min(W, b.right - hr.left), y1 = Math.min(H, b.bottom - hr.top);
+    if (x1 > x0 && y1 > y0) boxes.push([x0, y0, x1, y1]);
+  }
+  if (!boxes.length) return null;
+  let cx = 0, area = 0;
+  for (const [x0, y0, x1, y1] of boxes) { const a = (x1 - x0) * (y1 - y0); cx += (a * (x0 + x1)) / 2; area += a; }
+  cx /= area;
+  // gaps between the boxes' projections onto one axis (lo, hi: box indices of that axis)
+  const gaps = (lo: 0 | 1, hi: 2 | 3, size: number) => {
+    const out: [number, number][] = [];
+    let at = 0;
+    for (const b of [...boxes].sort((p, q) => p[lo] - q[lo])) { if (b[lo] > at) out.push([at, b[lo]]); at = Math.max(at, b[hi]); }
+    if (size > at) out.push([at, size]);
+    return out;
+  };
+  let best: Band | null = null, score = 0.3 * Math.min(W, H);
+  for (const [a, b] of gaps(1, 3, H)) {
+    if (Math.min(W, b - a) > score) { score = Math.min(W, b - a); best = { x: 0, y: a, w: W, h: b - a, along: cx < W * 0.45 ? 0.7 : cx > W * 0.55 ? 0.3 : 0.5 }; }
+  }
+  for (const [a, b] of gaps(0, 2, W)) {
+    if (Math.min(b - a, H) > score) { score = Math.min(b - a, H); best = { x: a, y: 0, w: b - a, h: H, along: 0.5 }; }
+  }
+  return best;
+}
+
+/** Resize the field with its host, and recompose it when the hero copy reflows (wrapping, late fonts). */
+export function observeLayout(ro: ResizeObserver, host: HTMLElement) {
+  ro.observe(host);
+  const hero = document.querySelector('[data-hero-root]');
+  if (hero && hero !== host) ro.observe(hero);
 }
 
 /** CPU still for hosts without WebGL: the scene's composed frame, painted once per size or theme. */
@@ -150,7 +202,7 @@ function mountPoster(host: HTMLElement, ctx0: MotionCtx, scene: Scene, replace?:
   const canvas = canvasFor(host, true);
   const c2 = canvas.getContext('2d');
   if (!c2) return NOOP;
-  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: palette(ctx0), ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0 };
+  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: palette(ctx0), ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null };
   if (replace) replace.replaceWith(canvas); else host.append(canvas);
   let visible = false, dirty = true, dead = false;
   const paint = () => {
@@ -166,7 +218,7 @@ function mountPoster(host: HTMLElement, ctx0: MotionCtx, scene: Scene, replace?:
   const io = new IntersectionObserver((e) => { visible = e.some((x) => x.isIntersecting); paint(); });
   io.observe(canvas);
   const ro = new ResizeObserver(() => { dirty = true; paint(); });
-  ro.observe(host);
+  observeLayout(ro, host);
   return {
     pause() {}, resume() {},
     update(ctx) { f.ctx = ctx; f.pal = palette(ctx); dirty = true; paint(); },
@@ -181,7 +233,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
   host.append(canvas);
 
   let target = palette(ctx0);
-  const s: Stage = { gl, canvas, host, kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: target, ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0 };
+  const s: Stage = { gl, canvas, host, kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: target, ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null };
   let from = target, mixStart = 0, mixing = false;
   let t = scene.still, last = 0, lastDraw = 0, raf = 0, eased = 0;
   // stale: the last presented frame no longer matches size, palette or time, so a still must be redrawn
@@ -270,7 +322,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
   });
   io.observe(canvas);
   const ro = new ResizeObserver(() => { if (dead || poster) return; size(); if (!raf) settle(); });
-  ro.observe(host);
+  observeLayout(ro, host);
   const onVis = () => { if (document.hidden) halt(); else kick(); };
   document.addEventListener('visibilitychange', onVis);
   // A lost context falls back to the CPU still of the same composition.

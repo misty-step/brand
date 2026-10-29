@@ -189,6 +189,10 @@ html[data-layout="corners"] {
     --nav-h: 64px;
     .nav { gap: 12px; }
     .nav-links { display: none; }
+    /* On phones the chooser becomes free chips, so a wrapped row never strands one pill. */
+    .s-install .tabs { gap: 8px; padding: 0; border: 0; border-radius: 0; }
+    .s-install .tab { border: var(--rule) solid var(--line-2); }
+    .s-install .tab[aria-selected="true"] { border-color: var(--accent); }
     .s { gap: 32px; }
     .s-title { font-size: var(--step-3); }
     .s-cta { min-height: 0; }

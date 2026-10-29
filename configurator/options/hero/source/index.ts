@@ -3,7 +3,7 @@ import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
 import { title, sub, actions, proof, slot, enter, fit, href, EDGE, GUTTER } from '../shared';
 
-const S = 'html[data-hero="source"]';
+const S = 'html[data-hero="source"] .hero';
 const core = FACTS.nodes.find(n => n.id === 'core');
 const corePath = core ? core.href.replace(/^.*\/blob\/[^/]+\//, '') : '';
 const coreLines = FACTS.core.split('\n');
@@ -41,13 +41,13 @@ export default {
   ],
   motionHost: 'panel',
   render: (ctx: HeroCtx) => `<div class="src-copy">${title(ctx)}${sub(ctx)}${actions(ctx)}${proof(ctx)}</div>${slot()}${ctx.page === 'stack' ? installCard() : coreCard()}`,
-  css: `${S} .hero{display:grid;grid-template-columns:[full-start] ${EDGE} [copy-start] minmax(0,5fr) [copy-end] clamp(40px,5vw,88px) [art-start] minmax(0,7fr) [art-end] ${EDGE} [full-end];align-items:center;padding-block:clamp(56px,10vh,112px) clamp(64px,11vh,128px)}
+  css: `${S}{display:grid;grid-template-columns:[full-start] ${EDGE} [copy-start] minmax(0,5fr) [copy-end] clamp(40px,5vw,88px) [art-start] minmax(0,7fr) [art-end] ${EDGE} [full-end];align-items:center;padding-block:clamp(56px,10vh,112px) clamp(64px,11vh,128px)}
 ${S} .src-copy{grid-column:copy;grid-row:1;container-type:inline-size}
 ${fit(S)}
 ${S} .hero-sub{margin-top:24px;max-width:min(var(--measure,56ch),100%);font-size:var(--step-1);color:var(--ink-2)}
 ${S} .actions{margin-top:32px}
 ${S} .hero-proof{margin-top:24px;font-size:var(--step--1);color:var(--ink-2)}
-${S} .hero>.hero-visual{grid-column:art-start/full-end;grid-row:1;align-self:stretch;position:relative;overflow:hidden;margin:clamp(-64px,-6vh,-40px) 0 clamp(-64px,-6vh,-40px) clamp(48px,6vw,96px);border-radius:var(--radius,0) 0 0 var(--radius,0)}
+${S}>.hero-visual{grid-column:art-start/full-end;grid-row:1;align-self:stretch;position:relative;overflow:hidden;margin:clamp(-64px,-6vh,-40px) 0 clamp(-64px,-6vh,-40px) clamp(48px,6vw,96px);border-radius:var(--radius,0) 0 0 var(--radius,0)}
 ${S} .src-card{grid-column:art;grid-row:1;position:relative;z-index:1;margin:0;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius,0);padding:clamp(20px,2.2vw,32px)}
 ${S} .src-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 24px;max-width:none;margin:0 0 16px;font-size:var(--step--1);color:var(--ink-2)}
 ${S} .src-head code{font-family:var(--font-mono);color:var(--ink)}
@@ -67,9 +67,9 @@ ${S} .src-panel{display:none}
 ${switches}
 ${S} .src-panel .copy{margin-top:12px}
 @supports not selector(:has(*)){${S} .src-panel{display:block}${S} .src-panel+.src-panel{margin-top:24px}}
-@media (max-width:899px){${S} .hero{grid-template-columns:[full-start] ${GUTTER} [copy-start art-start] minmax(0,1fr) [copy-end art-end] ${GUTTER} [full-end];row-gap:clamp(40px,7vh,64px);padding-block:40px 64px}
-${S} .src-card{grid-row:2;margin-top:56px}
-${S} .hero>.hero-visual{grid-column:full;grid-row:2;align-self:start;height:clamp(160px,48vw,280px);margin:0;border-radius:0}}
+@media (max-width:899px){${S}{grid-template-columns:[full-start] ${GUTTER} [copy-start art-start] minmax(0,1fr) [copy-end art-end] ${GUTTER} [full-end];row-gap:clamp(40px,7vh,64px);padding-block:40px 64px}
+${S} .src-card{grid-row:2;margin-top:112px}
+${S}>.hero-visual{grid-column:full;grid-row:2;align-self:start;height:176px;margin:0;border-radius:0}}
 @media (max-width:700px){${S} .actions{flex-direction:column;align-items:stretch}
 ${S} .src-card{padding:16px}
 ${S} .src-card .code{padding:16px}}`,

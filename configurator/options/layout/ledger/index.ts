@@ -19,6 +19,7 @@ html[data-layout="ledger"] {
   --l-sheet: min(100% - 2 * var(--gutter), var(--page-max));
   --l-cell: var(--rule) solid var(--line);
   --l-frame: var(--rule) solid var(--line-2);
+  *::before, *::after { box-sizing: border-box; }
 
   /* Header: one ruled row of cells, brand, parts, actions. */
   .nav {
@@ -134,19 +135,19 @@ html[data-layout="ledger"] {
   /* Install: key | value rows. Harness, Command, Note. */
   .s-install .tabs {
     position: relative; display: flex; flex-wrap: wrap;
-    margin: 0; gap: 0; padding-left: var(--l-ref);
-    border-bottom: var(--l-cell);
+    margin: 0; gap: var(--rule); padding-left: var(--l-ref);
+    border-bottom: var(--l-cell); background: var(--line);
   }
   .s-install .tabs::before {
     content: "Harness"; content: "Harness" / "";
     position: absolute; inset: 0 auto 0 0; width: var(--l-ref);
-    padding: 12px var(--l-pad); border-right: var(--l-cell);
+    padding: 12px var(--l-pad); border-right: var(--l-cell); background: var(--bg);
   }
   .s-install .tab {
+    flex: 1 1 auto;
     min-height: 48px; padding: 10px var(--l-pad);
-    border: 0; border-right: var(--l-cell);
-    background: transparent; color: var(--ink-2);
-    font-family: var(--font-ui); font-size: var(--step--1);
+    border: 0; background: var(--bg); color: var(--ink-2);
+    font-family: var(--font-ui); font-size: var(--step--1); text-align: left;
   }
   .s-install .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
   .s-install .tab:focus-visible { outline-offset: -4px; }
@@ -164,7 +165,7 @@ html[data-layout="ledger"] {
 
   /* Evidence: ref | arm | bar | passed, then numbered notes and the source row. */
   .bars {
-    display: grid; grid-template-columns: var(--l-ref) minmax(0, 13rem) minmax(0, 1fr) 6rem;
+    display: grid; grid-template-columns: var(--l-ref) minmax(0, 16rem) minmax(0, 1fr) 6rem;
     margin: 0; gap: 0;
   }
   .bar { grid-column: 1 / -1; grid-template-columns: subgrid; gap: 0; align-items: stretch; }
@@ -212,7 +213,7 @@ html[data-layout="ledger"] {
   .s-cta { grid-template-columns: var(--l-ref) minmax(0, 7fr) minmax(0, 5fr); }
   .s-cta > .s-title { grid-column: 2; grid-row: 1 / span 2; }
   .s-cta > .s-intro { grid-column: 3; grid-row: 1; align-self: end; border-left: var(--l-cell); }
-  .s-cta > .actions { grid-column: 3; grid-row: 2; margin: 0; padding: 0 var(--l-pad) var(--l-pad); border-left: var(--l-cell); }
+  .s-cta > .actions { grid-column: 3; grid-row: 2; justify-content: flex-start; margin: 0; padding: 0 var(--l-pad) var(--l-pad); border-left: var(--l-cell); }
 
   /* Index: the contents list as lettered cells matching the sheets. */
   .toc { display: block; }

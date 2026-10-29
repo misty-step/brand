@@ -16,9 +16,9 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero settles like cloth (settled by 1040 ms); sections only resolve.
+    // The hero settles like cloth (settled by 920 ms); sections only resolve.
     css: `${S} [data-enter]{opacity:0;transition:opacity .45s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{transform:translateY(16px);transition:opacity .72s cubic-bezier(.16,1,.3,1),transform .72s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 80ms)}
+${S} .hero [data-enter]{transform:translateY(16px);transition:opacity .64s cubic-bezier(.16,1,.3,1),transform .64s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
 ${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
@@ -30,8 +30,8 @@ ${S} .btn:active{transform:scale(.98)}
 ${S} a.link,${S} .item-link{transition:text-decoration-thickness .24s ease,text-underline-offset .24s cubic-bezier(.23,1,.32,1),color .24s ease,background-color .24s ease}`,
   },
   budget: {
-    gzipKB: 4.6,
+    gzipKB: 5.2,
     frameMs: '0.21 ms median, 0.30 ms p90 per frame at 1440x820, 0.21 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
-    note: 'Vite production chunks, gzip -9: 1.7 KB for this option plus the 2.9 KB runtime shared by the MotionB options. Raw WebGL1, one fullscreen triangle at one cell per 2 CSS px (3 and 4 px on lower tiers), 30 fps cap. Without WebGL the same still is painted once on the CPU (10.7 ms at 1440x820, 4.6 ms for a 480x640 panel).',
+    note: 'Vite production chunks, gzip -9: 1.8 KB for this option plus the 3.4 KB runtime shared by the MotionB options. Raw WebGL1, one fullscreen triangle at one cell per 2 CSS px (3 and 4 px on lower tiers), 30 fps cap. Without WebGL the same still is painted once on the CPU (10.7 ms at 1440x820, 4.6 ms for a 480x640 panel).',
   },
 } satisfies MotionOption & { renderer: 'webgl' };

@@ -3,7 +3,7 @@ import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
 import { title, sub, actions, proof, slot, enter, fit, bigName, bigNameCss, EDGE, GUTTER } from '../shared';
 
-const S = 'html[data-hero="tiles"]';
+const S = 'html[data-hero="tiles"] .hero';
 
 /** The offer's three steps (studio) or the method path (stack) as the bottom row of panes. */
 function strip(ctx: HeroCtx): string {
@@ -25,7 +25,7 @@ export default {
   ],
   motionHost: 'panel',
   render: ctx => `<div class="ti-set"><div class="ti-copy">${title(ctx)}${sub(ctx)}${actions(ctx)}${proof(ctx)}</div><div class="ti-field" ${enter(4)}>${slot()}${bigName(ctx, 'ti-word')}</div>${strip(ctx)}</div>`,
-  css: `${S} .hero{padding:clamp(16px,3vh,32px) ${EDGE} clamp(48px,9vh,96px)}
+  css: `${S}{padding:clamp(16px,3vh,32px) ${EDGE} clamp(48px,9vh,96px)}
 ${S} .ti-set{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:max(var(--rule,1px),1px);overflow:hidden;background:var(--line);border:max(var(--rule,1px),1px) solid var(--line);border-radius:var(--radius,0)}
 ${S} .ti-copy{grid-column:span 8;container-type:inline-size;padding:clamp(28px,4vw,56px);background:var(--bg)}
 ${fit(S)}
@@ -36,7 +36,7 @@ ${S} .ti-field{grid-column:span 4;position:relative;isolation:isolate;display:fl
 ${S} .ti-field>.hero-visual{position:absolute;inset:0;z-index:-1;overflow:hidden}
 ${S} .ti-word{width:100%}
 ${bigNameCss(S, '.ti-word', '88cqi', 'min(24svh,200px)')}
-${S} .ti-strip{grid-column:1/-1;display:grid;grid-template-columns:subgrid;margin:0}
+${S} .ti-strip{grid-column:1/-1;display:grid;grid-template-columns:subgrid;row-gap:max(var(--rule,1px),1px);margin:0}
 ${S} .ti-strip>li{grid-column:span 4;padding:18px clamp(16px,2vw,28px) 22px;background:var(--bg)}
 ${S} .ti-strip[data-n="3"]>li:nth-child(1){grid-column:span 3}
 ${S} .ti-strip[data-n="3"]>li:nth-child(2){grid-column:span 5}
@@ -48,7 +48,7 @@ ${S} .ti-strip[data-n="6"] .ti-v{font-size:var(--step--1);color:var(--ink)}
 @media (max-width:899px){${S} .ti-copy{grid-column:1/-1}
 ${S} .ti-field{grid-column:1/-1;order:-1;min-height:168px}
 ${S} .ti-strip[data-n="6"]>li{grid-column:span 4}}
-@media (max-width:700px){${S} .hero{padding:12px ${GUTTER} 48px}
+@media (max-width:700px){${S}{padding:12px ${GUTTER} 48px}
 ${S} .ti-copy{padding:24px 16px 28px}
 ${S} .actions{flex-direction:column;align-items:stretch}
 ${S} .ti-strip>li,${S} .ti-strip[data-n="3"]>li:nth-child(n),${S} .ti-strip[data-n="6"]>li{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:12px;padding:12px 16px}

@@ -16,10 +16,12 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero is scanned in from the left like a beam crossing it (settled by 840 ms); sections only resolve.
+    // The hero arrives from the left along the rails, like a beam (settled by 840 ms); sections only resolve.
+    // Hidden states use opacity and transform only: a clip-path on an observed element hides it from the
+    // renderer's IntersectionObserver, which then never adds .is-in.
     css: `${S} [data-enter]{opacity:0;transition:opacity .32s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{opacity:1;clip-path:inset(-24px 100% -24px -24px);transition:clip-path .56s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
-${S} [data-enter].is-in{opacity:1;clip-path:inset(-24px)}
+${S} .hero [data-enter]{transform:translateX(-12px);transition:opacity .56s cubic-bezier(.16,1,.3,1),transform .56s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
+${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
 ${S} .s-items>[data-enter]:nth-child(n+4),${S} .diagram>[data-enter]:nth-child(n+4){--enter-i:3}`,
@@ -31,8 +33,8 @@ ${S} a.link,${S} .item-link{transition:text-decoration-thickness .15s ease,text-
 @media (hover:hover) and (pointer:fine){${S} a.link:hover{text-underline-offset:.3em}}`,
   },
   budget: {
-    gzipKB: 5.3,
+    gzipKB: 5.8,
     frameMs: '0.28 ms median, 0.43 ms p90 per frame at 1440x820, 0.26 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
-    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 2.9 KB runtime shared by the MotionB options. Raw WebGL1, at most 512 axis-aligned quads in one draw, 60 fps cap because beams travel 200 px/s, DPR capped with whole-number upscaling; the lower tier renders at 1 CSS px. Without WebGL the same still is painted once on the CPU (1.1 ms at 1440x820).',
+    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 3.4 KB runtime shared by the MotionB options. Raw WebGL1, at most 512 axis-aligned quads in one draw, 60 fps cap because beams travel 200 px/s, DPR capped with whole-number upscaling; the lower tier renders at 1 CSS px. Without WebGL the same still is painted once on the CPU (1.1 ms at 1440x820).',
   },
 } satisfies MotionOption & { renderer: 'webgl' };

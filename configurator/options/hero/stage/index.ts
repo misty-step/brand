@@ -3,7 +3,7 @@ import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
 import { title, sub, actions, proof, slot, enter, fit, href, markPair, markPairCss, EDGE, GUTTER } from '../shared';
 
-const S = 'html[data-hero="stage"]';
+const S = 'html[data-hero="stage"] .hero';
 const core = FACTS.nodes.find(n => n.id === 'core');
 const corePath = core ? core.href.replace(/^.*\/blob\/[^/]+\//, '') : '';
 
@@ -29,7 +29,7 @@ export default {
   ],
   motionHost: 'panel',
   render: ctx => `<div class="st-copy">${title(ctx)}${sub(ctx)}${actions(ctx)}${proof(ctx)}</div><div class="st-stage" ${enter(4)}>${slot()}${artefact(ctx)}</div>`,
-  css: `${S} .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(56px,11vh,120px) ${EDGE} 0}
+  css: `${S}{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(56px,11vh,120px) ${EDGE} 0}
 ${S} .st-copy{container-type:inline-size;width:min(100%,1120px);display:flex;flex-direction:column;align-items:center}
 ${fit(S)}
 ${S} .hero-title{max-width:100%}
@@ -47,7 +47,7 @@ ${S} .st-file-head .link{display:inline-flex;align-items:center;min-height:44px}
 ${S} .st-file .code{margin:0;border:0;border-radius:0;padding:20px 24px 24px}
 ${S} .st-file .ln{display:inline-block;width:100%;padding-left:2ch;text-indent:-2ch;vertical-align:top}
 ${S} .st-file .ln+.ln{margin-top:.45em}
-@media (max-width:700px){${S} .hero{align-items:stretch;text-align:left;padding:40px ${GUTTER} 0}
+@media (max-width:700px){${S}{align-items:stretch;text-align:left;padding:40px ${GUTTER} 0}
 ${S} .st-copy{align-items:flex-start;width:100%}
 ${S} .actions{flex-direction:column;align-items:stretch;align-self:stretch}
 ${S} .st-stage{margin:40px calc(-1 * ${GUTTER}) 0;min-height:300px;padding:40px ${GUTTER} 72px}
