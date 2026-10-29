@@ -59,7 +59,7 @@ html[data-layout="book"] {
   .s > * { grid-column: col; }
   .s::before {
     content: ""; grid-column: col; justify-self: center;
-    width: 28px; height: 4px; margin-bottom: clamp(56px, 6vw, 88px);
+    width: 28px; height: 4px; margin-bottom: clamp(48px, 5vw, 72px);
     background: linear-gradient(90deg, var(--ink-3) 0 4px, transparent 4px 12px, var(--ink-3) 12px 16px, transparent 16px 24px, var(--ink-3) 24px 28px);
   }
   .s-title { position: relative; }
@@ -220,7 +220,7 @@ html[data-layout="book"] {
   .codefig figcaption::before { content: "Fig. " counter(fig) "\2002"; font-family: var(--font-mono); color: var(--accent-2); }
 
   /* The closing chapter: its actions get the room a last page gives them. */
-  .s-cta .actions { margin-top: 32px; }
+  .s-cta .actions { justify-content: flex-start; margin-top: 32px; }
 
   /* Colophon. */
   .foot { padding-block: var(--b-chapter) 48px; }

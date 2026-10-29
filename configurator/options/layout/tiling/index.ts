@@ -19,6 +19,7 @@ html[data-layout="tiling"] {
   --t-ws: clamp(80px, 8.4vw, 128px);
   --nav-h: var(--t-top);
   scroll-padding-top: calc(var(--t-top) + var(--t-gap));
+  *::before, *::after { box-sizing: border-box; }
 
   /* Top bar: brand, numbered workspaces, theme and the one call to action. */
   .nav {
@@ -40,11 +41,12 @@ html[data-layout="tiling"] {
     color: var(--ink-2); text-decoration: none;
     box-shadow: inset 0 -2px 0 transparent;
   }
+  /* Workspace indices are clickable chips, not key caps: no number keys are bound. */
   .nav-links .link::before {
     content: counter(ws);
     display: inline-grid; place-items: center;
     min-width: 24px; height: 24px; padding-inline: 6px;
-    border: var(--rule) solid var(--line-2);
+    background: var(--bg-3);
     font-family: var(--font-mono); font-size: var(--step--1); line-height: 1;
     font-variant-numeric: tabular-nums; color: var(--ink);
   }
@@ -85,7 +87,7 @@ html[data-layout="tiling"] {
     grid-area: label; align-self: start;
     display: inline-grid; place-items: center;
     min-width: 32px; height: 32px; padding-inline: 8px;
-    border: var(--rule) solid var(--line-2);
+    background: var(--bg-3);
     font-family: var(--font-mono); font-size: var(--step--1); line-height: 1;
     font-variant-numeric: tabular-nums;
   }
@@ -137,7 +139,7 @@ html[data-layout="tiling"] {
     grid-column: 2; grid-row: 1; align-self: start;
     display: inline-grid; place-items: center;
     min-width: 32px; height: 32px; padding-inline: 8px;
-    border: var(--rule) solid var(--line-2);
+    background: var(--bg-3);
     font-family: var(--font-mono); font-size: var(--step--1); line-height: 1;
     font-variant-numeric: tabular-nums;
   }
@@ -191,14 +193,14 @@ html[data-layout="tiling"] {
   }
 
   /* Call to action: the one pane that is active at rest. */
-  .s-cta {
+  .s.s-cta {
     padding: clamp(32px, 4vw, 64px) var(--t-pad);
     border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent);
     align-items: start; gap: 0;
   }
   .s-cta .s-title { max-width: 18ch; }
   .s-cta .s-intro { margin-top: 20px; }
-  .s-cta .actions { margin-top: 28px; }
+  .s-cta .actions { justify-content: flex-start; margin-top: 28px; }
 
   /* Footer: a status block at the end of the page; a fixed status line on wide screens. */
   .foot {
@@ -241,6 +243,9 @@ html[data-layout="tiling"] {
       grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1fr);
       grid-template-areas: "core misty playbooks oracle" "core misty skills oracle" "core misty principles oracle";
     }
+    /* The method diagram is the tile layout, so it takes the whole workspace. */
+    .s-diagram > .s-head { grid-column: 1 / -1; grid-row: auto; }
+    .s-diagram > .diagram { grid-column: 1 / -1; margin-top: var(--t-gap); }
     .node[data-node="core"] { grid-area: core; }
     .node[data-node="misty"] { grid-area: misty; }
     .node[data-node="playbooks"] { grid-area: playbooks; }
