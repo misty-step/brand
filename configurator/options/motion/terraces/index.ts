@@ -5,13 +5,14 @@ import { interactionCss } from '../_motion-a/interaction';
 const S = 'html[data-motion="terraces"]';
 const L = live('terraces');
 
-// The focal pieces surface the way the terraces do: out of a short mist (6px blur), 620ms on
-// an expo ease-out, 60ms apart. Phones drop the blur, which costs the most paint on small GPUs.
+// The focal pieces surface the way the terraces do: out of a short mist (6px blur), 480ms on
+// an expo ease-out, 40ms apart, opaque by 40% of the run; every piece is final by 600ms after the
+// hero renders. Phones drop the blur, which costs the most paint on small GPUs.
 const css = `
-@keyframes ma-tr-surface{from{opacity:0;filter:blur(6px);translate:0 6px}}
-@keyframes ma-tr-surface-phone{from{opacity:0;translate:0 6px}}
+@keyframes ma-tr-surface{0%{opacity:0;filter:blur(6px);translate:0 6px}40%{opacity:1}}
+@keyframes ma-tr-surface-phone{0%{opacity:0;translate:0 6px}40%{opacity:1}}
 ${focalOrder(S)}
-${focal(L)}{animation:ma-tr-surface 620ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(min(var(--ma-i),3) * 60ms)}
+${focal(L)}{animation:ma-tr-surface 480ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(min(var(--ma-i),3) * 40ms)}
 @media (max-width:700px){${focal(L)}{animation-name:ma-tr-surface-phone}}`;
 
 export default {
@@ -23,7 +24,7 @@ export default {
   renderer: 'webgl',
   refs: [
     { name: 'Earendil', url: 'https://earendil.com/', what: 'One slow living backdrop under one sentence, engineered to get out of the way: low resolution, adaptive quality, aperiodic drift. Here the drift is the mist bank, not the camera.' },
-    { name: 'Linear', url: 'https://linear.app/', what: 'Its hero lines rise out of a 10px blur over 1000ms. Terraces keeps the blur as mist clearing, shortens it to 620ms with 60ms steps, and drops it on phones.' },
+    { name: 'Linear', url: 'https://linear.app/', what: 'Its hero lines rise out of a 10px blur over 1000ms. Terraces keeps the blur as mist clearing, shortens it to 480ms with 40ms steps so the hero is final by 0.6 s, and drops it on phones.' },
     { name: 'Stripe', url: 'https://stripe.com/', what: 'Its shader wave ships a still of the same wave for every breakpoint and one governor that pauses offscreen and on hidden tabs and steps quality on frame time. The terraces do both, computing their still on the CPU instead of shipping images.' },
   ],
   background: { load: () => import('./field') },

@@ -10,12 +10,13 @@ const tile = (k: number) => {
   return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' shape-rendering='crispEdges'>${cells}</svg>`)}")`;
 };
 
-// The focal pieces land the way the field is drawn: through four ordered-dither cuts, 80ms each.
+// The focal pieces land the way the field is drawn: through four ordered-dither cuts, 80ms each,
+// 60ms apart; every hero piece is final by 320ms + 3 x 60ms = 500ms after the hero renders.
 const css = `
 @keyframes ma-dm-land{0%{opacity:0}25%{opacity:1;mask-image:${tile(1)}}50%{mask-image:${tile(2)}}75%{mask-image:${tile(3)}}100%{mask-image:none}}
 ${focalOrder(S)}
 ${focal(S)}{mask-size:8px 8px;mask-repeat:repeat}
-${focal(live('dither-mist'))}{animation:ma-dm-land 320ms steps(1,end) backwards;animation-delay:calc(min(var(--ma-i),4) * 70ms)}`;
+${focal(live('dither-mist'))}{animation:ma-dm-land 320ms steps(1,end) backwards;animation-delay:calc(min(var(--ma-i),3) * 60ms)}`;
 
 export default {
   id: 'dither-mist',

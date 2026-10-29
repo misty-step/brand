@@ -9,12 +9,14 @@ const OUT = 'cubic-bezier(.23,1,.32,1)';
 // the stack's route and the trial's bars. Headings, work and points never move.
 const SEQ = ':is(.s-steps .item,.s-diagram .node)[data-enter]';
 
+// Focal sequence: every piece is final by 480ms + 3 x 40ms = 600ms after the hero renders, and
+// opaque by 40% of its run (at most 312ms), so the hero never waits on a slow frame to be read.
 const css = `
-@keyframes ma-quiet-rise{from{opacity:0;translate:0 12px}}
+@keyframes ma-quiet-rise{0%{opacity:0;translate:0 12px}40%{opacity:1}}
 @keyframes ma-quiet-fade{from{opacity:0}}
 ${focalOrder(S)}
-${S} .hero .hero-visual{--ma-name:ma-quiet-fade;--ma-dur:400ms}
-${focal(L)}{animation:var(--ma-name,ma-quiet-rise) var(--ma-dur,560ms) cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(min(var(--ma-i),4) * 60ms)}
+${S} .hero .hero-visual{--ma-name:ma-quiet-fade;--ma-dur:360ms}
+${focal(L)}{animation:var(--ma-name,ma-quiet-rise) var(--ma-dur,480ms) cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(min(var(--ma-i),3) * 40ms)}
 ${L} ${SEQ}:not(.is-in){opacity:0;translate:0 8px}
 ${S} ${SEQ}{transition:opacity 300ms ${OUT},translate 300ms ${OUT}}
 ${S} ${SEQ}:nth-child(2){transition-delay:50ms}
@@ -29,7 +31,7 @@ export default {
   id: 'quiet',
   layer: 'motion',
   label: 'Quiet',
-  summary: 'One entrance, then stillness: headline, line, actions and visual rise 12px in reading order and settle by 0.8 s; after that only ordered things (the offer steps, the route, the trial bars) arrive in order. No background.',
+  summary: 'One entrance, then stillness: headline, line, actions and visual rise 12px in reading order and settle by 0.6 s; after that only ordered things (the offer steps, the route, the trial bars) arrive in order. No background.',
   origin: 'new',
   renderer: 'none',
   refs: [
@@ -39,5 +41,5 @@ export default {
   ],
   entrance: { css },
   interaction: { css: interactionCss('quiet', 'smooth') },
-  budget: { gzipKB: 2.0, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 2.0 KB gzip option module (CSS plus lab metadata), vite build. Focal sequence 560ms + 4 x 60ms stagger = 0.8 s from first paint; reveals 300ms with at most 150ms of stagger. Reduced motion and Pause show the finished page.' },
+  budget: { gzipKB: 2.0, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 2.0 KB gzip option module (CSS plus lab metadata), vite build. Focal sequence 480ms + 3 x 40ms stagger = 0.6 s after the hero renders, opaque within 0.32 s, timed by CSS alone; reveals 300ms with at most 150ms of stagger. Reduced motion and Pause show the finished page.' },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };
