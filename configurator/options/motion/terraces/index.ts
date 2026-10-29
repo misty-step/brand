@@ -20,6 +20,7 @@ export default {
   label: 'Terraces',
   summary: 'Six ridges of terraced hills in the field ramp, crisp at the crest and dissolving downslope into mist; the bank swells and sinks over tens of seconds, and the headline surfaces from a short blur. Steps coming out of mist, said as landscape.',
   origin: 'B',
+  renderer: 'webgl',
   refs: [
     { name: 'Earendil', url: 'https://earendil.com/', what: 'One slow living backdrop under one sentence, engineered to get out of the way: low resolution, adaptive quality, aperiodic drift. Here the drift is the mist bank, not the camera.' },
     { name: 'Linear', url: 'https://linear.app/', what: 'Its hero lines rise out of a 10px blur over 1000ms. Terraces keeps the blur as mist clearing, shortens it to 620ms with 60ms steps, and drops it on phones.' },
@@ -33,4 +34,4 @@ export default {
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 7.4 ms (358x220 panel) to 33.3 ms (1440x820 full), painted in idle slices of at most 8 ms',
     note: 'Measured: 8.5 KB gzip (1.8 option + 6.8 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, nearest ridge first with an early exit. One cell = 2 CSS px (0.5x backing store), then 4 CSS px tiers: 30, 24, 12 fps with 3/2/1 mist octaves; still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
   },
-} satisfies MotionOption;
+} satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

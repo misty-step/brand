@@ -23,6 +23,7 @@ export default {
   label: 'Voxel stairs',
   summary: 'Flights of voxel stairs build out of mist a step at a time, hold and sink on their own periods; one top tread takes the accent when its flight is complete. The page builds the same way: four hard cuts, bottom up. The step as the unit of everything.',
   origin: 'C',
+  renderer: 'webgl',
   refs: [
     { name: 'Omarchy', url: 'https://omarchy.org/', what: 'Its pixel wordmark rebuilds row by row in hard steps when the theme changes: pixel state changes as cuts, never as fades. The page here builds in four.' },
     { name: 'Linear', url: 'https://linear.app/', what: 'Measured 2026-10-29: its dot-matrix glyphs animate on steps(1) keyframes. A pixel world earns its feel from stepped timing, not from blur or easing.' },
@@ -36,4 +37,4 @@ export default {
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 0.5 ms (358x220 panel) to 6.2 ms (1440x820 full)',
     note: 'Measured: 9.5 KB gzip (1.9 option + 7.6 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL2, one instanced draw per frame (32 boxes x 18 vertices, three visible faces), one cell = 4 CSS px; world scale 4 px per unit, 2 on small hosts so the focal flight stays whole. Tiers 30/15/8 fps, still below the last. Reduced motion, Save-Data, no WebGL2 and context loss rasterise the same boxes on the CPU with a depth test, no GPU context. Shaders validated with glslang (ESSL 3.00).',
   },
-} satisfies MotionOption;
+} satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

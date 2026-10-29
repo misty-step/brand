@@ -31,6 +31,7 @@ export default {
   label: 'Quiet',
   summary: 'One entrance, then stillness: headline, line, actions and visual rise 12px in reading order and settle by 0.8 s; after that only ordered things (the offer steps, the route, the trial bars) arrive in order. No background.',
   origin: 'new',
+  renderer: 'none',
   refs: [
     { name: 'Macroscope', url: 'https://macroscope.com/', what: 'Its hero rises (h1 18px over 680ms, buttons 14px at 220 and 260ms) on an expo ease-out, and its scroll reveals are 8 to 16px over about 300ms with a 42ms stagger. Quiet is that grammar, cut to one reveal pattern.' },
     { name: 'Linear', url: 'https://linear.app/', what: 'Its hero rises piece by piece (opacity, 20% travel, 100ms stagger), but over 1000ms with a 10px blur and a 3 s settle. Quiet keeps the order, drops the blur and settles in 0.8 s.' },
@@ -39,4 +40,4 @@ export default {
   entrance: { css },
   interaction: { css: interactionCss('quiet', 'smooth') },
   budget: { gzipKB: 1.9, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 1.9 KB gzip option module (CSS plus lab metadata), vite build. Focal sequence 560ms + 4 x 60ms stagger = 0.8 s from first paint; reveals 300ms with at most 150ms of stagger. Reduced motion and Pause show the finished page.' },
-} satisfies MotionOption;
+} satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

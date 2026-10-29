@@ -23,6 +23,7 @@ export default {
   label: 'Dither mist',
   summary: 'Low fog drawn in two field inks through an 8x8 Bayer dither, drifting without a period and parting around a fine pointer; the headline lands through the same four dither steps. Mist, for a studio named after a step through it.',
   origin: 'A',
+  renderer: 'webgl',
   refs: [
     { name: 'Omarchy', url: 'https://omarchy.org/', what: 'A pixel-cell field on one strict grid that thickens toward the bottom edge and pauses offscreen. Here the cells are dither, not noise, and they keep clear of the text.' },
     { name: 'Nous Research', url: 'https://nousresearch.com/', what: 'Dither as a two-ink material over a quiet ground: the texture carries the brand while the inks stay within the palette.' },
@@ -37,4 +38,4 @@ export default {
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 1.7 ms (358x220 panel) to 16.9 ms (1440x820 full), painted in idle slices of at most 8 ms',
     note: 'Measured: 8.0 KB gzip (2.0 option + 6.0 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, one cell = 4 CSS px at any DPR (0.25x backing store, under the 1.5 cap). Tiers 5/4/3 octaves at 24/15/10 fps, 2 s frame-rate sampling, still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
   },
-} satisfies MotionOption;
+} satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };
