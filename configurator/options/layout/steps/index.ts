@@ -275,8 +275,8 @@ ${S} .code:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px
   ${S} .node { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "num label count" "num body body"; column-gap: 16px; padding: 18px 20px 22px; }
   ${S} .node::before { margin: 0; }
   ${S} .s-install .note, ${S} .s-install .copy, ${S} .s-install .code, ${S} .s-install .tabpanel:not(:has(.code)) .note { grid-column: 1 / -1; grid-row: auto; }
-  ${S} .s-code > .s-head, ${S} .s-code > .codefig { grid-column: 1 / -1; }
-  ${S} .s-code > .s-head { margin-bottom: 40px; }
+  ${S} .s-code > .s-head, ${S} .s-code > .codefig, ${S} .s-points > .s-head, ${S} .s-points > .s-items { grid-column: 1 / -1; }
+  ${S} .s-code > .s-head, ${S} .s-points > .s-head { margin-bottom: 40px; }
 }
 
 /* ---- Phone: re-composed, not shrunk ---- */

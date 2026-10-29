@@ -148,7 +148,7 @@ ${S} .s-install .tabs {
   border-bottom: var(--rule) solid var(--line-2);
 }
 ${S} .s-install .tab {
-  min-height: 52px; padding: 0; border: 0; border-radius: 0; background: none;
+  min-height: 52px; min-width: 44px; padding: 0; border: 0; border-radius: 0; background: none;
   font-family: var(--font-ui); font-size: var(--step-0); font-weight: 500; line-height: 1.2;
   color: var(--ink-2);
 }

@@ -47,20 +47,23 @@ ${S} .btn {
 }
 ${S} .btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 ${S} .btn-quiet { background: transparent; color: var(--ink); border-color: var(--line-2); }
-${S} .btn-sm { min-height: 40px; padding: 0 14px; font-size: var(--step--1); }
+${S} .btn-sm { min-height: 44px; padding: 0 16px; font-size: var(--step--1); }
 ${S} .actions { gap: 8px; }
 
 ${S} a.link { text-decoration-color: var(--line-2); text-decoration-thickness: 1px; text-underline-offset: 0.24em; }
 
-/* ---- The frame: panels between two rails, sunken gutters between panels ---- */
+/* ---- The frame: opaque panels between two rails, sunken gutters between panels.
+   A page-level motion field shows only beside the frame, never behind the reading. ---- */
 ${S} main > .s {
   width: var(--frame); margin-inline: auto; padding: 0;
   border: var(--rule) solid var(--line); border-top: 0;
+  background-color: var(--bg);
 }
 ${S} main > :not(.s) + .s { border-top: var(--rule) solid var(--line); }
 ${S} main > .s + .s {
   padding-top: var(--band);
-  background: linear-gradient(var(--bg-3) var(--band), var(--line) var(--band) calc(var(--band) + var(--rule)), transparent calc(var(--band) + var(--rule))) no-repeat;
+  background-image: linear-gradient(var(--bg-3) var(--band), var(--line) var(--band) calc(var(--band) + var(--rule)), transparent calc(var(--band) + var(--rule)));
+  background-repeat: no-repeat;
 }
 ${S} .s-head {
   display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
