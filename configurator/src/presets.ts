@@ -1,20 +1,21 @@
 import type { Layer } from './contract';
 export interface Preset { id: string; label: string; note: string; picks: Record<Layer,string> }
 // Opinionated starting points: each is one complete direction, all seven layers chosen together.
-// 'Chosen' is Phaedrus's pick (29 Oct) and opens by default; the three round-2 presets keep its type, colour, layout and hero
-// and swap in round-2 marks, copy and motion. The three previous-round directions come last.
+// 'Locked' is the identity Phaedrus locked on 29 Oct ("lock in your favorites"; Mist sign "fine for now") and opens by default;
+// it is the source the identity package (/identity) is generated from. 'Chosen' was his round-1 pick; the two other
+// round-2 presets keep its type, colour, layout and hero. The three previous-round directions come last.
 export const presets: Preset[] = [
+  {
+    id: 'locked',
+    label: 'Locked',
+    note: 'Locked by Phaedrus on 29 Oct: the Mist sign, industrial condensed type, mono, editorial layout, horizon hero, Ground fog at its defaults and the editor\'s cut of the copy. Both sites are built from it.',
+    picks: { mark: 'r2-a-mist', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'r2-mist-ground', copy: 'r2-cut' },
+  },
   {
     id: 'chosen',
     label: 'Chosen',
-    note: 'Phaedrus\'s pick on 29 Oct: Plate\'s mark, industrial condensed type, mono, editorial layout, horizon hero, dither mist and Show the work copy. The baseline for round 2, which redoes the marks, the copy and the motion.',
+    note: 'Phaedrus\'s pick on 29 Oct: Plate\'s mark, industrial condensed type, mono, editorial layout, horizon hero, dither mist and Show the work copy. The baseline for round 2, which redid the marks, the copy and the motion.',
     picks: { mark: 'plate', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'dither-mist', copy: 'show-the-work' },
-  },
-  {
-    id: 'r2',
-    label: 'Round 2',
-    note: 'The round-2 recommendation on Chosen: the Mist sign (the weather map\'s mist sign where you stood, solid ground one step up where you can see), the editor\'s cut of the copy and Ground fog.',
-    picks: { mark: 'r2-a-mist', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'r2-mist-ground', copy: 'r2-cut' },
   },
   {
     id: 'r2-plate',
