@@ -20,6 +20,12 @@
 // Lockup: the plate is 32 px tall beside capitals 19.7 px tall (font-size 30 px x cap 0.655): 1.63 times the cap height,
 // centred on the capitals (text-box trims the name to cap height and baseline). Gap and clear space: one chamfer plus
 // one bar is 5 px at nav size; the name sits two of those (10 px) away. Phones step the name to 26 px (1.88 x).
+// Collisions checked (Oct 2026: web search across logo galleries, 1000logos, logo marketplaces and studio case studies
+// for an M in a chamfered or rounded plate, an M over horizontal bars, stencil M plates): MG's octagon badge (an M in
+// a chamfered octagon), so the chamfer stays at one unit; BMW M (a white M on a dark rounded rectangle, with three
+// coloured diagonal stripes); Medium's former M in a square; Monero's M in a split badge. None carries a two-bar sign
+// keyed through the plate's edge. The portrait plate read as a document page and two notches as a book's page
+// edges, hence the square plate and the single notch.
 import type { Ctx } from '../../../src/contract';
 import { quiet, runs, cells, svg } from '../_lib/mark';
 
