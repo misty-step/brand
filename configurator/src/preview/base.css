@@ -11,3 +11,10 @@
 body { caret-color: var(--focus); }
 :root { --display-advance: .5; }
 .toc { display: none; }
+html[data-paused="1"] [data-enter] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  filter: none !important;
+  transition-duration: 0s !important;
+}
