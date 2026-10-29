@@ -23,7 +23,8 @@ ${S} .hero-sub{flex:1 1 420px;max-width:min(var(--measure,56ch),100%);font-size:
 ${S} .actions{margin-top:0}
 ${S} .hero-proof{grid-row:3;max-width:min(44ch,100%);font-size:var(--step--1);color:var(--ink)}
 ${S}>.hero-motion-controls{grid-row:4}
-@media (max-width:700px){${S}{grid-template-rows:clamp(160px,26svh,240px) auto auto;min-height:0;padding:0 ${GUTTER} 32px}
+@media (max-width:700px){${S}{--hz-band:clamp(160px,26svh,240px);grid-template-rows:var(--hz-band) auto auto;min-height:0;padding:0 ${GUTTER} 32px}
+${S}>.hero-motion-host{bottom:auto;height:var(--hz-band)}
 ${S} .hz-copy{grid-row:2}
 ${S} .hero-proof{margin-top:28px}
 ${S} .hz-row{flex-direction:column;align-items:stretch;gap:28px}

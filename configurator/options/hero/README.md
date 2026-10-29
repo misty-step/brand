@@ -6,7 +6,7 @@ Each hero renders the inner HTML of `section.hero` and styles it under `html[dat
 | --- | --- | --- | --- |
 | `stage` | Centred statement and actions over a wide stage: the mark in the field (studio), the real `rules/core.md` (stack) | panel | new |
 | `spread` | Statement on the left page, a full-height field plate bleeding off the right edge | panel | B |
-| `horizon` | Full-bleed field like a landscape: statement high with sentence and actions on one line, the field as the ground below, proof in the lower corner | full | new |
+| `horizon` | Full-bleed field like a landscape: statement high with sentence and actions on one line, the field as the ground below, proof in the lower corner. On phones the field host is resized to a band above the statement, so ground-anchored fields stand on the band's floor | full | new |
 | `source` | Statement beside a real artefact in mono: verbatim core lines (studio), exact install lines per harness with Copy (stack) | panel | new |
 | `treads` | The three priced steps (studio) or the method path (stack) rise as treads standing in the field | panel | C |
 | `wordmark` | The brand wordmark across the full width, a rule, then the statement in two columns | full | new |
