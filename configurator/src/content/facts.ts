@@ -470,7 +470,7 @@ export const STACK_PAGE: PageContent = {
       "type": "install",
       "id": "install",
       "title": "Use your own harness.",
-      "intro": "Native installation. Shared method. Commands from the current harness references; not executed by this lab.",
+      "intro": "Shipped for OMP; the Claude Code, Codex and pi adapters are in progress (#591). Commands from the current harness references; not executed by this lab.",
       "harnesses": [
         {
           "id": "omp",
