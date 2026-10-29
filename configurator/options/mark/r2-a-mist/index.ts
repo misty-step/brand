@@ -13,22 +13,31 @@ import { capitals } from '../r2-a-kit/capitals';
 //   foot and the upper bar). In ink-box units: bars (0,8)-(7,9) and (0,10)-(7,11); block (8,0)-(15,7).
 //   The ink box sits 3u from the top and 2u from the bottom, so the heavy block does not ride high.
 // Drawings.
-//   Below 96 px: snapped to whole pixels. At 16 px the bars are 1 px with a 1 px gap and the block 7 px; at 32 px
-//   everything doubles (bars 2 px); 48, 64 and 80 px stay on whole pixels too. 0 soft pixels at 16 and 32.
+//   16 px, drawn by hand on the pixel grid: block 7 px, then 1 px, bar 2 px, gap 1 px, bar 2 px (13 px tall, 77 inked
+//   pixels). The bars are heavier than the unit here so the favicon holds its own in a tab; the 1 px gap still keeps
+//   them two lines, not one slab.
+//   Other sizes below 96 px: the construction snapped to whole pixels. At 32 px everything doubles (bars 2 px, gap
+//   2 px); 24, 48, 64 and 80 px round edge by edge. 0 soft pixels at 16 and 32.
 //   96 px and up (viewBox 160, u = 10): the bars are 9 thick, a touch under the unit, because a horizontal reads
 //   heavier than its measure and the sign must stay a light mark against the block; their gap opens to 11. The block
-//   keeps its full 70 so its top and foot stay on the name's cap line and baseline at every lockup scale.
-// Lockup. The block is exactly the cap height of the name: 14 px at the 32 px nav, which is Sofia Sans Extra
-// Condensed's cap height at the type's own 22 px nav size. Its top sits on the cap line and its foot on the baseline;
-// the sign hangs below the line like a descender. Gap 8 px (4u). Clear space: one block width (7u) on every side.
+//   keeps its full 70 so the lockup's alignments hold at every scale.
+// Lockup. The sign stands on the baseline (the lower bar's foot on the name's baseline) and the block rises one step
+// over the caps: at the 32 px nav the name's cap height is 14 px (Sofia Sans Extra Condensed at the type's own 22 px
+// nav size) and the block's top is 8 px (4u) above the cap line. The step visibly rises over the name, and nothing in
+// the symbol mimics a letter. The name stays centred in the nav row; the symbol is lifted 5 px to meet it.
+// Gaps: 12 px (6u) between symbol and name; stacked, 7u (one block width) from the lower bar's foot to the cap line.
+// Clear space: one block width (7u) on every side.
 
 const NS = 'http://www.w3.org/2000/svg';
 const rect = (x0: number, y0: number, x1: number, y1: number) => `M${x0} ${y0}H${x1}V${y1}H${x0}Z`;
 
 interface Drawing { box: number; mist: string; block: string; origin: string; crisp: boolean }
 
-/** Pixel drawing for small sizes: every edge on a whole pixel of a `size` px box. */
+/** Pixel drawing for small sizes: every edge on a whole pixel of a `size` px box. 16 px is drawn by hand. */
 function pixel(size: number): Drawing {
+  if (size === 16) {
+    return { box: 16, crisp: true, mist: rect(0, 10, 7, 12) + rect(0, 13, 7, 15), block: rect(8, 2, 15, 9), origin: rect(0, 8, 7, 15) };
+  }
   const s = size / 16, r = (v: number) => Math.round(v * s);
   const x0 = Math.floor((size - r(15)) / 2), y0 = Math.round((size - r(11)) / 2 + s / 2);
   const X = (v: number) => x0 + r(v), Y = (v: number) => y0 + r(v);
@@ -89,9 +98,10 @@ export default {
     return () => { settle(anims)(); done(); };
   },
   css: `
-html[data-mark="r2-a-mist"] .brand { gap: 8px; }
+html[data-mark="r2-a-mist"] .brand { gap: 5px 12px; }
+html[data-mark="r2-a-mist"] .brand-mark { position: relative; top: -5px; }
 html[data-mark="r2-a-mist"] .brand-mark svg { width: 32px; height: 32px; }
 html[data-mark="r2-a-mist"] .brand-name { display: block; line-height: 0; }
-html[data-mark="r2-a-mist"] .brand-name svg { display: block; height: 14px; width: auto; position: relative; top: -3px; }
+html[data-mark="r2-a-mist"] .brand-name svg { display: block; height: 14px; width: auto; }
 `,
 } satisfies MarkOption & { css: string };
