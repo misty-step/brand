@@ -11,8 +11,7 @@ export default {
   origin: 'new',
   refs: [
     { name: 'Earendil', url: 'https://earendil.com', what: 'One statement set directly on a full-viewport living field, with the remaining words pushed to the corners of the screen.' },
-    { name: 'Grok', url: 'https://x.ai', what: 'A full-bleed dark field as the entire first screen, with the type sitting on the field rather than in a box.' },
-    { name: 'Brass Hands', url: 'https://brasshands.com', what: 'A display headline anchored to the bottom-left and the supporting text aligned to its baseline, a poster grid rather than a centred stack.' },
+    { name: 'Stripe', url: 'https://stripe.com', what: 'The WebGL wave runs behind the headline itself, so the type sits on the motion instead of beside it in a box.' },
   ],
   motionHost: 'full',
   render: ctx => `<div class="hz-copy">${title(ctx)}<div class="hz-row">${sub(ctx)}${actions(ctx)}</div></div>${proof(ctx)}`,

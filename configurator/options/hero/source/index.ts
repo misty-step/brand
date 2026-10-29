@@ -37,7 +37,7 @@ export default {
   origin: 'new',
   refs: [
     { name: 'pi', url: 'https://pi.dev', what: 'The install command is the hero object, in a box with a copy button and one control to switch the installer.' },
-    { name: 'Greptile', url: 'https://www.greptile.com', what: 'The product shown through its real output on real code, set in ruled panels instead of an illustration.' },
+    { name: 'Greptile', url: 'https://www.greptile.com', what: 'Proof by real artefact: actual findings in named public repositories, shown with file paths and diff lines and linked to the pull request, instead of an illustration.' },
     { name: 'Macroscope', url: 'https://macroscope.com', what: 'Headline on the left, product panels on the right laid over the brand image, which shows around their edges.' },
   ],
   motionHost: 'panel',
