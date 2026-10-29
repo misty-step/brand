@@ -41,7 +41,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python check.py                    # browser-free checks; exits non-zero on failure
 ```
 
-`check.py` checks families, weights, files, glyph coverage, licences and the canon's size floors. It also simulates h1 word wrap from the font's own advances across five headlines at 350, 820 and 1100px columns.
+`check.py` checks families, weights, files, glyph coverage, licences and the canon's size floors. It also simulates h1 word wrap from the font's own advances across five headlines at 350, 820 and 1100px columns. Builds keep each source's timestamps, so the pinned sources rebuild to byte-identical woff2 files.
 
 ## Known limits
 
