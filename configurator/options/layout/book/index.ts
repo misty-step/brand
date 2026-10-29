@@ -53,7 +53,8 @@ html[data-layout="book"] {
   /* Chapters: one column on the reading measure, with room either side for figures.
      Every section is a chapter, numbered to match the contents page. */
   main { counter-reset: chapter fig; }
-  .s, .foot, .toc { display: grid; grid-template-columns: var(--b-tracks); }
+  /* Chapters are opaque paper: nothing moves behind the reading column. */
+  .s, .foot, .toc { display: grid; grid-template-columns: var(--b-tracks); background: var(--bg); }
   .s { padding-top: var(--b-chapter); counter-increment: chapter; }
   .s > * { grid-column: col; }
   .s::before {
