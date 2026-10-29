@@ -3,8 +3,8 @@ import { setPixels, svg, type PixelFont } from '../_lib/mark';
 
 // An industrial nameplate in Brass Hands' Neo-Industrial manner: a chamfered plate with a heavy M cut through it.
 // Under the M runs the weather-map sign for mist, two horizontal bars (=), the lower one stepped short.
-// At display size those two bars resolve into what they stood for: the name in plate lettering, and a run of
-// bars that thins out like mist.
+// At display size those two bars resolve into what they stood for: the brand's own name in plate lettering
+// ("MISTY STEP" on the studio page, "MISTYSTACK" on the stack page), and a run of bars that thins out like mist.
 
 const n = (v: number) => +v.toFixed(3);
 const PLATE = 'M4 1H20L23 4V20L20 23H4L1 20V4Z';
@@ -22,6 +22,7 @@ function M(x0: number, x1: number, y0: number, y1: number, stem: number): string
 const bar = (x0: number, x1: number, y0: number, y1: number) => `M${n(x0)} ${n(y0)}H${n(x1)}V${n(y1)}H${n(x0)}Z`;
 
 // Plate lettering: a 3x5 technical cap set (M is five wide), drawn as cells and knocked out of the plate.
+// It covers both brand names; any other name gets the plain plate, and the wordmark beside it carries the name.
 const PLATE_CAPS: PixelFont = { height: 5, space: 2, tracking: 1, glyphs: {
   M: ['#...#', '##.##', '#.#.#', '#...#', '#...#'],
   I: ['###', '.#.', '.#.', '.#.', '###'],
@@ -30,11 +31,24 @@ const PLATE_CAPS: PixelFont = { height: 5, space: 2, tracking: 1, glyphs: {
   Y: ['#.#', '#.#', '.#.', '.#.', '.#.'],
   E: ['###', '#..', '##.', '#..', '###'],
   P: ['###', '#.#', '###', '#..', '#..'],
+  A: ['###', '#.#', '###', '#.#', '#.#'],
+  C: ['###', '#..', '#..', '#..', '###'],
+  K: ['#.#', '#.#', '##.', '#.#', '#.#'],
 } };
-function lettering(text: string, cx: number, y: number, cellSize: number): string {
-  const set = setPixels(text, PLATE_CAPS, true)!;
-  const x0 = cx - (set.width * cellSize) / 2;
-  return set.cells.map(([x, yy]) => bar(x0 + x * cellSize, x0 + (x + 1) * cellSize, y + yy * cellSize, y + (yy + 1) * cellSize)).join('');
+const MEASURE = 15.6; // widest the lettering may run, in plate units: just past the run of bars below it
+/**
+ * The name centred between the M and the bars, with every cell a whole number of CSS pixels at this size,
+ * so the lettering stays crisp. Null when the name has a letter the plate set does not draw.
+ */
+function lettering(name: string, size: number): string | null {
+  const set = setPixels(name, PLATE_CAPS, true);
+  if (!set || !set.cells.length) return null;
+  const unit = 24 / size;                                        // plate units per CSS pixel
+  const k = Math.max(1, Math.floor(MEASURE / (set.width * unit))); // CSS pixels per letter cell
+  const c = k * unit;
+  const x0 = Math.round((12 - (set.width * c) / 2) / unit) * unit;
+  const y0 = Math.round((15.05 - (5 * c) / 2) / unit) * unit;
+  return set.cells.map(([x, y]) => bar(x0 + x * c, x0 + (x + 1) * c, y0 + y * c, y0 + (y + 1) * c)).join('');
 }
 // Bars that thin out to the right, Brass Hands' compression run read as mist dissipating.
 function thinning(x0: number, x1: number, y0: number, y1: number, count: number, gap: number): string {
@@ -45,11 +59,12 @@ function thinning(x0: number, x1: number, y0: number, y1: number, count: number,
   return d;
 }
 
-function draw(size: number): string {
+function draw(size: number, name: string): string {
+  const named = size >= 128 ? lettering(name, size) : null;
   let cutout: string;
   if (size <= 20) cutout = M(5.2, 18.8, 5.4, 18.6, 3.9);
-  else if (size < 96) cutout = M(5.6, 18.4, 5, 15.4, 3.4) + bar(5.6, 18.4, 16.9, 18.1) + bar(8, 18.4, 19.3, 20.5);
-  else cutout = M(6.9, 17.1, 4.2, 12.2, 2.75) + lettering('MISTY STEP', 12, 14.2, 0.4) + thinning(4.4, 19.6, 17.9, 19.7, 16, 0.42);
+  else if (!named) cutout = M(5.6, 18.4, 5, 15.4, 3.4) + bar(5.6, 18.4, 16.9, 18.1) + bar(8, 18.4, 19.3, 20.5);
+  else cutout = M(6.9, 17.1, 4.2, 12.2, 2.75) + named + thinning(4.4, 19.6, 17.9, 19.7, 16, 0.42);
   return svg({
     viewBox: [24, 24], width: size, height: size, cls: 'mk mk-plate',
     body: `<path fill="currentColor" fill-rule="evenodd" d="${PLATE}${cutout}"/>`,
@@ -61,12 +76,12 @@ export default {
   layer: 'mark',
   label: 'Nameplate',
   origin: 'new',
-  summary: 'A chamfered industrial plate with a heavy M cut through it over the weather-map sign for mist; at display size the sign resolves into plate lettering and a run of thinning bars.',
+  summary: 'A chamfered industrial plate with a heavy M cut through it over the weather-map sign for mist; at display size the sign resolves into the brand\'s own name in plate lettering and a run of thinning bars.',
   refs: [
     { name: 'Brass Hands', url: 'https://www.brasshands.com', what: 'Identity as field equipment: data plates, unit lettering and one heavy glyph drawn to pass their shipping-container test, so it survives stencilling, embroidery and a 16px tab.' },
     { name: 'Brass Hands for Helix-DB', url: 'https://www.usbrandingstudio.com/projects/brass-hands-frames-helix-dbs-ai-infrastructure-as-industrial-machinery', what: 'A mark simple enough to hold at any scale that compresses the whole system; a row of bars thinning out as a graphic device.' },
   ],
-  svg: ({ size }) => draw(size),
+  svg: ({ size, title }) => draw(size, title),
   css: `
 html[data-mark="plate"] .brand { gap: 10px; }
 html[data-mark="plate"] .brand-mark svg { display: block; width: 32px; height: 32px; }
