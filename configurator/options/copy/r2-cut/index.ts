@@ -197,7 +197,7 @@ export default {
         sub: `mistystack is Misty Step's open method for coding agents. Its core is ${eight} lines long and loads in every session; the second line starts with this headline.`,
         primary: { label: 'Install for your harness', href: '#install' },
         secondary: { label: `Read all ${eight} lines`, href: '#core' },
-        proof: 'Installs natively in OMP, Claude Code, Codex and pi.',
+        proof: 'Install commands for OMP, Claude Code, Codex and pi.',
       },
       sections: [
         core('Eight lines. Every session.', 'The whole always-on core, verbatim.'),
@@ -207,8 +207,8 @@ export default {
         {
           type: 'install',
           id: 'install',
-          title: 'Native installs. No custom installer.',
-          intro: "OMP, Claude Code and Codex install it as a plugin; pi installs it as a Git package. Each command comes from that harness's reference file in the repository.",
+          title: 'Shipped for OMP first.',
+          intro: "The Claude Code, Codex and pi adapters are in progress (#591). Their commands are here too, copied from each harness's reference file in the repository.",
           harnesses: INSTALL_HARNESSES,
         },
         {
