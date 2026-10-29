@@ -4,7 +4,7 @@ import type { PageContent } from "../contract";
 export const SOURCES = {
   "offer": "https://github.com/misty-step/misty-step/blob/45628ff8eb8e68963745eea3a6964da754701925/OFFER.md",
   "work": "https://github.com/misty-step/misty-step/blob/45628ff8eb8e68963745eea3a6964da754701925/content/work.ts",
-  "stack": "https://github.com/misty-step/mistystack/tree/b3e508427b42f0bf37cf02083ead391828056b55",
+  "stack": "https://github.com/misty-step/mistystack/tree/c72698fa0cac6241f7c7bb5fc4f587c2e4445d82",
   "trial": "https://github.com/misty-step/mistystack/pull/607",
   "trialRecord": "https://github.com/misty-step/mistystack/blob/feat/stack-site/docs/evals/2026-10-28-kernel-trial.md",
   "trialReport": "https://github.com/misty-step/mistystack/issues/533#issuecomment-6476093437"
@@ -153,7 +153,7 @@ export const INSTALL_HARNESSES = [
   }
 ];
 
-export const CORE = "- Nontrivial work: load the `misty` skill first and follow its routing.\n- Before work, name the check outside yourself that will show the result is right: a failing test, the repository's verification skill, a measurement or the user's path. Done is that check passing on the real path.\n- Ship the smallest change that solves the user's problem. New work becomes a ticket, not scope.\n- Every fact has one home. Replace an old path by migrating its callers and deleting it.\n- Label every claim measured, inferred or guess in the same sentence. Link only what you produced or read.\n- Finish the work you were given. Ask one precise question for a blocked part and finish the rest.\n- Placement: Tern+OMP is the local development environment. Run portable builds, test suites, browser QA, untrusted code and long jobs on fresh Boat workers through the `boat-workers` skill.\n- Ask Phaedrus before spending money, creating or widening credentials, writing production data, messaging third parties or doing anything irreversible.";
+export const CORE = "- Nontrivial work: load the `misty` skill first and follow its routing.\n- Before work, name the check outside yourself that will show the result is right: a failing test, the repository's verification skill, a measurement or the user's path. Done is that check passing on the real path.\n- Ship the smallest change that solves the user's problem. New work becomes a ticket, not scope.\n- Every fact has one home. Replace an old path by migrating its callers and deleting it.\n- Label every claim measured, inferred or guess in the same sentence. Link only what you produced or read.\n- Finish the work you were given. Ask one precise question for a blocked part and finish the rest.\n- Placement: run portable builds, test suites, browser QA, untrusted code and long jobs on fresh Boat workers through the `boat-workers` skill. Everything else stays where you run unless your harness note in `misty` says otherwise.\n- Ask Phaedrus before spending money, creating or widening credentials, writing production data, messaging third parties or doing anything irreversible.";
 
 export const STACK_NODES = [
   {
@@ -185,7 +185,7 @@ export const STACK_NODES = [
     "id": "principles",
     "label": "Principles",
     "body": "On-demand leaves, not more standing instructions.",
-    "count": "7",
+    "count": "9",
     "href": "https://github.com/misty-step/mistystack/tree/master/skills"
   },
   {
@@ -446,7 +446,7 @@ export const STACK_PAGE: PageContent = {
           "id": "principles",
           "label": "Principles",
           "body": "On-demand leaves, not more standing instructions.",
-          "count": "7",
+          "count": "9",
           "href": "https://github.com/misty-step/mistystack/tree/master/skills"
         },
         {
