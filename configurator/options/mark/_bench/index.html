@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mark specimen</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.4 system-ui,sans-serif;background:#888;color:#111}
+  h2{font-size:15px;margin:0 0 8px;font-weight:600}
+  .row{background:#fff;margin:12px;padding:12px 16px}
+  .row p{margin:0 0 10px;color:#444;max-width:110ch}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  .cell{padding:16px;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;gap:14px;min-width:0}
+  .cell small{color:var(--ink-2);font-size:12px}
+  .brand{display:inline-flex;align-items:center;gap:12px;flex-shrink:0;min-height:44px;color:var(--ink);text-decoration:none}
+  .brand-mark{display:block;flex-shrink:0}
+  .brand-name{font-family:var(--font-display);font-weight:650;font-size:20px;letter-spacing:-0.01em}
+  .tabs{display:flex;gap:6px;align-items:center}
+  .tab{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px 8px 0 0;font-size:12px}
+  .tab img{width:16px;height:16px;display:block}
+  .zoom img{width:64px;height:64px;image-rendering:pixelated;display:block}
+  .heroes{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}
+  .heroes .big{color:var(--ink)}
+  .heroes .wm svg{width:min(560px,100%);height:auto;display:block}
+  button{font:inherit}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="./bench.ts"></script>
+</body>
+</html>
