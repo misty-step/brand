@@ -40,8 +40,9 @@ We write like a studio keeping notes as it builds: first person plural, warm and
 - Correction counts come from facts.ts `PRINCIPLE_EVIDENCE` (mistystack c72698f); the page adds "inferred" whenever the source marks a count as inferred. The surrounding words follow each leaf's record: "in the initiative #533 audit" for prove it on the real path, "in initiative #533" for finish the work.
 - Playbook names, the nothing-fails-silently principle and the guide's seven chapters: mistystack c72698f (`skills/misty/playbooks/`, `skills/misty/SKILL.md`, `docs/guide/`).
 - The name's origin, "a short step through mist, to a place you can see": a proposal. Phaedrus has not confirmed that the name comes from the spell, and Main has added the question to his list. The close still reads if the sentence is cut: "We only step where we can see. We start with a free 30-minute call about one process."
+- Adapter status: shipped for OMP; the Claude Code, Codex and pi adapters are in progress (mistystack#591). Sources: mistystack `docs/guide/README.md` and Main's ruling in the round 2 brief. The page shows all four install commands but never calls those three shipped, supported, native or proven.
 
-Numbers that facts.ts owns are derived, never retyped: the core's line count, the correction counts, the trial's task and arm counts, the call minutes, discovery weeks and price, and the native harness list. Core clauses set as titles are checked against CORE when the page loads; a mismatch logs a console error.
+Numbers that facts.ts owns are derived, never retyped: the core's line count, the correction counts, the trial's task and arm counts, the call minutes, discovery weeks and price, and the list of harnesses with install commands. Core clauses set as titles are checked against CORE when the page loads; a mismatch logs a console error.
 
 ## Facts we wished we had (questions for Phaedrus)
 1. One real quick win from a past discovery, anonymised: what shipped, and in which week. The hero promises that you will see something; one example would show it.

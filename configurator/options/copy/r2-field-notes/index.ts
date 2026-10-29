@@ -14,7 +14,7 @@ const say = (n: number) => WORDS[n] ?? String(n);
 
 const coreLineCount = CORE.split('\n').length;
 const coreCaption = STACK_PAGE.sections.find((section) => section.type === 'code')!.caption;
-const nativeHarnesses = INSTALL_HARNESSES.filter((harness) => harness.lines.length > 0).map((harness) => harness.name);
+const harnessesWithCommands = INSTALL_HARNESSES.filter((harness) => harness.lines.length > 0).map((harness) => harness.name);
 
 // A clause of the core, set as a title. If facts.ts stops containing it, the error
 // surfaces in the lab's console gate instead of the page quietly misquoting.
@@ -153,7 +153,7 @@ const stack: PageContent = {
     sub: `mistystack is the method our coding agents work from. Its core is the ${say(coreLineCount)} lines below, loaded in every session. You can install it too.`,
     primary: installLink,
     secondary: { label: 'Read the core', href: '#core' },
-    proof: `Installs natively in ${nativeHarnesses.slice(0, -1).join(', ')} and ${nativeHarnesses.at(-1)}.`,
+    proof: `Install commands for ${harnessesWithCommands.slice(0, -1).join(', ')} and ${harnessesWithCommands.at(-1)}.`,
   },
   sections: [
     {
@@ -198,7 +198,7 @@ const stack: PageContent = {
       type: 'install',
       id: 'install',
       title: 'Install it where you already work.',
-      intro: 'Pick your harness. Each command comes from that harness\u2019s note in the repository.',
+      intro: 'Shipped for OMP; the other adapters are in progress (#591). Each command comes from that harness\u2019s note in the repository.',
       harnesses: INSTALL_HARNESSES,
     },
     {
