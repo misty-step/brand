@@ -1,6 +1,6 @@
 # Colour options
 
-Twelve palettes, each a composed light theme and a composed dark theme in OKLCH role tokens (`ColorTokens` in `src/contract.ts`). Nine are new, at least one for every named reference. Three port the previous round's directions (`origin` A, B, C).
+Thirteen palettes, each a composed light theme and a composed dark theme in OKLCH role tokens (`ColorTokens` in `src/contract.ts`). Ten are new, at least one for every named reference. Three port the previous round's directions (`origin` A, B, C).
 
 | id | Label | Origin | Strategy | Grounded in |
 | --- | --- | --- | --- | --- |
@@ -13,6 +13,7 @@ Twelve palettes, each a composed light theme and a composed dark theme in OKLCH 
 | `navy-periwinkle` | Navy and periwinkle | new | Colour as image: ink buttons, one periwinkle ink in the field and links | Macroscope |
 | `grey-mint` | Grey paper and mint | new | Mint fill with ink text; the ink is the night ground | Greptile |
 | `overcast` | Overcast | new | No hue; mid-scale sky and sea grounds | Earendil |
+| `stone-steel` | Stone and steel | new | Steel blue fill; pi's tetromino colours only in the field | pi.dev |
 | `fog-sodium` | Fog and sodium | A | Amber marks only the active thing | Direction A |
 | `paper-rubric` | Paper and rubric | B | Ink-filled buttons, rubric red second ink | Direction B |
 | `stone-green` | Stone and signal green | C | Green on the action and the goal | Direction C |
