@@ -14,6 +14,8 @@ Nine palettes, each a composed light theme and a composed dark theme in OKLCH ro
 | `paper-rubric` | Paper and rubric | B | Ink-filled buttons, rubric red second ink | Direction B |
 | `stone-green` | Stone and signal green | C | Green on the action and the goal | Direction C |
 
+`baseline-color` (Plain neutral) is the lab's control, not a direction. It follows the same guarantees: its fields were lightened, and its dark `--bg-3` now sits below `--bg`.
+
 ## What every palette guarantees, in both themes
 
 Layouts, heroes, marks and motion can rely on these without knowing which palette is picked.
