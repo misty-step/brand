@@ -15,7 +15,46 @@ history.scrollRestoration = 'manual';
 function style(id:string,css:string){let el=document.getElementById(id) as HTMLStyleElement|null;if(!el){el=document.createElement('style');el.id=id;document.head.append(el);}el.textContent=css;}
 function context():Ctx {return {page:state.page,theme:state.theme,reducedMotion:state.reducedMotion,viewport:innerWidth<=700?'phone':'desktop'};}
 function motionContext():MotionCtx {const css=getComputedStyle(root),value=(v:string)=>css.getPropertyValue(v).trim();return {...context(),dprCap:1.5,colors:{bg:value('--bg'),ink:value('--ink'),accent:value('--accent'),field1:value('--field-1'),field2:value('--field-2'),field3:value('--field-3')}};}
-function updateMark(){if(!current)return;const mark=current.mark as MarkOption & {css?:string};style('lab-mark',mark.css??'');const css=getComputedStyle(root);const svg=mark.svg({size:16,title:current.copy.pages[state.page].brand}).replace(/currentColor/g,css.getPropertyValue('--ink').trim()).replace(/var\((--[\w-]+)\)/g,(_,name:string)=>css.getPropertyValue(name).trim());let icon=document.querySelector<HTMLLinkElement>('link[rel="icon"]');if(!icon){icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';document.head.append(icon);}icon.href='data:image/svg+xml,'+encodeURIComponent(svg);}
+function updateMark() {
+  if (!current) return;
+  const mark = current.mark as MarkOption & { css?: string };
+  style('lab-mark', mark.css ?? '');
+  const variant = (theme: 'light'|'dark') => {
+    const tokens = current!.color[theme];
+    return mark.svg({ size: 16, title: current!.copy.pages[state.page].brand })
+      .replace('<svg', `<svg data-favicon-theme="${theme}"`)
+      .replace(/currentColor/g, tokens['--ink'])
+      .replace(/var\((--[\w-]+)\)/g, (_, name: string) => tokens[name as keyof typeof tokens] ?? '');
+  };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><style>svg[data-favicon-theme="dark"]{display:none}@media(prefers-color-scheme:dark){svg[data-favicon-theme="light"]{display:none}svg[data-favicon-theme="dark"]{display:block}}</style>${variant('light')}${variant('dark')}</svg>`;
+  let icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+  if (!icon) {
+    icon = document.createElement('link');
+    icon.rel = 'icon';
+    icon.type = 'image/svg+xml';
+    document.head.append(icon);
+  }
+  icon.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+function placeMotionControl() {
+  const button = document.querySelector<HTMLButtonElement>('.motion-toggle');
+  const hero = document.querySelector<HTMLElement>('[data-hero-root]');
+  if (!button || !hero) return;
+  let holder = hero.querySelector<HTMLElement>('.hero-motion-controls');
+  if (matchMedia('(max-width:700px)').matches) {
+    if (!holder) {
+      holder = document.createElement('div');
+      holder.className = 'hero-motion-controls';
+      hero.append(holder);
+    }
+    holder.append(button);
+    holder.hidden = button.hidden;
+  } else {
+    document.body.append(button);
+    if (holder) holder.hidden = true;
+  }
+}
+window.addEventListener('resize', placeMotionControl, { passive: true });
 function applyTheme() {
   if (!current) return;
   root.dataset.theme = state.theme;
@@ -28,7 +67,9 @@ function applyTheme() {
   if (button) {
     button.textContent = state.paused ? 'Resume motion' : 'Pause motion';
     button.setAttribute('aria-pressed', String(state.paused));
+    button.hidden = !current.motion.background || (current.motion.renderer ?? 'webgl') !== 'webgl' || state.reducedMotion;
   }
+  placeMotionControl();
   if (state.paused || state.reducedMotion) {
     disposeMark?.();
     disposeMark = undefined;

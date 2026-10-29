@@ -18,3 +18,10 @@ html[data-paused="1"] [data-enter] {
   filter: none !important;
   transition-duration: 0s !important;
 }
+.nowrap { white-space: nowrap; }
+pre.code { white-space: pre; overflow-x: auto; overflow-wrap: normal; word-break: normal; }
+.hero-motion-controls { display: none; }
+@media (max-width: 700px) {
+  .hero > .hero-motion-controls { display: flex; grid-column: 1 / -1; grid-row: auto; order: 99; justify-content: flex-end; padding: 12px var(--edge, 20px); }
+  .hero-motion-controls .motion-toggle { position: static; margin: 0; flex: none; }
+}
