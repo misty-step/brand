@@ -6,13 +6,22 @@ Variable fonts are instanced to the axis ranges the option uses (fewer bytes), s
 Fonts' Latin range plus arrows, minus and multiply, unhinted, with every OpenType layout feature
 kept (tabular figures, ligatures, alternates). A face whose OFL reserves its name is renamed
 inside the font (plan "rename"), as the OFL requires of modified versions.
+
+Unhinted is not the same as no hinting tables. FreeType autohints any TrueType font that has no
+fpgm, no prep and no glyph instructions, and under full hinting (headless Chrome on Linux) the
+autohinter rounds 't' and 'g' about a pixel wide and 'n' and 'h' a pixel narrow at 16px, which
+reads as gaps inside words. So every glyf font gets the 7-byte prep and gasp that gftools
+fix-unhinted writes (smart dropout control, smooth at all sizes). That is exactly what the
+Google Fonts variable sources already carry; FreeType then takes its native path, and the font
+renders as designed.
 """
 import io
 import json
 from pathlib import Path
 
 from fontTools import subset
-from fontTools.ttLib import TTFont
+from fontTools.ttLib import TTFont, newTable
+from fontTools.ttLib.tables import ttProgram
 from fontTools.varLib import instancer
 
 HERE = Path(__file__).parent
@@ -45,6 +54,20 @@ def set_family(font, family):
             name.setName(family.replace(" ", ""), rec.nameID, rec.platformID, rec.platEncID, rec.langID)
 
 
+def mark_unhinted(font):
+    """gftools fix-unhinted: a prep with smart dropout control and a gasp that smooths all sizes."""
+    if "glyf" not in font:
+        return  # CFF outlines go through FreeType's own CFF hinter, never the autohinter
+    program = ttProgram.Program()
+    program.fromAssembly(["PUSHW[]", "511", "SCANCTRL[]", "PUSHB[]", "4", "SCANTYPE[]"])
+    prep = newTable("prep")
+    prep.program = program
+    font["prep"] = prep
+    gasp = newTable("gasp")
+    gasp.gaspRange = {0xFFFF: 0x000F}
+    font["gasp"] = gasp
+
+
 def build(src, out, axes=None, unicodes=LATIN, rename=None):
     # recalcTimestamp=False keeps head.modified from the source, so rebuilds are byte-identical.
     font = TTFont(SRC / src, recalcTimestamp=False)
@@ -68,6 +91,7 @@ def build(src, out, axes=None, unicodes=LATIN, rename=None):
     sub = subset.Subsetter(opts)
     sub.populate(unicodes=parse_ranges(unicodes))
     sub.subset(font)
+    mark_unhinted(font)
     out.parent.mkdir(parents=True, exist_ok=True)
     font.flavor = "woff2"
     font.save(out)

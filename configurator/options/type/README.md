@@ -11,7 +11,7 @@ Nine type systems for the configurator's `type` layer, plus LabCore's plain `bas
 | `mono-console` | Martian Mono, width 87.5, 580 | Host Grotesk body; Martian Mono UI | Martian Mono | new (Greptile, Macroscope) | 53.2 KB |
 | `industrial-condensed` | Sofia Sans Extra Condensed 720, capitals | Sofia Sans | Kode Mono | new (Brass Hands, Grok) | 87.2 KB |
 | `a-tiling` | Schibsted Grotesk 640, -0.035em | Schibsted Grotesk | Chivo Mono | A | 69.0 KB |
-| `b-atelier` | Literata 400 on its opsz axis | Literata body; Departure Mono UI | Departure Mono | B | 106.6 KB |
+| `b-atelier` | Literata 400 on its opsz axis | Literata | Departure Mono (code and figures) | B | 106.6 KB |
 | `c-steps` | Archivo width 112, 740; Bitcount pixel digits | Archivo | Fragment Mono | C | 75.5 KB |
 
 Each `index.ts` names what the option learns from each reference, and its `license` field lists every face.
@@ -23,6 +23,8 @@ Each `index.ts` names what the option learns from each reference, and its `licen
 - `geist-pixel` snaps its display steps with CSS `round(nearest, clamp(...), 13.1579px)`. Geist Pixel Square is drawn on a 38/1000 em grid, so every multiple of 13.158px puts each pixel on whole device pixels at DPR 2.
 - `book-italic` registers the Brygada italic file as its own family in normal style, so `--font-display` alone sets headlines in italic.
 - `c-steps` puts a digits-and-slash Bitcount face in the display stack through `unicode-range`. Large figures set in `--font-display` (LayoutA's step numbers and counts) turn pixel; letters stay Archivo.
+- `b-atelier` keeps Departure Mono out of the UI role. Round B set it at 22px for nav and controls only, but here `--font-ui` also sets small labels and full-width buttons, where the pixel mono ran wide and off its 11px grid. Its small step is 16.5px (1.5 grid pixels), so code is crisp at DPR 2.
+- Every TrueType font carries the 7-byte `prep` and `gasp` that gftools writes for unhinted fonts. Without them FreeType autohints the font, and under full hinting (headless Chrome on Linux) 't' and 'g' render a pixel wide at 16px, which reads as gaps inside words.
 
 ## Licences
 

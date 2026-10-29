@@ -605,13 +605,13 @@
     "build": "b-atelier",
     "label": "Atelier (B)",
     "origin": "B",
-    "comment": "Round B's type, ported: display clamp(2.375rem, 0.9rem + 4.6vw, 5rem) at 400 and -0.022em, body 18 -> 19px, small 16px, Literata's opsz axis follows the size (optical sizing auto). Departure Mono is drawn on an 11px grid: crisp at 22px, and never set under 16px here.",
-    "summary": "Round B's type, ported: Literata on its optical-size axis for headlines and reading, and Departure Mono for controls and code; the editorial book with a pixel mono.",
+    "comment": "Round B's type, ported: display clamp(2.375rem, 0.9rem + 4.6vw, 5rem) at 400 and -0.022em, body 18 -> 19px, Literata's opsz axis follows the size (optical sizing auto). B set Departure Mono at 22px for nav and controls; here the UI role also sets small labels and full-width buttons, so controls stay in Literata and the pixel mono keeps code and figures. Small text is 16.5px, 1.5 pixels of Departure Mono's 11px grid, so code is crisp at DPR 2.",
+    "summary": "Round B's type, ported: Literata on its optical-size axis for headlines, reading and controls, and Departure Mono for code and figures; the editorial book with one pixel mono.",
     "refs": [
       {
         "name": "pi",
         "url": "https://pi.dev",
-        "what": "Book typography for a developer tool, with Departure Mono for nav, tabs and buttons. B kept the pixel mono in sentence case and untracked."
+        "what": "Book typography for a developer tool: Plantin for everything you read, Departure Mono for chrome, a plain mono for commands. B set the pixel mono at 22px for nav and controls; in the configurator the UI role also sets small labels, so here it keeps code and figures."
       },
       {
         "name": "Earendil",
@@ -643,7 +643,7 @@
     "tokens": {
       "--font-display": "'Literata', Georgia, serif",
       "--font-body": "'Literata', Georgia, serif",
-      "--font-ui": "'Departure Mono', ui-monospace, monospace",
+      "--font-ui": "'Literata', Georgia, serif",
       "--font-mono": "'Departure Mono', ui-monospace, monospace",
       "--display-weight": "400",
       "--display-tracking": "-0.022em",
@@ -655,8 +655,8 @@
     },
     "steps": {
       "--step--1": [
-        16,
-        16
+        16.5,
+        16.5
       ],
       "--step-0": "clamp(1.125rem, 1.07rem + 0.2vw, 1.1875rem)",
       "--step-1": "clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem)",

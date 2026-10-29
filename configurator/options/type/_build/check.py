@@ -46,8 +46,12 @@ for d in sorted(p for p in TYPE.iterdir() if (p / "index.ts").exists()):
             continue
         if p.read_bytes()[:4] != b"wOF2":
             bad(d.name, f"{file} is not woff2")
+        font = TTFont(p)
+        if "glyf" in font and not ("prep" in font and font.getTableData("prep")):
+            # FreeType autohints TrueType fonts with no fpgm, prep or instructions; see build_fonts.py
+            bad(d.name, f"{file} has no prep, so FreeType would autohint it")
         if ur == "LATIN":
-            cmap = TTFont(p).getBestCmap()
+            cmap = font.getBestCmap()
             missing = "".join(chr(c) for c in sorted(NEEDED) if c not in cmap)
             if missing:
                 bad(d.name, f"{file} lacks {missing}")
