@@ -90,5 +90,6 @@ html[data-mark="tile"] .brand-mark svg, html[data-mark="tile"] .brand-name svg {
 html[data-mark="tile"] .brand-mark svg { width: 20px; height: 20px; }
 html[data-mark="tile"] .brand-name svg { width: auto; height: 20px; }
 html[data-mark="tile"] .brand-name { line-height: 0; }
+@media (max-width: 480px) { html[data-mark="tile"] .brand-mark { display: none; } }
 `,
 } satisfies MarkOption & { css: string };

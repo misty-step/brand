@@ -85,5 +85,6 @@ html[data-mark="banded"] .brand-mark svg, html[data-mark="banded"] .brand-name s
 html[data-mark="banded"] .brand-mark svg { width: 24px; height: 24px; }
 html[data-mark="banded"] .brand-name svg { width: auto; height: 26px; }
 html[data-mark="banded"] .brand-name { line-height: 0; }
+@media (max-width: 480px) { html[data-mark="banded"] .brand-mark { display: none; } }
 `,
 } satisfies MarkOption & { css: string };
