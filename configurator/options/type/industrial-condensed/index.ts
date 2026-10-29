@@ -17,8 +17,8 @@ export default {
   summary: "Brass Hands' industrial register: Sofia Sans Extra Condensed in capitals for headlines, Sofia Sans for reading and controls, and Kode Mono for code; loud at the top, plain everywhere else.",
   origin: 'new',
   refs: [
-    { name: "Brass Hands", url: "https://www.brasshands.com", what: "A condensed industrial wordmark (Artific Bold) over a square technical mono (Construct Mono) for status lines, both read from brasshands.com on 2026-10-29. Both are commercial faces (Power Type; Marius Roosendaal), so Sofia Sans Extra Condensed and Kode Mono carry the same shapes under the OFL." },
-    { name: "Grok", url: "https://grok.com", what: "One display grotesk (Universal Sans Display) against technical monos for anything machine-made: a single loud face and plain technical small print." },
+    { name: "Brass Hands", url: "https://www.brasshands.com", what: "Status-plate type: brasshands.com sets every visible line in one square mono (Construct Mono, commercial, by Marius Roosendaal) beside a condensed wordmark, and its client systems pair display capitals with mono spec tables. Here Sofia Sans Extra Condensed carries the capitals and Kode Mono the square technical voice, both under the OFL." },
+    { name: "Grok", url: "https://grok.com", what: "grok.com runs one grotesk family in Text and Display cuts (Universal Sans, commercial) for every word, keeps monos (IBM Plex Mono, Geist Mono) for code, and uses five sizes on its home page. Here Sofia Sans plays both cuts (Extra Condensed for display, regular width for reading) and Kode Mono is only for code." },
   ],
   faces: [
     { family: "Sofia Sans Extra Condensed", src: font("sofia-sans-extra-condensed-latin.woff2"), weight: "600 800", unicodeRange: LATIN },
