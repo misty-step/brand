@@ -16,7 +16,7 @@ export default {
   summary: 'A light-first page inked in deep navy rather than black, with one saturated magenta on the primary action and a navy night instead of grey: confident the way a payments company has to be.',
   origin: 'new',
   refs: [
-    { name: 'Stripe', url: 'https://stripe.com', what: 'Navy ink (#061b31) and slate secondaries (#3c4f69, #50617a) instead of black and grey, the blue-grey neutral ramp (#f8fafd, #e5edf5, #d4dee9) for wells and fields, and a navy dark ground. The signature is the magenta of Stripe’s gradient and accent modes (#ee30fb, #ef008f), not its blurple, which the slate and indigo option already covers.' },
+    { name: 'Stripe', url: 'https://stripe.com', what: 'Navy ink (#061b31) and slate secondaries (#3c4f69, #50617a) instead of black and grey, the blue-grey neutral ramp (#f8fafd, #e5edf5, #d4dee9) for wells and fields, and a navy dark ground. The signature is the magenta of Stripe’s own gradient (#ee30fb between #ffd601 and #635bff) and its magenta accent mode, not its blurple, which the slate and indigo option already covers.' },
   ],
   light: {
     '--bg': 'oklch(0.982 0.004 255)',
