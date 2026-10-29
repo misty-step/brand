@@ -13,7 +13,8 @@ Per-layer notes on the owner's named references, written for the option builders
 | Linear | `linear.md` | The product is the illustration: the app rendered in HTML, quiet grey type on near-black. |
 | Omarchy | `omarchy.md` | The site wears the OS theme system; a drawn pixel logotype in a canvas field of pixel cells. |
 | Brass Hands | `brasshands.md` | Brand identity as field equipment: seals, spec plates, stippled 1-bit glyphs, condensed type. |
-| pi.dev, earendil.com | `~/.cache/tmp/misty-design/Inspiration/moodboard.md` §2–3 | Book serif plus a pixel mono; one sentence over a raymarched sea. Cited below from that write-up. |
+| pi.dev | `pi.md` | Book serif for reading, a pixel mono for chrome, a logo that assembles once and then stillness. Re-cut from the 2026-10-28 Inspiration captures. |
+| Earendil | `earendil.md` | One italic sentence over a raymarched sea, four pixel-mono corner labels. Re-cut from the 2026-10-28 Inspiration captures and saved scene source. |
 
 ## How these were captured
 - **Linear and Vercel:** a headless Chrome 156 on this Mac, driven over CDP (Linear with SwiftShader WebGL, Vercel with the Mac's GPU through ANGLE Metal), before the 2026-10-29 browser stop. Matrix: 1440×900 @1× and 390×844 @2× touch, `prefers-color-scheme` light and dark with storage cleared per state, a reload under `prefers-reduced-motion: reduce`, scroll storyboards (a screenshot every 0.92 viewport after a 900ms settle), and a screencast of the load. Measures: visible change (share of greyscale pixels moving more than 10/255 between frames 450ms apart), main thread (CDP `TaskDuration` per second over 3s), rAF and WebGL draws per second (DesignCanon `init.js`), offscreen cost at the page bottom, and the DesignCanon `probe.js` at 1440 and 390.
@@ -127,4 +128,4 @@ Contrast failures seen: Linear ink 4 (3.45:1), Vercel ink 3 (3.1:1), Stripe ink 
 5. **Nobody ships a pause control.** None of the nine sites has one; the canon requires it for anything moving longer than 5s.
 
 ## Files
-`linear.md`, `vercel.md`, `stripe.md`, `macroscope.md`, `greptile.md`, `grok.md`, `cloudflare.md`, `omarchy.md`, `brasshands.md`, and this `README.md`.
+`linear.md`, `vercel.md`, `stripe.md`, `macroscope.md`, `greptile.md`, `grok.md`, `cloudflare.md`, `omarchy.md`, `brasshands.md`, `pi.md`, `earendil.md`, and this `README.md`.
