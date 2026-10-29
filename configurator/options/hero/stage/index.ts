@@ -47,6 +47,7 @@ ${S} .st-file-head .link{display:inline-flex;align-items:center;min-height:44px}
 ${S} .st-file .code{margin:0;border:0;border-radius:0;padding:20px 24px 24px}
 ${S} .st-file .ln{display:inline-block;width:100%;padding-left:2ch;text-indent:-2ch;vertical-align:top}
 ${S} .st-file .ln+.ln{margin-top:.45em}
+${S} .st-file .code{white-space:pre-wrap;overflow-wrap:anywhere}
 @media (max-width:700px){${S}{align-items:stretch;text-align:left;padding:40px ${GUTTER} 0}
 ${S} .st-copy{align-items:flex-start;width:100%}
 ${S} .actions{flex-direction:column;align-items:stretch;align-self:stretch}

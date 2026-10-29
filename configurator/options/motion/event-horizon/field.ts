@@ -52,8 +52,8 @@ void main() {
   float over = smoothstep(1.02, 1.1, rho) * (1.0 - smoothstep(1.45, 1.95, rho)) * smoothstep(-0.25, 0.55, q.y / rho);
   float under = smoothstep(1.03, 1.08, rho) * (1.0 - smoothstep(1.16, 1.3, rho)) * smoothstep(0.1, 0.9, -q.y / rho);
   float L = max(Ld, over * disc(1.55 + (rho - 1.05) * 3.4, phi) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6.0, -phi) * 0.8);
-  // the photon ring: one cell wide at any size, behind the near side of the disc
-  float ring = step(abs(rho - 1.03) * uHole.z / uCell, 0.5) * (1.0 - step(0.0, -d.y) * step(0.25, Ld));
+  // the photon ring: one connected line of cells at any size (0.72 cell reaches the diagonals), behind the near side of the disc
+  float ring = step(abs(rho - 1.03) * uHole.z / uCell, 0.72) * (1.0 - step(0.0, -d.y) * step(0.25, Ld));
   float doppler = 0.5 - 0.5 * cos(phi);                    // 1 on the approaching side (left)
   if (rho < 1.0 && d.y >= 0.0) L = 0.0;                    // the shadow itself
   // stipple: interleaved gradient noise, fixed to the screen so the grain never crawls
@@ -158,7 +158,7 @@ export function scene(): Scene {
         const over = sstep(1.02, 1.1, rho) * (1 - sstep(1.45, 1.95, rho)) * sstep(-0.25, 0.55, qy / rho);
         const under = sstep(1.03, 1.08, rho) * (1 - sstep(1.16, 1.3, rho)) * sstep(0.1, 0.9, -qy / rho);
         let L = Math.max(Ld, over * disc(1.55 + (rho - 1.05) * 3.4, phi, t) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6, -phi, t) * 0.8);
-        const ring = (Math.abs(rho - 1.03) * rs) / cell <= 0.5 && !(dy <= 0 && Ld >= 0.25);
+        const ring = (Math.abs(rho - 1.03) * rs) / cell <= 0.72 && !(dy <= 0 && Ld >= 0.25);
         const doppler = 0.5 - 0.5 * Math.cos(phi);
         if (rho < 1 && dy >= 0) L = 0;
         const gy = f.h - 1 - y; // the shader's cell rows count from the bottom
