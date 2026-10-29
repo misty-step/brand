@@ -203,32 +203,25 @@ ${S} .s-evidence > .link { justify-self: start; font-size: var(--step--1); }
 ${S} .s.s-evidence > .limits + .link { margin-top: 16px; }
 
 /* ---- Code: a figure in the reading column, caption beneath ---- */
-${S} .s-code .codefig { padding-top: 28px; }
+${S} .s-code .codefig { grid-column: 6 / -1; padding-top: 28px; }
 ${S} .s-code .code {
   margin: 0; padding: clamp(24px, 3vw, 40px); border: 0; border-radius: var(--radius); background: var(--bg-3);
   font-size: var(--step--1); line-height: 1.8; max-width: none;
 }
 ${S} .s-code figcaption { margin-top: 14px; font-size: var(--step--1); color: var(--ink-2); max-width: var(--measure); }
 
-/* ---- Closing: the widest two-tone statement on the page. A block, not a grid, so the
-   claim and its explanation flow as one sentence; the right padding keeps it to nine columns. ---- */
+/* ---- Closing: the widest statement on the page, its terms beneath. A block, not a grid;
+   the right padding keeps it to nine columns. ---- */
 ${S} .s-cta {
   display: block; position: relative;
   padding: calc(var(--section-space) + 30px) calc(var(--edge) + (100% - 2 * var(--edge)) / 4) var(--section-space) var(--edge);
-  font-family: var(--font-display); font-size: var(--step-3); font-weight: var(--display-weight);
-  line-height: 1.1; letter-spacing: var(--display-tracking); text-wrap: balance;
 }
 ${S} .s-cta::before {
   content: ""; position: absolute; left: var(--edge); right: var(--edge); top: var(--section-space);
   border-top: calc(var(--rule) * 2) solid var(--ink);
 }
-${S} .s-cta > .s-title, ${S} .s-cta > .s-intro {
-  display: inline; margin: 0; max-width: none;
-  font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit;
-}
-${S} .s-cta > .s-title { color: var(--ink); }
-${S} .s-cta > .s-title::after { content: " "; }
-${S} .s-cta > .s-intro { font-family: var(--font-body); font-weight: var(--body-weight); letter-spacing: 0; color: var(--ink-2); }
+${S} .s-cta > .s-title { max-width: 14em; font-size: var(--step-4); line-height: 1.02; letter-spacing: var(--display-tracking); color: var(--ink); }
+${S} .s-cta > .s-intro { margin-top: 24px; max-width: 46ch; font-size: var(--step-1); line-height: 1.4; color: var(--ink-2); }
 ${S} .s.s-cta > .actions { margin-top: 40px; letter-spacing: 0; }
 
 /* ---- Footer: the same rule, the same columns ---- */
@@ -290,9 +283,8 @@ ${S} .s-install .tab:focus-visible { outline-offset: 2px; }
   ${S} .s-install .copy { justify-self: start; }
   ${S} .s-install .tabpanel:not(:has(.code)) { grid-template-areas: "note"; }
   ${S} .s-install .code, ${S} .s-code .code { padding: 18px; }
-  ${S} .s-cta > .s-title { display: block; }
-  ${S} .s-cta > .s-title::after { content: none; }
-  ${S} .s-cta > .s-intro { display: block; margin-top: 16px; font-size: var(--step-1); line-height: 1.35; }
+  ${S} .s-code .codefig { grid-column: 1 / -1; }
+  ${S} .s-cta > .s-title { font-size: var(--step-3); }
   ${S} .s.s-cta > .actions { flex-direction: column; align-items: stretch; }
   ${S} .s.s-cta > .actions .btn { width: 100%; }
   ${S} .foot { grid-template-columns: minmax(0, 1fr); }
