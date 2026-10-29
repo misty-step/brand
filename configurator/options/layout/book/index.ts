@@ -181,6 +181,9 @@ html[data-layout="book"] {
   .tabpanel > * { grid-column: col; }
   :is(.tabpanel, .codefig) > .code { grid-column: wide; }
   .s .code { border: 0; border-top: 2px solid var(--ink); padding: clamp(20px, 2.4vw, 32px); }
+  /* Commands never wrap; only their block scrolls. The core file wraps at spaces: it is prose. */
+  .tabpanel .code { white-space: pre; overflow-wrap: normal; }
+  .codefig .code { overflow-wrap: normal; }
   .tabpanel .copy {
     justify-self: start; margin-top: 12px; min-height: 44px; padding: 8px 0;
     border: 0; background: transparent; color: var(--ink);

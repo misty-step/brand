@@ -163,7 +163,7 @@ html[data-layout="tiling"] {
   .s-install .tab[aria-selected="true"] { background: var(--bg-2); color: var(--ink); box-shadow: inset 0 2px 0 var(--accent); }
   .s-install .tab:focus-visible { outline-offset: -4px; }
   .tabpanel { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding: var(--t-pad); }
-  .tabpanel .code { grid-column: 1; margin: 0; border: 0; }
+  .tabpanel .code { grid-column: 1; margin: 0; border: 0; white-space: pre; overflow-wrap: normal; }
   .tabpanel .copy { grid-column: 2; align-self: start; margin: 0; min-width: 88px; background: transparent; font-family: var(--font-ui); font-size: var(--step--1); }
   .tabpanel .note { grid-column: 1 / -1; margin: 0; }
 
@@ -186,7 +186,7 @@ html[data-layout="tiling"] {
 
   /* Code: a sunken pane whose caption is its status line. */
   .codefig { display: grid; background: var(--bg-3); }
-  .codefig .code { border: 0; background: transparent; padding: var(--t-pad); }
+  .codefig .code { border: 0; background: transparent; padding: var(--t-pad); overflow-wrap: normal; }
   .codefig figcaption {
     margin: 0; max-width: none; padding: 12px var(--t-pad);
     border-top: var(--rule) solid var(--line); background: var(--bg-2);
@@ -232,6 +232,8 @@ html[data-layout="tiling"] {
     --nav-h: calc(var(--t-top) + var(--t-bar));
     .s { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); row-gap: 0; }
     .s > .s-head { grid-column: 1; grid-row: 1 / span 12; }
+    /* The master pane is as tall as its words and stays in view beside a long stack. */
+    .s:not(.s-diagram) > .s-head { align-self: start; position: sticky; top: calc(var(--t-top) + var(--t-gap)); z-index: 1; }
     .s > :not(.s-head) { grid-column: 2; }
     .s-cta { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--t-gap); }
     .s-cta > .s-title { grid-column: 1; grid-row: 1 / span 2; }
@@ -308,7 +310,6 @@ html[data-layout="tiling"] {
     .bar-label { grid-column: 1; }
     .bar-value { grid-column: 2; grid-row: 1; }
     .bar-track { grid-column: 1 / -1; }
-    .motion-toggle { bottom: 12px; right: 12px; background: var(--bg-2); }
   }
 }
 `;
