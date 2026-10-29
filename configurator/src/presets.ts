@@ -1,13 +1,32 @@
 import type { Layer } from './contract';
 export interface Preset { id: string; label: string; note: string; picks: Record<Layer,string> }
 // Opinionated starting points: each is one complete direction, all seven layers chosen together.
-// 'Chosen' is Phaedrus's pick (29 Oct) and opens by default; the three previous-round directions come last.
+// 'Chosen' is Phaedrus's pick (29 Oct) and opens by default; the three round-2 presets keep its type, colour, layout and hero
+// and swap in round-2 marks, copy and motion. The three previous-round directions come last.
 export const presets: Preset[] = [
   {
     id: 'chosen',
     label: 'Chosen',
     note: 'Phaedrus\'s pick on 29 Oct: Plate\'s mark, industrial condensed type, mono, editorial layout, horizon hero, dither mist and Show the work copy. The baseline for round 2, which redoes the marks, the copy and the motion.',
     picks: { mark: 'plate', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'dither-mist', copy: 'show-the-work' },
+  },
+  {
+    id: 'r2',
+    label: 'Round 2',
+    note: 'The round-2 recommendation on Chosen: the Mist sign (the weather map\'s mist sign where you stood, solid ground one step up where you can see), the editor\'s cut of the copy and Ground fog.',
+    picks: { mark: 'r2-a-mist', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'r2-mist-ground', copy: 'r2-cut' },
+  },
+  {
+    id: 'r2-plate',
+    label: 'Round 2, plate',
+    note: 'Chosen with its plate kept and redrawn (the mist sign cut out through the plate\'s edge), the Work order copy and Strata, mist as an engraved landscape.',
+    picks: { mark: 'r2-c-plate-edge', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'r2-mist-strata', copy: 'r2-ledger' },
+  },
+  {
+    id: 'r2-stencil',
+    label: 'Round 2, stencil',
+    note: 'Chosen with the stencil logotype (one cut through the name, stepping up at the word break), the Field notes copy and Silvery, where patches of mist step a short way off.',
+    picks: { mark: 'r2-b-stencil', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'r2-mist-silver', copy: 'r2-field-notes' },
   },
   {
     id: 'mist',
