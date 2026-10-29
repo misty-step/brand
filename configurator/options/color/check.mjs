@@ -75,9 +75,9 @@ function checkTheme(theme, tokens) {
     text[role] = on(role);
     if (Math.min(...text[role]) < 4.5) fails.push(`${role} under 4.5:1 on a surface (${text[role].map(f).join(', ')})`);
   }
-  const line = on('--line'), line2 = on('--line-2', ['--bg', '--bg-2']), focus = on('--focus');
+  const line = on('--line'), line2 = on('--line-2', ['--bg', '--bg-2']), focus = on('--focus', [...SURFACES, '--field-1', '--field-2', '--field-3']);
   if (Math.min(...line2) < 3) fails.push(`--line-2 under 3:1 (${line2.map(f).join(', ')})`);
-  if (Math.min(...focus) < 3) fails.push(`--focus under 3:1 (${focus.map(f).join(', ')})`);
+  if (Math.min(...focus) < 3) fails.push(`--focus under 3:1 on a surface or field (${focus.map(f).join(', ')})`);
   const onAccent = ratio(c['--accent-ink'], c['--accent']);
   if (onAccent < 4.5) fails.push(`--accent-ink on --accent ${f(onAccent)} < 4.5`);
   const accentOnBg = on('--accent');
@@ -90,8 +90,8 @@ function checkTheme(theme, tokens) {
   if (!fields.every((k, i) => towardInk(i ? c[fields[i - 1]].L : c['--bg'].L, c[k].L))) fails.push(`fields must move toward --ink (${theme === 'light' ? 'darker' : 'lighter'} than --bg)`);
   const inkOnFields = fields.map((k) => ratio(c['--ink'], c[k]));
   if (Math.min(...inkOnFields) < 4.5) fails.push(`--ink under 4.5:1 on a field (${inkOnFields.map(f).join(', ')})`);
-  const ink2OnFields = fields.slice(0, 2).map((k) => ratio(c['--ink-2'], c[k]));
-  if (Math.min(...ink2OnFields) < 4.5) fails.push(`--ink-2 under 4.5:1 on field-1/2 (${ink2OnFields.map(f).join(', ')})`);
+  const ink2OnFields = fields.map((k) => ratio(c['--ink-2'], c[k]));
+  if (Math.min(...ink2OnFields) < 4.5) fails.push(`--ink-2 under 4.5:1 on a field (${ink2OnFields.map(f).join(', ')})`);
 
   const [gh, gs, gd] = probeHsl(c['--bg'].rgb);
   const cream = luminance(c['--bg'].rgb) > 0.75 && gh >= 30 && gh <= 60 && gs > 0.2 && gd >= 0.02;
@@ -104,8 +104,8 @@ function checkTheme(theme, tokens) {
 
   const lines = [
     `${theme.padEnd(6)}on bg, bg-2, bg-3: ink ${text['--ink'].map(f).join(' ')}; ink-2 ${text['--ink-2'].map(f).join(' ')}; ink-3 ${text['--ink-3'].map(f).join(' ')}; accent-2 ${text['--accent-2'].map(f).join(' ')}`,
-    `${''.padEnd(6)}accent-ink on accent ${f(onAccent)}; accent on bg, bg-2, bg-3 ${accentOnBg.map(f).join(' ')}; focus ${focus.map(f).join(' ')}; line-2 on bg, bg-2 ${line2.map(f).join(' ')}; line ${line.map(f).join(' ')}; ink on selection ${f(selection)}`,
-    `${''.padEnd(6)}fields vs bg ${fieldVsBg.map(f).join(' ')}; ink on fields ${inkOnFields.map(f).join(' ')}; ink-2 on field-1, field-2 ${ink2OnFields.map(f).join(' ')}`,
+    `${''.padEnd(6)}accent-ink on accent ${f(onAccent)}; accent on bg, bg-2, bg-3 ${accentOnBg.map(f).join(' ')}; line-2 on bg, bg-2 ${line2.map(f).join(' ')}; line ${line.map(f).join(' ')}; ink on selection ${f(selection)}`,
+    `${''.padEnd(6)}fields vs bg ${fieldVsBg.map(f).join(' ')}; ink on fields ${inkOnFields.map(f).join(' ')}; ink-2 on fields ${ink2OnFields.map(f).join(' ')}; focus on bg, bg-2, bg-3, fields ${focus.map(f).join(' ')}`,
   ];
   return { fails, flags, lines };
 }
@@ -152,7 +152,7 @@ console.log(`${checked} palettes checked, ${failed} failing`);
 if (process.argv.includes('--pairs')) {
   const COVERED = new Set([
     ...['ink', 'ink-2', 'ink-3', 'accent-2'].flatMap((t) => ['bg', 'bg-2', 'bg-3'].map((b) => `${t}|${b}`)),
-    'accent-ink|accent', 'ink|selection', 'ink|field-1', 'ink|field-2', 'ink|field-3', 'ink-2|field-1', 'ink-2|field-2',
+    'accent-ink|accent', 'ink|selection', 'ink|field-1', 'ink|field-2', 'ink|field-3', 'ink-2|field-1', 'ink-2|field-2', 'ink-2|field-3',
   ]);
   const covered = (a, b) => COVERED.has(`${a}|${b}`) || COVERED.has(`${b}|${a}`);
   const ROLES = Object.keys(palettes[0]?.light ?? {}).map((k) => k.slice(2));
