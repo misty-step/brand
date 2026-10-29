@@ -1,10 +1,10 @@
 import type { LayoutOption } from '../../../src/contract';
 
 // Corners. An immersive canvas: no panels, no page frame. Chrome retreats to the corners of
-// the viewport, and on wide screens every section is a full-height scene with a display-size
-// title in one corner and its content in the opposite one, alternating down the page, so a
-// motion field behind the page shows through the open middle. Text sits only in --ink and
-// --ink-2, the two inks every palette keeps legal over every field colour.
+// the viewport, and on wide screens each section is a scene with a display-size title on one
+// side and its content toward the opposite corner, alternating down the page, so a motion
+// field behind the page shows through the open ground. Text sits only in --ink and --ink-2,
+// the two inks every palette keeps legal over every field colour.
 // Tokens only: no font families, no literal colours, no transitions (motion owns those).
 const css = String.raw`
 html[data-layout="corners"] {
@@ -14,7 +14,7 @@ html[data-layout="corners"] {
   --radius: 24px;
   --rule: 1px;
   --nav-h: 88px;
-  --c-scene: clamp(88px, 9vw, 144px);
+  --c-scene: clamp(56px, 7vw, 112px); /* two of these between scenes: 112px on a phone, about 200px at 1440 */
   --c-gap: clamp(24px, 3vw, 48px);
   --c-content: 62rem;
 
@@ -37,9 +37,11 @@ html[data-layout="corners"] {
   .btn-sm { padding-inline: 18px; }
   .btn-quiet { border-color: var(--line-2); color: var(--ink); }
   .motion-toggle {
-    right: var(--gutter); bottom: clamp(16px, 2.2vw, 32px);
     border-radius: 999px; padding-inline: 18px;
     background: var(--bg-2); color: var(--ink); font-size: var(--step--1);
+  }
+  @media (min-width: 701px) {
+    .motion-toggle { right: var(--gutter); bottom: clamp(16px, 2.2vw, 32px); }
   }
   .motion-toggle::before {
     content: ""; display: inline-block; width: 10px; height: 12px; margin-right: 10px;
@@ -121,7 +123,8 @@ html[data-layout="corners"] {
     border: 0; border-radius: var(--radius); background: var(--bg-2);
     padding: clamp(22px, 2.6vw, 36px);
   }
-  .tabpanel .code { font-size: var(--step-0); }
+  .tabpanel .code { font-size: var(--step-0); white-space: pre; overflow-wrap: normal; }
+  .codefig .code { overflow-wrap: normal; }
   .tabpanel .copy { justify-self: start; margin: 0; border-radius: 999px; padding-inline: 22px; background: transparent; font-family: var(--font-ui); font-size: var(--step--1); }
   .tabpanel .note { margin: 0; }
 
@@ -165,19 +168,19 @@ html[data-layout="corners"] {
   }
   .s-install .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 
-  /* Wide screens: full-height scenes, title and content on opposite corners, alternating. */
+  /* Wide screens: title and content on opposite sides of each scene, alternating down the page. */
   @media (min-width: 1024px) {
-    .s:not(.s-cta) { min-height: min(92svh, 62rem); gap: 48px; }
-    .s:not(.s-cta) > .s-head { margin-bottom: auto; }
+    .s:not(.s-cta) { gap: clamp(48px, 4.4vw, 72px); }
     .s:nth-child(odd of .s:not(.s-cta)) > :not(.s-head, .group) { align-self: flex-end; }
     .s:nth-child(even of .s:not(.s-cta)) > .s-head { align-self: flex-end; }
+    .s:is(.s-steps, .s-points) > .s-items { width: 100%; }
     .s-work {
       display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: auto 1fr auto; column-gap: var(--c-gap); row-gap: 48px;
+      column-gap: var(--c-gap); row-gap: clamp(48px, 4.4vw, 72px);
     }
     .s-work > .s-head { grid-column: 1 / -1; grid-row: 1; margin: 0; }
     .s-work:nth-child(even of .s:not(.s-cta)) > .s-head { justify-self: end; }
-    .s-work > .group { grid-row: 3; width: auto; }
+    .s-work > .group { grid-row: 2; width: auto; }
     .node[data-node="oracle"] { margin-left: clamp(16px, 2vw, 32px); }
   }
 
@@ -202,7 +205,6 @@ html[data-layout="corners"] {
     .bar-label { grid-column: 1; }
     .bar-value { grid-column: 2; grid-row: 1; }
     .bar-track { grid-column: 1 / -1; }
-    .motion-toggle { right: 12px; bottom: 12px; }
   }
 }
 `;
@@ -211,7 +213,7 @@ export default {
   id: 'corners',
   layer: 'layout',
   label: 'Corners',
-  summary: 'An immersive canvas: chrome retreats to the corners and each section becomes a full-height scene with a display-size title in one corner and its content in the opposite one, so the field and the words share the whole screen.',
+  summary: 'An immersive canvas: chrome retreats to the corners and each section is a scene with a display-size title on one side and its content toward the opposite corner, alternating down the page, so the field and the words share the whole screen.',
   origin: 'new',
   refs: [
     { name: 'Grok', url: 'https://grok.com/', what: 'One statement per screen with almost nothing else in view (the logged-out home is one question and an input), pill buttons and pill choosers, and chrome reduced to small type at the top.' },

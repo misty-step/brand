@@ -42,7 +42,7 @@ export default {
       ],
       navCta: call,
       hero: {
-        headline: "Useful AI. Fixed-price work.",
+        headline: "Useful AI. Fixed prices.",
         sub: "One business process. A shipped quick win. A plan with a price and expected value for every project. Then you decide what gets built.",
         primary: call,
         secondary: { label: "Read the terms", href: "#process" },

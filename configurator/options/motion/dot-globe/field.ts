@@ -87,22 +87,23 @@ function rotation(t: number): Float32Array {
 }
 
 /**
- * Where the globe sits: in the strip the hero copy leaves clear (a column beside it, or a row above
- * or below it); without one, beside the copy on wide full-bleed hosts and as a horizon on phones.
- * In panels the sphere rises from the lower edge.
+ * Where the globe sits: in the clear rectangle the hero copy leaves (beside it, above or below it,
+ * or in a corner); without one, beside the copy on wide full-bleed hosts and as a horizon on
+ * phones. In panels the sphere rises from the lower edge.
  */
 function place(f: Frame): V3 {
   const W = f.cssW, H = f.cssH, a = W / H, b = f.band;
-  if (b && b.h >= H) {
-    // a column: as large as fits, running off the host's outer edge when the column touches it
-    const R = Math.min(b.w * 0.52, H * 0.52);
-    const x = b.x + b.w >= W - 1 ? W - R * 0.92 : b.x <= 1 ? R * 0.92 : b.x + b.w / 2;
-    return [x, H * 0.54, R];
-  }
   if (b) {
-    // a row: the whole globe inside it, along the row away from the copy
-    const R = Math.min(b.h * 0.44, W * 0.3);
-    return [Math.min(W - R * 1.08, Math.max(R * 1.08, b.w * b.along)), b.y + b.h / 2, R];
+    const left = b.x <= 1, right = b.x + b.w >= W - 1;
+    if (b.h >= b.w && left !== right) {
+      // tall and against one outer edge: as large as fits, running off that edge
+      const R = Math.min(b.w * 0.52, b.h * 0.5);
+      return [right ? W - R * 0.92 : R * 0.92, b.y + b.h * 0.54, R];
+    }
+    // otherwise the whole globe inside it, along a full-width row away from the copy
+    const R = Math.min(b.h * 0.44, b.w * 0.44, W * 0.3);
+    const x = left && right ? Math.min(W - R * 1.08, Math.max(R * 1.08, W * b.along)) : b.x + b.w / 2;
+    return [x, b.y + b.h / 2, R];
   }
   if (f.kind !== 'panel') {
     if (W >= 700) { const R = Math.min(H * 0.52, W * 0.32); return [W - R * 0.92, H * 0.54, R]; }

@@ -154,7 +154,7 @@ html[data-layout="ledger"] {
   .tabpanel { display: grid; grid-template-columns: var(--l-ref) minmax(0, 1fr) auto; }
   .tabpanel:has(.code)::before { content: "Command"; content: "Command" / ""; grid-column: 1; grid-row: 1; padding: var(--l-pad); border-right: var(--l-cell); }
   .tabpanel::after { content: "Note"; content: "Note" / ""; grid-column: 1; grid-row: 2; padding: var(--l-pad); border-right: var(--l-cell); border-top: var(--l-cell); }
-  .tabpanel .code { grid-column: 2; grid-row: 1; margin: 0; border: 0; padding: var(--l-pad); }
+  .tabpanel .code { grid-column: 2; grid-row: 1; margin: 0; border: 0; padding: var(--l-pad); white-space: pre; overflow-wrap: normal; }
   .tabpanel .copy {
     grid-column: 3; grid-row: 1; align-self: stretch; margin: 0; min-width: 7rem;
     border: 0; border-left: var(--l-cell); background: transparent;
@@ -207,7 +207,7 @@ html[data-layout="ledger"] {
   .codefig::before { content: "Source"; content: "Source" / ""; grid-column: 1; grid-row: 1; padding: var(--l-pad); border-right: var(--l-cell); border-bottom: var(--l-cell); }
   .codefig::after { content: "Lines"; content: "Lines" / ""; grid-column: 1; grid-row: 2; padding: var(--l-pad); border-right: var(--l-cell); }
   .codefig figcaption { grid-column: 2; grid-row: 1; margin: 0; max-width: none; padding: var(--l-pad); border-bottom: var(--l-cell); }
-  .codefig .code { grid-column: 2; grid-row: 2; margin: 0; border: 0; padding: var(--l-pad); }
+  .codefig .code { grid-column: 2; grid-row: 2; margin: 0; border: 0; padding: var(--l-pad); overflow-wrap: normal; }
 
   /* Closing sheet: letter | title | terms and actions. */
   .s-cta { grid-template-columns: var(--l-ref) minmax(0, 7fr) minmax(0, 5fr); }

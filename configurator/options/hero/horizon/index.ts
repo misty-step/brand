@@ -7,7 +7,7 @@ export default {
   id: 'horizon',
   layer: 'hero',
   label: 'Horizon',
-  summary: 'The motion field fills the whole first screen like a landscape: the statement sits high on it with the sentence and actions on one line, the field rises below as the ground, and the proof rests in the lower corner.',
+  summary: 'The motion field fills the whole first screen like a landscape: the statement sits high on it with the sentence and actions on one line and the field rises below as the ground; on a phone the field opens as a band above the statement.',
   origin: 'new',
   refs: [
     { name: 'Earendil', url: 'https://earendil.com', what: 'One statement set directly on a full-viewport living field, with the remaining words pushed to the corners of the screen.' },
@@ -22,7 +22,9 @@ ${S} .hz-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:sp
 ${S} .hero-sub{flex:1 1 420px;max-width:min(var(--measure,56ch),100%);font-size:var(--step-1);color:var(--ink)}
 ${S} .actions{margin-top:0}
 ${S} .hero-proof{grid-row:3;max-width:min(44ch,100%);font-size:var(--step--1);color:var(--ink)}
-@media (max-width:700px){${S}{grid-template-rows:auto clamp(120px,24svh,200px) auto;min-height:0;padding:32px ${GUTTER} 32px}
+@media (max-width:700px){${S}{grid-template-rows:clamp(160px,26svh,240px) auto auto;min-height:0;padding:0 ${GUTTER} 32px}
+${S} .hz-copy{grid-row:2}
+${S} .hero-proof{margin-top:28px}
 ${S} .hz-row{flex-direction:column;align-items:stretch;gap:28px}
 ${S} .hero-sub{flex:none}
 ${S} .actions{flex-direction:column;align-items:stretch}}`,

@@ -1,11 +1,12 @@
 import type { LayoutOption } from '../../../src/contract';
 
 // Editorial: an asymmetric twelve-column page. Each section opens with a
-// two-tone lede (the claim in ink, the explanation continuing in the second
-// ink) hung in the left five columns under a heavy rule, sticky while the
-// reading column on the right scrolls. Lists are ruled like a printed index,
-// numerals hang in the alley, figures carry captions. Geometry and token roles
-// only: no families, no literal colours, no transitions (motion owns those).
+// hanging head (the title, then a standfirst in the second ink) set in the left
+// five columns under a heavy rule, sticky while the reading column on the right
+// scrolls. Lists are ruled like a printed index, numerals hang in the alley,
+// figures carry captions, and the closing runs the claim on into its terms.
+// The display face appears only at the type layer's display steps (1, 3 and up).
+// Geometry and token roles only: no families, no literal colours, no transitions.
 const S = 'html[data-layout="editorial"]';
 
 const css = String.raw`
@@ -50,8 +51,8 @@ ${S} .actions { gap: 12px 16px; }
 
 ${S} a.link { text-decoration-thickness: 1px; text-decoration-color: var(--line-2); text-underline-offset: 0.24em; }
 
-/* ---- The page grid: lede hung left, reading column right, numerals in the alley.
-   The lede spans every row and the last row is flexible, so a tall lede grows only that
+/* ---- The page grid: head hung left, reading column right, numerals in the alley.
+   The head spans every row and the last row is flexible, so a tall head grows only that
    row and never opens gaps between the entries of the reading column. ---- */
 ${S} .s {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(4, auto) 1fr;
@@ -64,12 +65,12 @@ ${S} .s > .s-head {
   grid-column: 1 / span 5; grid-row: 1 / -1;
   position: sticky; top: 32px;
   padding-top: 22px; border-top: calc(var(--rule) * 2) solid var(--ink);
-  font-size: var(--step-2); line-height: 1.25; text-wrap: balance;
 }
-${S} .s-head .s-title, ${S} .s-head .s-intro { display: inline; margin: 0; max-width: none; font-size: inherit; line-height: inherit; }
-${S} .s-head .s-title { font-weight: var(--display-weight); letter-spacing: var(--display-tracking); color: var(--ink); }
-${S} .s-head .s-title::after { content: " "; }
-${S} .s-head .s-intro { font-family: var(--font-body); font-weight: var(--body-weight); color: var(--ink-2); }
+${S} .s-head .s-title { font-size: var(--step-3); line-height: 1.04; letter-spacing: var(--display-tracking); max-width: 12em; color: var(--ink); }
+${S} .s-head .s-intro {
+  margin-top: 20px; max-width: 34ch;
+  font-size: var(--step-1); line-height: 1.35; text-wrap: pretty; color: var(--ink-2);
+}
 
 /* The first rule of every reading column lines up with the lede's rule */
 ${S} .s-steps .s-items, ${S} .s-points .s-items, ${S} .diagram, ${S} .s-evidence .bars,
@@ -83,9 +84,13 @@ ${S} .item-title, ${S} .node-label {
   line-height: 1.2; letter-spacing: var(--display-tracking); color: var(--ink);
 }
 ${S} .item-body, ${S} .node-body { font-size: var(--step-0); color: var(--ink-2); max-width: var(--measure); }
-${S} .s-steps .item-label, ${S} .node-count, ${S} .bar-value {
-  font-family: var(--font-display); font-size: var(--step-2); font-weight: var(--display-weight);
+${S} .s-steps .item-label {
+  font-family: var(--font-display); font-size: var(--step-3); font-weight: var(--display-weight);
   line-height: 1; letter-spacing: var(--display-tracking); font-variant-numeric: tabular-nums;
+}
+${S} .node-count, ${S} .bar-value {
+  font-family: var(--font-display); font-size: var(--step-1); font-weight: var(--display-weight);
+  line-height: 1.2; letter-spacing: var(--display-tracking); font-variant-numeric: tabular-nums;
 }
 
 /* ---- Steps: ruled entries, numerals hung in the alley ---- */
@@ -264,7 +269,7 @@ ${S} .s-install .tab:focus-visible { outline-offset: 2px; }
   ${S} .s-steps .item-label { position: static; grid-column: 1; grid-row: 1 / span 2; }
 }
 
-/* ---- Phone: one column, the lede above its list, rules kept ---- */
+/* ---- Phone: one column, each head above its list, rules kept ---- */
 @media (max-width: 700px) {
   ${S} { --gutter: 20px; --nav-h: 64px; --section-space: 88px; --row-pad: 18px; }
   ${S} .nav { gap: 12px; }
@@ -285,7 +290,9 @@ ${S} .s-install .tab:focus-visible { outline-offset: 2px; }
   ${S} .s-install .copy { justify-self: start; }
   ${S} .s-install .tabpanel:not(:has(.code)) { grid-template-areas: "note"; }
   ${S} .s-install .code, ${S} .s-code .code { padding: 18px; }
-  ${S} .s-cta { font-size: var(--step-2); line-height: 1.2; }
+  ${S} .s-cta > .s-title { display: block; }
+  ${S} .s-cta > .s-title::after { content: none; }
+  ${S} .s-cta > .s-intro { display: block; margin-top: 16px; font-size: var(--step-1); line-height: 1.35; }
   ${S} .s.s-cta > .actions { flex-direction: column; align-items: stretch; }
   ${S} .s.s-cta > .actions .btn { width: 100%; }
   ${S} .foot { grid-template-columns: minmax(0, 1fr); }
@@ -297,10 +304,10 @@ export default {
   id: 'editorial',
   layer: 'layout',
   label: 'Editorial',
-  summary: 'An asymmetric twelve-column page: each section opens with a two-tone lede hung in the left columns under a heavy rule, beside a wide reading column of ruled entries, so the offer and the method read like a carefully set report rather than a feature grid.',
+  summary: 'An asymmetric twelve-column page: each section opens with a hanging head (a title and its standfirst) under a heavy rule, beside a wide reading column of ruled entries, so the offer and the method read like a carefully set report rather than a feature grid.',
   origin: 'new',
   refs: [
-    { name: 'Stripe', url: 'https://stripe.com/', what: 'Section heads written as two-tone sentences (the claim in ink, the explanation continuing in a lighter ink), a twelve-column grid with narrow gutters under a container of about 1266px, small 4px radii, and caveats set as footnotes beside the claim they qualify.' },
+    { name: 'Stripe', url: 'https://stripe.com/', what: 'A twelve-column grid with narrow gutters under a container of about 1266px, small 4px radii, long even section spacing, the closing set as a two-tone sentence (the claim in ink running on into its explanation in a lighter ink), and caveats set as footnotes beside the claim they qualify.' },
     { name: 'Making Software', url: 'https://www.makingsoftware.com/', what: 'A reference book on the web: a reading column beside figure plates, a table of contents with counts, and a caption under every figure; here the method becomes a contents list with counts and the core file a captioned figure.' },
   ],
   css,

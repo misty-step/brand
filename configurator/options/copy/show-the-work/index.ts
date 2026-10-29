@@ -45,7 +45,7 @@ export default {
         headline: "Two weeks. One working improvement.",
         sub: "Our fixed $4,500 discovery ships one quick win in a key business process, plus a plan that prices each project and the value we expect it to return. Fixed-price builds follow only if you choose them.",
         primary: call,
-        secondary: { label: "Open our products", href: "#work" },
+        secondary: { label: "See what we have built", href: "#work" },
         proof: `Start with a free ${OFFER.callMinutes}-minute call.`,
       },
       sections: [

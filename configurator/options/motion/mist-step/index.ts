@@ -30,8 +30,8 @@ ${S} .btn:active{transform:scale(.97)}
 ${S} a.link,${S} .item-link{transition:text-decoration-thickness .15s ease,color .2s ease,background-color .2s ease}`,
   },
   budget: {
-    gzipKB: 5.8,
+    gzipKB: 6.2,
     frameMs: 'No ambient loop. A step paints 0.15 to 1.0 ms per frame for 500 ms (1440x900 at one cell per 6 CSS px, measured in Bun) after a 1.1 to 1.4 ms threshold map; the one-off hero arrival paints 0.2 to 1.2 ms per frame for 640 ms.',
-    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 3.4 KB runtime shared by the MotionB options. Canvas 2D only, so there is no GL context to hold or release. The hero bank is painted once per size or theme; reduced motion, Pause motion, a nearby destination or a modified click keep the renderer\'s instant jump. Focus moves to the destination heading.',
+    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 3.8 KB runtime shared by the MotionB options (copy-aware placement and keep-clear mask included). Canvas 2D only, so there is no GL context to hold or release. The hero bank is painted once per size or theme; reduced motion, Pause motion, a nearby destination or a modified click keep the renderer\'s instant jump. Focus moves to the destination heading.',
   },
 } satisfies MotionOption & { renderer: 'canvas2d' };

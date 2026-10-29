@@ -15,7 +15,7 @@ export default {
     { name: 'Brass Hands', url: 'https://brasshands.com', what: 'Its header sets the name as a heavy block beside columns of short facts and closes the band with a rule; here the rule separates the name from the statement.' },
   ],
   motionHost: 'full',
-  render: ctx => `${bigName(ctx, 'wm-name')}<div class="wm-copy"><div class="wm-head">${title(ctx)}</div><div class="wm-side">${sub(ctx)}${actions(ctx)}${proof(ctx)}</div></div>`,
+  render: ctx => `${bigName(ctx, 'wm-name', 0)}<div class="wm-copy"><div class="wm-head">${title(ctx)}</div><div class="wm-side">${sub(ctx)}${actions(ctx)}${proof(ctx)}</div></div>`,
   css: `${S}{padding:clamp(24px,5vh,56px) ${EDGE} clamp(56px,10vh,112px)}
 ${S} .wm-name{color:var(--ink)}
 ${bigNameCss(S, '.wm-name', '90cqi', 'min(34svh,300px)')}

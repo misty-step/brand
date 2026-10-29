@@ -45,18 +45,19 @@ void main() {
 }`;
 
 /**
- * Ribbon axis (from A to B), half-width and bow in CSS px, per host. It runs through the strip the
- * hero copy leaves clear; without one, it keeps to the side away from the copy.
+ * Ribbon axis (from A to B), half-width and bow in CSS px, per host. It runs through the clear
+ * rectangle the hero copy leaves; without one, it keeps to the side away from the copy.
  */
 function layout(f: Frame): { A: [number, number]; B: [number, number]; half: number; bow: number } {
   const W = f.cssW, H = f.cssH, a = W / H, m = Math.min(W, H), b = f.band;
-  if (b && b.h >= H) {
-    const k = Math.min(b.w, H), left = b.x <= 1 && b.x + b.w < W - 1;
+  if (b && b.h >= b.w) {
+    // tall: climb the rectangle corner to corner, leaning away from the side the copy is on
+    const k = b.w, left = b.x <= 1 && b.x + b.w < W - 1;
     return left
-      ? { A: [b.x + b.w, H * 1.12], B: [b.x - b.w * 0.15, -H * 0.12], half: k * 0.24, bow: k * 0.14 }
-      : { A: [b.x, H * 1.12], B: [b.x + b.w * 1.15, -H * 0.12], half: k * 0.24, bow: k * 0.14 };
+      ? { A: [b.x + b.w, b.y + b.h * 1.12], B: [b.x - b.w * 0.15, b.y - b.h * 0.12], half: k * 0.24, bow: k * 0.14 }
+      : { A: [b.x, b.y + b.h * 1.12], B: [b.x + b.w * 1.15, b.y - b.h * 0.12], half: k * 0.24, bow: k * 0.14 };
   }
-  if (b) return { A: [-W * 0.1, b.y + b.h * 0.9], B: [W * 1.1, b.y + b.h * 0.15], half: b.h * 0.22, bow: b.h * 0.1 };
+  if (b) return { A: [b.x - b.w * 0.1, b.y + b.h * 0.9], B: [b.x + b.w * 1.1, b.y + b.h * 0.15], half: b.h * 0.22, bow: b.h * 0.1 };
   if (f.kind !== 'panel') {
     if (W >= 700) return { A: [W * 0.44, H * 1.15], B: [W * 1.08, -H * 0.15], half: m * 0.22, bow: m * 0.16 };
     return { A: [-W * 0.1, H * 1.02], B: [W * 1.1, H * 0.64], half: W * 0.2, bow: W * 0.08 };
