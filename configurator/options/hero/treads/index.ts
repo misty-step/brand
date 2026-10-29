@@ -4,13 +4,15 @@ import { esc } from '../../../src/html';
 import { title, sub, actions, proof, slot, enter, fit, href, EDGE, GUTTER } from '../shared';
 
 const S = 'html[data-hero="treads"]';
+// The longest terms line sizes all three treads alike, so the prices read as one set.
+const termsLength = Math.max(...FACTS.offer.steps.map(s => [...s.terms].length));
 
 /** Studio: the three priced steps, the first lit because it is the primary action. Stack: the method path, the Oracle lit as the goal. */
 function flight(ctx: HeroCtx): string {
   const steps = ctx.page === 'stack'
     ? FACTS.nodes.map((n, i) => `<li class="tr-step" style="--k:${i}"${n.id === 'oracle' ? ' data-lit' : ''}><p class="tr-head"><span class="tr-n" aria-hidden="true">${i + 1}</span><a class="link tr-title" ${href(n.href)}>${esc(n.label)}</a>${n.count ? `<span class="tr-count">${esc(n.count)}</span>` : ''}</p><p class="tr-body">${esc(n.body)}</p></li>`)
     : FACTS.offer.steps.map((s, i) => `<li class="tr-step" style="--k:${i}"${i === 0 ? ' data-lit' : ''}><p class="tr-head"><span class="tr-n" aria-hidden="true">${esc(s.label)}</span><span class="tr-title">${esc(s.title)}</span></p><p class="tr-terms">${esc(s.terms)}</p></li>`);
-  return `<ol class="tr-steps" data-n="${steps.length}" style="--n:${steps.length}" ${enter(4)}>${steps.join('')}</ol>`;
+  return `<ol class="tr-steps" data-n="${steps.length}" ${enter(4, `--n:${steps.length};--tl:${termsLength}`)}>${steps.join('')}</ol>`;
 }
 
 export default {
@@ -37,8 +39,8 @@ ${S} .actions{margin-top:0}
 ${S} .hero-proof{font-size:var(--step--1);color:var(--ink-2)}
 ${S} .hero>.hero-visual{grid-column:full;grid-row:2;position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%);mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%)}
 ${S} .tr-steps{grid-column:c;grid-row:2;position:relative;z-index:1;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));align-items:end;margin-top:clamp(40px,7vh,72px);--base:176px;--rise:48px}
-${S} .tr-steps[data-n="6"]{--base:150px;--rise:28px}
-${S} .tr-step{min-height:calc(var(--base) + var(--k) * var(--rise));padding:18px clamp(14px,1.6vw,24px) 24px;background:var(--bg-2);border-top:max(var(--rule,1px),2px) solid var(--line-2)}
+${S} .tr-steps[data-n="6"]{--rise:28px}
+${S} .tr-step{container-type:inline-size;min-height:calc(var(--base) + var(--k) * var(--rise));padding:18px clamp(14px,1.6vw,24px) 24px;background:var(--bg-2);border-top:max(var(--rule,1px),2px) solid var(--line-2)}
 ${S} .tr-step+.tr-step{border-left:1px solid var(--line)}
 ${S} .tr-step[data-lit]{border-top:max(var(--rule,1px),4px) solid var(--accent)}
 ${S} .tr-head{display:flex;align-items:baseline;gap:10px;font-family:var(--font-ui)}
@@ -46,7 +48,7 @@ ${S} .tr-n{font-variant-numeric:tabular-nums;color:var(--ink-2)}
 ${S} .tr-title{font-weight:600}
 ${S} a.tr-title{display:inline-flex;align-items:center;min-height:44px;margin-block:-10px}
 ${S} .tr-count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink-2)}
-${S} .tr-terms{margin-top:14px;font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--step-3);line-height:1.04;letter-spacing:var(--display-tracking);text-transform:var(--display-transform);text-wrap:balance}
+${S} .tr-terms{margin-top:14px;font-family:var(--font-display);font-weight:var(--display-weight);font-size:max(20px,min(var(--step-3),calc(100cqi / (var(--tl,24) * var(--display-advance,.55) * .6))));line-height:1.04;letter-spacing:var(--display-tracking);text-transform:var(--display-transform);text-wrap:balance}
 ${S} .tr-body{margin-top:10px;font-size:var(--step--1);color:var(--ink-2)}
 @media (max-width:700px){${S} .hero{grid-template-columns:[full-start] ${GUTTER} [c-start] minmax(0,1fr) [c-end] ${GUTTER} [full-end];padding-top:40px}
 ${S} .tr-row{flex-direction:column;align-items:stretch;gap:28px}
