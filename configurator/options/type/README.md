@@ -6,7 +6,7 @@ Nine type systems for the configurator's `type` layer, plus LabCore's plain `bas
 | --- | --- | --- | --- | --- | --- |
 | `precise-grotesk` | Wix Madefor Display 530, -0.03em | Wix Madefor Text | JetBrains Mono | new (Linear) | 66.9 KB |
 | `geist-pixel` | Geist Pixel Square, sizes snapped to its grid | Geist | Geist Mono | new (Vercel, Omarchy, pi) | 54.1 KB |
-| `light-ledger` | Mona Sans 300, renamed Misty Ledger Sans | same face at 400 | Source Code Pro, renamed Misty Ledger Code | new (Stripe) | 70.3 KB |
+| `light-ledger` | Mona Sans 300, renamed Misty Ledger Sans | same face at 350 | Source Code Pro, renamed Misty Ledger Code | new (Stripe) | 70.3 KB |
 | `book-italic` | Brygada 1918 italic 430 | Brygada 1918 roman | Commit Mono | new (pi, Earendil) | 89.8 KB |
 | `mono-console` | Martian Mono, width 87.5, 580 | Host Grotesk body; Martian Mono UI | Martian Mono | new (Greptile, Macroscope) | 53.2 KB |
 | `industrial-condensed` | Sofia Sans Extra Condensed 720, capitals | Sofia Sans | Kode Mono | new (Brass Hands, Grok) | 87.2 KB |
@@ -41,7 +41,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python check.py                    # browser-free checks; exits non-zero on failure
 ```
 
-`check.py` checks families, weights, files, glyph coverage, licences and the canon's size floors. It also simulates h1 word wrap from the font's own advances across five headlines at 350, 820 and 1100px columns.
+`check.py` checks families, weights, files, glyph coverage, licences and the canon's size floors. It also simulates h1 word wrap from the font's own advances across five headlines at 350, 820 and 1100px columns. Builds keep each source's timestamps, so the pinned sources rebuild to byte-identical woff2 files.
 
 ## Known limits
 

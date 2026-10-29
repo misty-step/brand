@@ -46,13 +46,14 @@ def set_family(font, family):
 
 
 def build(src, out, axes=None, unicodes=LATIN, rename=None):
-    font = TTFont(SRC / src)
+    # recalcTimestamp=False keeps head.modified from the source, so rebuilds are byte-identical.
+    font = TTFont(SRC / src, recalcTimestamp=False)
     if axes and "fvar" in font:
         font = instancer.instantiateVariableFont(font, axes, updateFontNames=False)
         buf = io.BytesIO()  # reload: subsetting a freshly instanced gvar can miss glyphs
         font.save(buf)
         buf.seek(0)
-        font = TTFont(buf)
+        font = TTFont(buf, recalcTimestamp=False)
     if rename:
         set_family(font, rename)
     opts = subset.Options()

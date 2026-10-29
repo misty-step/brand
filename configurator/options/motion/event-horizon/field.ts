@@ -14,7 +14,11 @@ const RIN = 1.55, ROUT = 4.4, INC = 0.12; // disc radii in shadow radii; cos of 
 
 const VS = `attribute vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`;
 const FS = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 uniform vec2 uRes;
 uniform float uCell, uT;
 uniform vec3 uHole, uPtr, uF1, uF2, uF3, uInk;

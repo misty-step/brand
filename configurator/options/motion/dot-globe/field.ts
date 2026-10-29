@@ -29,7 +29,7 @@ void main() {
   vec3 p = uRot * aPos;
   float kind = aMeta.x;
   vec2 css = uGlobe.xy - p.xy * uGlobe.z; // seen from outside: east on the right, north up
-  if (p.z < 0.0 && (kind < 1.5 || dot(p.xy, p.xy) < 1.0)) { gl_Position = vec4(2.0); gl_PointSize = 0.0; return; }
+  if (p.z < 0.0 && (kind < 1.5 || dot(p.xy, p.xy) < 1.0)) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 1.0; return; } // outside the clip volume
   float face = smoothstep(0.0, 0.62, p.z);
   float near = uPtr.z * (1.0 - smoothstep(20.0, 120.0, length(css - uPtr.xy)));
   vec3 col; float a; float size = ${DOT.toFixed(1)};
@@ -129,11 +129,12 @@ export function scene(): Scene {
   let first = land[0];
   for (const p of land) if (dot3(p, iberia) > dot3(first, iberia)) first = p;
   const start0 = STILL - HOP * 0.62;
-  let hop = { a: first, b: pick(first, start0 + HOP), start: start0 };
+  const hop0 = { a: first, b: pick(first, start0 + HOP), start: start0 };
+  let hop = hop0;
 
   /** Fills `arc` with the current hop's trail for time t: `dots` wake dots, then the traveller. */
   const trail = (t: number, R: number) => {
-    if (t < hop.start) hop = { a: first, b: hop.b, start: start0 };
+    if (t < hop.start) hop = hop0;
     while (t - hop.start > HOP + LAG + REST) {
       const start = hop.start + HOP + LAG + REST;
       hop = { a: hop.b, b: pick(hop.b, start + HOP), start };

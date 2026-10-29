@@ -17,7 +17,7 @@ export default {
   origin: 'new',
   refs: [
     { name: 'Vercel', url: 'https://vercel.com', what: 'Geist’s own greys at zero chroma: #fafafa ground, #171717 ink, #4d4d4d and #666 secondaries; #0a0a0a, #ededed, #a1a1a1 and #8f8f8f at night; and its one functional hue, the focus-ring blue (blue-700 #0070f7 or the deeper blue-900 #0068d6 by day, #52a8ff at night). The deeper blue is used here so the ring holds 3:1 over the field.' },
-    { name: 'Grok', url: 'https://x.ai/grok', what: 'A brand with no accent at all: #0a0a0a ground, white type, a white primary button with dark text, and secondary text as white at 70%.' },
+    { name: 'Grok', url: 'https://x.ai/grok', what: 'Chrome without hue: on its dark pages a #0a0a0a ground, white type, a white primary button with dark text and secondary text as white at 70%. The only colour is held to product tiles and the send button (x.ai’s sunset orange, grok.com’s blue), never the chrome.' },
   ],
   light: {
     '--bg': 'oklch(0.985 0 0)',

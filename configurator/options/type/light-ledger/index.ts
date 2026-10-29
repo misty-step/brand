@@ -14,10 +14,10 @@ export default {
   id: 'light-ledger',
   layer: 'type',
   label: "Light ledger",
-  summary: "Stripe's register in OFL faces: an Akzidenz-rooted grotesk (Mona Sans, renamed in the subset) set light at 300 for headlines over a regular body, with Source Code Pro for code; calm and expensive, and easy to read about money.",
+  summary: "Stripe's register in OFL faces: an Akzidenz-rooted grotesk (Mona Sans, renamed in the subset) set light, 300 for headlines and 350 for reading, with Source Code Pro for code; calm and expensive, and easy to read about money.",
   origin: 'new',
   refs: [
-    { name: "Stripe", url: "https://stripe.com", what: "Söhne set light at display size over a regular body, with Source Code Pro Medium for code (both read from stripe.com's CSS on 2026-10-29). Söhne is commercial, so the light grotesk here is Mona Sans, which shares its Akzidenz-Grotesk ancestry." },
+    { name: "Stripe", url: "https://stripe.com", what: "Söhne at weight 300 for display and body alike, with Source Code Pro Medium for code (stripe.com CSS, 2026-10-29). Söhne is commercial, so the light grotesk here is Mona Sans, which shares its Akzidenz-Grotesk ancestry; body sits at 350 so it stays readable on the dark theme." },
     { name: "Mona Sans (GitHub)", url: "https://github.com/github/mona-sans", what: "An OFL grotesk drawn from industrial-era grotesques; at weight 300 its joins stay crisp at 84px, which is what makes a light headline look deliberate rather than faint." },
   ],
   faces: [
@@ -34,7 +34,7 @@ export default {
     "--display-leading": "1.04",
     "--display-transform": "none",
     "--display-advance": "0.435",
-    "--body-weight": "400",
+    "--body-weight": "350",
     "--body-leading": "1.6",
     "--measure": "60ch",
     "--step--1": "clamp(0.875rem, 0.8518rem + 0.0952vw, 0.9375rem)",

@@ -184,12 +184,18 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
   const s: Stage = { gl, canvas, host, kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: target, ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0 };
   let from = target, mixStart = 0, mixing = false;
   let t = scene.still, last = 0, lastDraw = 0, raf = 0, eased = 0;
-  let paused = true, visible = false, dead = false, still = false, drawn = false;
+  // stale: the last presented frame no longer matches size, palette or time, so a still must be redrawn
+  let paused = true, visible = false, dead = false, still = false, drawn = false, stale = true;
   let poster: MotionHandle | undefined;
   let winStart = 0, winFrames = 0, lastTierChange = 0;
   const ptrTarget = { x: -1e4, y: -1e4, s: 0 }, ptrV = { x: 0, y: 0 };
 
-  const size = () => { fit(s, canvas, host, scene); gl.viewport(0, 0, s.w, s.h); };
+  const size = () => {
+    const w = s.w, h = s.h;
+    fit(s, canvas, host, scene);
+    gl.viewport(0, 0, s.w, s.h);
+    if (s.w !== w || s.h !== h) stale = true;
+  };
   const draw = (now: number) => {
     if (dead || poster) return;
     if (mixing) {
@@ -201,6 +207,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
       if (k >= 1) mixing = false;
     }
     scene.draw(s, t);
+    stale = mixing;
     if (!drawn) { drawn = true; canvas.style.opacity = '1'; }
   };
   const live = () => !dead && !poster && !paused && visible && !document.hidden && !s.ctx.reducedMotion && !still;
@@ -240,7 +247,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
   const halt = () => { if (raf) cancelAnimationFrame(raf); raf = 0; };
   /** One composed frame when not looping (reduced motion, paused, quality floor), only while on screen. */
   const settle = () => {
-    if (dead || poster || !visible || document.hidden) return;
+    if (dead || poster || !visible || document.hidden || (drawn && !stale)) return;
     if (s.ctx.reducedMotion) { t = scene.still; s.ptr.s = 0; }
     requestAnimationFrame((now) => { if (!raf) draw(now); });
   };
@@ -284,6 +291,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
       const wasReduced = s.ctx.reducedMotion;
       s.ctx = ctx;
       const next = palette(ctx);
+      stale = true;
       if (ctx.reducedMotion || !drawn) { target = next; s.pal = next; mixing = false; }
       else { from = s.pal; target = next; mixStart = performance.now(); mixing = true; eased = mixStart; }
       if (ctx.reducedMotion) { halt(); settle(); }

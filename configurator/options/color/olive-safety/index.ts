@@ -16,7 +16,7 @@ export default {
   summary: 'Olive-black and sage with khaki fields and safety orange held back for the action and focus: an industrial register for a studio that puts AI to work inside real operations.',
   origin: 'new',
   refs: [
-    { name: 'Brass Hands', url: 'https://brasshands.com', what: 'Its own tokens: charcoal ground, cool grey type (#adb3b7), safety orange (#ff6200, #ff7235) for links, dashed rules and the one bordered action, and the pale sage #e7ece5 used here as the light ground. Olive and khaki carry its “design for the new industrial age” line into the neutrals and the field.' },
+    { name: 'Brass Hands', url: 'https://brasshands.com', what: 'Its own tokens: charcoal ground #242424, cool grey type (#adb3b7), safety orange (#ff6200, #ff7235) for the logo square, the CTA and dashed rules, and a pale sage #e7ece5 from its token set, used here as the light ground (the site itself has no light theme). Olive and khaki are this palette’s reading of its “design for the new industrial age” line. They stay in the neutrals and the field, so the orange remains a signal rather than a defence-tech costume.' },
   ],
   light: {
     '--bg': 'oklch(0.937 0.011 136.6)',
