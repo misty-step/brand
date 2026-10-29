@@ -8,7 +8,7 @@ import type { LayoutOption } from '../../../src/contract';
 const css = String.raw`
 html[data-layout="tiling"] {
   --page-max: 1520px;
-  --gutter: clamp(12px, 1.7vw, 24px);
+  --gutter: clamp(16px, 1.7vw, 24px);
   --edge: max(var(--gutter), calc((100% - var(--page-max)) / 2));
   --radius: 0px;
   --rule: 1px;
@@ -287,6 +287,11 @@ html[data-layout="tiling"] {
     &:has(.tabs :focus-visible) .foot::after { content: "switches harness"; content: "switches harness" / ""; }
   }
 
+  /* Narrow screens: the hero carries the call to action; the bar keeps navigation. */
+  @media (max-width: 900px) {
+    .nav-actions .btn { display: none; }
+  }
+
   @media (max-width: 700px) {
     --t-top: 60px;
     --t-pad: 20px;
@@ -299,9 +304,6 @@ html[data-layout="tiling"] {
     .bar-value { grid-column: 2; grid-row: 1; }
     .bar-track { grid-column: 1 / -1; }
     .motion-toggle { bottom: 12px; right: 12px; background: var(--bg-2); }
-  }
-  @media (max-width: 379px) {
-    .nav-actions .btn { display: none; }
   }
 }
 `;

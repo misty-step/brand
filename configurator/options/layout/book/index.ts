@@ -179,7 +179,7 @@ html[data-layout="book"] {
   .tabpanel { grid-column: full; display: grid; grid-template-columns: subgrid; margin-top: 20px; }
   .tabpanel > * { grid-column: col; }
   :is(.tabpanel, .codefig) > .code { grid-column: wide; }
-  .code { border: 0; border-top: 2px solid var(--ink); padding: clamp(20px, 2.4vw, 32px); }
+  .s .code { border: 0; border-top: 2px solid var(--ink); padding: clamp(20px, 2.4vw, 32px); }
   .tabpanel .copy {
     justify-self: start; margin-top: 12px; min-height: 44px; padding: 8px 0;
     border: 0; background: transparent; color: var(--ink);
@@ -241,10 +241,14 @@ html[data-layout="book"] {
     .s-title::before { position: absolute; right: 100%; margin-right: 1.25rem; }
   }
 
+  @media (max-width: 900px) {
+    .nav-actions .btn { display: none; }
+  }
+
   @media (max-width: 700px) {
     --nav-h: 60px;
     .nav { gap: 12px; }
-    .nav-links, .nav-actions .btn { display: none; }
+    .nav-links { display: none; }
     .s-steps .item { grid-template-columns: 2rem minmax(0, 1fr); grid-template-areas: "label title" ". terms" ". body"; }
     .s-steps .item-title::after { display: none; }
     .item-terms { margin-top: 4px; }

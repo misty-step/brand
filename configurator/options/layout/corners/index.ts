@@ -181,10 +181,14 @@ html[data-layout="corners"] {
     .node[data-node="oracle"] { margin-left: clamp(16px, 2vw, 32px); }
   }
 
+  @media (max-width: 900px) {
+    .nav-actions .btn { display: none; }
+  }
+
   @media (max-width: 700px) {
     --nav-h: 64px;
     .nav { gap: 12px; }
-    .nav-links, .nav-actions .btn { display: none; }
+    .nav-links { display: none; }
     .s { gap: 32px; }
     .s-title { font-size: var(--step-3); }
     .s-cta { min-height: 0; }

@@ -243,6 +243,7 @@ html[data-layout="ledger"] {
   }
 
   @media (max-width: 900px) {
+    .nav-actions .btn { display: none; }
     .s-head { grid-template-columns: var(--l-ref) minmax(0, 1fr); }
     .s-intro { grid-column: 2; grid-row: 2; align-self: start; padding-top: 0; }
     .s-head:not(:has(.s-intro)) .s-title { grid-column: 2; }
@@ -261,7 +262,7 @@ html[data-layout="ledger"] {
   @media (max-width: 700px) {
     --l-ref: 3.5rem;
     --nav-h: 60px;
-    .nav-links, .nav-actions .btn { display: none; }
+    .nav-links { display: none; }
     .diagram { grid-template-columns: minmax(0, 1fr); }
     .node, .node:nth-child(3n + 1), .node:nth-child(odd) { border-left: 0; }
     .node + .node { border-top: var(--l-cell); }
