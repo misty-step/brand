@@ -13,7 +13,7 @@ npm run build
 npm run smoke
 ```
 
-`npm run smoke` serves the production build and launches a dedicated Google Chrome with SwiftShader. It never uses the operator's browser relay. Set `CHROME_PATH` if Chrome lives elsewhere; set `LAB_URL` to smoke a deployed preview. It checks every option against the plain baseline on both pages, 390/1440, light/dark, plus reduced motion for motion options. Console errors, overflow, missing h1, offscreen canvas drawing, or reduced-motion drawing fail the run. Machine evidence goes to ignored `evidence/smoke.json`.
+`npm run smoke` serves the production build and uses only Playwright's bundled `chrome-headless-shell`, via `chromium.launch({ headless: true })`. Desktop Chrome, browser channels, executable overrides, the operator's relay, Tern and GUI apps are forbidden. Only LabCore runs browser verification, one run at a time. Builders use builds/type checks/source review and report visual checks as pending conductor. Set `LAB_URL` to smoke a deployed preview. The script checks every option against the plain baseline on both pages, 390/1440, light/dark, plus reduced motion for motion options. Console errors, overflow, missing h1, offscreen canvas drawing, or reduced-motion drawing fail the run. Machine evidence goes to ignored `evidence/smoke.json`. This backend exercises intentional no-WebGL still fallbacks; real WebGL rendering is verified off this Mac later.
 
 ## Add an option
 

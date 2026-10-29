@@ -1,5 +1,4 @@
 import { chromium } from 'playwright';
-import { createServer } from 'vite';
 import { preview } from 'vite';
 import { readdir, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +10,8 @@ for(const layer of layers) for(const entry of await readdir(path.join(root,'opti
 const external=process.env.LAB_URL;
 const server=external?null:await preview({root,preview:{host:'127.0.0.1',port:4177,strictPort:true}});
 const base=external??'http://127.0.0.1:4177';
-const browser=await chromium.launch({executablePath:process.env.CHROME_PATH??'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+// Only Playwright's bundled headless shell. Never a desktop browser, channel, or executable override.
+const browser=await chromium.launch({headless:true});
 const results=[];
 const instrument=()=>{
   window.__draws=0;
@@ -74,7 +74,7 @@ try {
  results.push({label:'shell shortlist + compare + spec',pass:shellErrors.length===0,...(shellErrors.length?{errors:shellErrors}:{})});
 } finally {await browser.close();await server?.close();}
 const failed=results.filter(r=>!r.pass);
-const summary={at:new Date().toISOString(),base,chrome:'Dedicated Google Chrome with SwiftShader, never the relay',inventory,states:results.length,passed:results.length-failed.length,failed:failed.length,results};
+const summary={at:new Date().toISOString(),base,chrome:'Playwright bundled chrome-headless-shell, never desktop Chrome or the relay',inventory,states:results.length,passed:results.length-failed.length,failed:failed.length,results};
 await mkdir(path.join(root,'evidence'),{recursive:true});await writeFile(path.join(root,'evidence','smoke.json'),JSON.stringify(summary,null,2)+'\n');
 console.log(JSON.stringify({states:summary.states,passed:summary.passed,failed:summary.failed,inventory:inventory.length}));
 if(failed.length)process.exitCode=1;

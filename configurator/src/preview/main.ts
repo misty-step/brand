@@ -8,6 +8,9 @@ import { MotionLifecycle } from './motion';
 let state=decode(location.hash), serial=0, motion:MotionLifecycle|undefined, entrances:IntersectionObserver|undefined, disposeMark:(()=>void)|undefined;
 let current:{mark:MarkOption;type:TypeOption;color:ColorOption;layout:LayoutOption;hero:HeroOption;motion:MotionOption;copy:CopyOption}|undefined;
 const root=document.documentElement;
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') parent.postMessage({ type: 'lab:exit-full' }, location.origin);
+});
 history.scrollRestoration = 'manual';
 function style(id:string,css:string){let el=document.getElementById(id) as HTMLStyleElement|null;if(!el){el=document.createElement('style');el.id=id;document.head.append(el);}el.textContent=css;}
 function context():Ctx {return {page:state.page,theme:state.theme,reducedMotion:state.reducedMotion,viewport:innerWidth<=700?'phone':'desktop'};}

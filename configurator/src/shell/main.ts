@@ -271,9 +271,14 @@ document.addEventListener('toggle', event => {
   document.querySelectorAll<HTMLDetailsElement>('.layer-info[open]').forEach(other => { if (other !== element) other.open = false; });
 }, true);
 window.addEventListener('message', event => {
-  if (event.origin !== location.origin || event.data?.type !== 'lab:state') return;
+  if (event.origin !== location.origin) return;
   const sources = ['desktop', 'phone'].map(id => (document.getElementById(id) as HTMLIFrameElement).contentWindow);
   if (!sources.includes(event.source as Window)) return;
+  if (event.data?.type === 'lab:exit-full') {
+    commit({ ...state, fullPreview: false });
+    return;
+  }
+  if (event.data?.type !== 'lab:state') return;
   const next = decode(encode(event.data.state));
   if (JSON.stringify(next) !== JSON.stringify(state)) commit(next);
 });
