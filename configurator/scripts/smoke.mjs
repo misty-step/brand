@@ -56,7 +56,7 @@ let browser;
 const results = [];
 
 function instrument() {
-  const stats = window.__labSmoke = { draws: 0, webglContexts: 0, webglAttempts: 0 };
+  const stats = window.__labSmoke = { draws: 0, webglDraws: 0, webglContexts: 0, webglAttempts: 0 };
   const original = HTMLCanvasElement.prototype.getContext;
   const seen = new WeakSet();
   HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
@@ -73,6 +73,7 @@ function instrument() {
         this.canvas.__labDraws = (this.canvas.__labDraws ?? 0) + 1;
         // Count even detached GL work; detached 2D colour parsers are not a background.
         if (isGL || this.canvas.isConnected) stats.draws++;
+        if (isGL && name.startsWith('draw')) stats.webglDraws++;
         return fn.apply(this, values);
       };
     }
@@ -169,6 +170,7 @@ async function checkState({ label, state, width, option, shot }) {
         if (!shape.canvases) errors.push('WebGL motion created no canvas');
         if (!shape.webglContexts) errors.push(`WebGL motion created no WebGL context (${shape.webglAttempts} attempts)`);
         if (!shape.canvasDraws) errors.push('WebGL motion never painted a frame');
+        if (!shape.webglDraws) errors.push('WebGL motion did not issue a GL draw call');
       } else if (state.reducedMotion && !shape.canvasDraws && !shape.stillArt) {
         errors.push('Reduced WebGL motion did not render a still canvas, image, SVG, or poster');
       }
@@ -194,7 +196,7 @@ async function checkState({ label, state, width, option, shot }) {
     const offscreenDrawDelta = await page.evaluate(() => window.__labSmoke.draws) - before;
     if (offscreen && offscreenDrawDelta) errors.push(`Offscreen motion still draws: ${offscreenDrawDelta} calls`);
     if (config.webgl && option?.layer === 'motion' && renderer === 'webgl' && !offscreen) errors.push('Could not scroll the hero offscreen to prove drawing stopped');
-    evidence = { renderer, canvases: shape.canvases, webglContexts: shape.webglContexts, webglAttempts: shape.webglAttempts, canvasDraws: shape.canvasDraws, offscreen, offscreenDrawDelta, reducedDrawDelta, pausedDrawDelta, heroReadyMs, heroVisibility, heroAfterSettle, ...(shot ? { screenshot: shot } : {}) };
+    evidence = { renderer, canvases: shape.canvases, webglContexts: shape.webglContexts, webglAttempts: shape.webglAttempts, webglDraws: shape.webglDraws, canvasDraws: shape.canvasDraws, offscreen, offscreenDrawDelta, reducedDrawDelta, pausedDrawDelta, heroReadyMs, heroVisibility, heroAfterSettle, ...(shot ? { screenshot: shot } : {}) };
   } catch (error) { errors.push(error.message); }
   finally { await context.close(); }
   const result = { label, pass: errors.length === 0, ...(errors.length ? { errors } : {}), ...(evidence ? { evidence } : {}) };
