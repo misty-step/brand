@@ -44,7 +44,7 @@ const productNotes: Record<string, string> = {
 
 const nodeNotes: Record<string, string> = {
   core: `Always on: the ${say(coreLineCount)} lines quoted above.`,
-  misty: 'Reads the task and sends it to the matching playbook or skill before anything else happens.',
+  misty: 'Reads each nontrivial task first and sends it to the matching playbook or skill.',
   playbooks: 'Bug fix, feature, refactor, investigation, incident, eval and authoring a skill.',
   skills: 'Specialist guidance, from research and verification to security audits, loaded when a task calls for it.',
   principles: 'Short leaves, each read when its trigger applies. Nothing fails silently is one: errors fail loudly, and no fallback hides them.',
@@ -191,7 +191,7 @@ const stack: PageContent = {
       type: 'diagram',
       id: 'method',
       title: 'What loads, and when.',
-      intro: 'Only the core is always on. The misty skill reads each task and opens the playbook it needs. Principles and skills load when their trigger applies.',
+      intro: 'Only the core is always on. The misty skill reads each nontrivial task and opens the playbook it needs. Principles and skills load when their trigger applies.',
       nodes: STACK_NODES.map((node) => ({ ...node, body: nodeNotes[node.id] ?? node.body })),
     },
     {
