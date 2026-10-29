@@ -78,6 +78,8 @@ void main() {
   float edge = max(smoothstep(10.0 * uScale, uScale, gl_FragCoord.x), smoothstep(uView.y - 4.5 * uScale, uView.y - 0.25 * uScale, gl_FragCoord.y));
   float veil = max(max(inMist, haze), edge);
   veil = max(veil, 1.0 - keepClear(gl_FragCoord.xy * uCell, 64.0));
+  // Mist in five hard tone steps, not a gradient: at 4px cells a smooth fade reads as blur.
+  veil = floor(veil * 4.0 + 0.5) * 0.25;
   o = vec4(mix(c, uMist, veil), 1.0);
 }`;
 
@@ -111,9 +113,10 @@ const BOXES = FLIGHTS.flatMap((fl, i) => Array.from({ length: fl.n }, (_, k) => 
     ? [fl.x, fl.z - fl.d * (k + 1), fl.w, fl.d, k, i, fl.base + k + 1, goal]
     : [fl.x - fl.d * (k + 1), fl.z, fl.d, fl.w, k, i, fl.base + k + 1, goal];
 }));
-/** Field px per world unit: 4 where the focal flight fits whole, 2 on small hosts (phone panels).
- *  Even scales keep every tread edge a clean 2:1 pixel line. The anchor offsets scale with it. */
-const scaleOf = (f: Frame) => (f.cols >= 92 && f.rows >= 80 ? 4 : 2);
+/** Field px per world unit: 4 on desktop hosts, 2 on phone-width hosts (under 480 CSS px) so two
+ *  flights fit and the focal one stays clear of the left edge's mist. Even scales keep every
+ *  tread edge a clean 2:1 pixel line. The anchor offsets scale with it. */
+const scaleOf = (f: Frame) => (f.cols >= 120 && f.rows >= 80 ? 4 : 2);
 
 export function scene(gl: GL) {
   const g = gl as WebGL2RenderingContext;
@@ -235,7 +238,7 @@ export function still(f: Frame): RowPainter {
           const haze = Math.min(0.62, Math.max(0, -(wx + wz) / 46 + 0.08));
           const edge = Math.max(smoothstep(10 * S, S, cx + 0.5), smoothstep(H - 4.5 * S, H - 0.25 * S, cy + 0.5));
           const veil = Math.max(inMist, haze, edge, 1 - keepClear(f, (cx + 0.5) * f.cell, (cy + 0.5) * f.cell, 64));
-          rgb.set(mix(col, p.ground, veil), idx * 3);
+          rgb.set(mix(col, p.ground, Math.floor(veil * 4 + 0.5) * 0.25), idx * 3);
         }
       }
     }
