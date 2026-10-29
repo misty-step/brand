@@ -5,12 +5,13 @@ const S = 'html[data-motion="dot-globe"]';
 export default {
   id: 'dot-globe',
   layer: 'motion',
+  renderer: 'webgl',
   label: 'Dotted globe',
   summary: 'The world as square points that turn once every four minutes while one accent traveller crosses it a short hop at a time, the way a misty step covers ground: never in one leap.',
   origin: 'new',
   refs: [
     { name: 'Stripe: designing the globe', url: 'https://stripe.com/blog/globe', what: 'A sunflower (Fibonacci) lattice keeps dot spacing even from pole to pole, land-only dots draw continents without borders, and arcs travel between points.' },
-    { name: 'Cloudflare network', url: 'https://www.cloudflare.com/network/', what: 'A network told as real places (data centres in cities in more than 100 countries) rather than decoration, so every point here comes from a real coastline.' },
+    { name: 'Cloudflare', url: 'https://www.cloudflare.com', what: 'A faint dot matrix with a horizon rising at the foot of the hero under "Region: Earth": here the dots are the Earth itself, and on phones the globe rises as that horizon.' },
     { name: 'Natural Earth', url: 'https://www.naturalearthdata.com/', what: 'Public-domain 1:50m land polygons, baked into one bit per lattice point (4 KB for both lattices).' },
   ],
   // Lazy chunk by contract: the field never loads on the critical path.
@@ -31,8 +32,8 @@ ${S} a.link,${S} .item-link{transition:text-decoration-thickness .15s ease,text-
 @media (hover:hover) and (pointer:fine){${S} a.link:hover{text-underline-offset:.32em}}`,
   },
   budget: {
-    gzipKB: 7.9,
+    gzipKB: 8.3,
     frameMs: 'Main-thread JS 0.002 ms median, 0.015 ms p95 per frame (600 frames in Bun, GL stubbed). GPU time pending the conductor: no browser may run on this Mac.',
-    note: 'One lazy chunk: field, shared runtime and 2.1 KB of land bits. Raw WebGL1, two point draws, 30 fps cap, DPR capped with whole-number upscaling. Tiers drop the ocean dots, then render at 1 CSS px. Without WebGL the same still is painted once on the CPU (3.6 ms at 1440x820).',
+    note: 'Vite production chunks, gzip -9: 5.4 KB for this option (its land bits included) plus the 2.9 KB runtime shared by the MotionB options. Raw WebGL1, two point draws, 30 fps cap, DPR capped with whole-number upscaling. Tiers drop the ocean dots, then render at 1 CSS px. Without WebGL the same still is painted once on the CPU (3.6 ms at 1440x820).',
   },
-} satisfies MotionOption;
+} satisfies MotionOption & { renderer: 'webgl' };
