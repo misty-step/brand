@@ -57,6 +57,20 @@ try {
  if(await shell.locator('.compare-item').count()!==2)shellErrors.push('Compare did not render two saved combinations');
  await shell.keyboard.press('Escape');await shell.locator('[data-action="spec"]').click();if(!await shell.locator('#panel').isVisible())shellErrors.push('Spec panel not opened');await shell.keyboard.press('Escape');
  const overflow=await shell.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);if(overflow)shellErrors.push('Shell horizontal overflow at 1440');
+ const composition=await shell.evaluate(()=>({desktop:document.querySelector('.desktop .frame-window').getBoundingClientRect().width,viewport:innerWidth}));
+ if(composition.desktop<composition.viewport*.65)shellErrors.push(`Desktop preview too small: ${composition.desktop}/${composition.viewport}`);
+ await shell.locator('.head-actions [data-action="full"]').click();
+ if(await shell.locator('.rail').isVisible())shellErrors.push('Full preview did not hide controls');
+ await shell.keyboard.press('Escape');
+ const desktopHandle=await shell.locator('#desktop').elementHandle(),desktopFrame=await desktopHandle.contentFrame();
+ await desktopFrame.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+ await shell.locator('[data-page="stack"]').click();
+ await desktopFrame.waitForFunction(()=>document.documentElement.dataset.page==='stack'&&window.__LAB__?.ready);
+ if(await desktopFrame.evaluate(()=>scrollY)!==0)shellErrors.push('Changed page did not start at the top');
+ await shell.locator('[data-page="studio"]').click();
+ await desktopFrame.waitForFunction(()=>document.documentElement.dataset.page==='studio'&&window.__LAB__?.ready);
+ await mkdir(path.join(root,'evidence'),{recursive:true});
+ await shell.screenshot({path:path.join(root,'evidence','shell-1440.png'),timeout:20000});
  results.push({label:'shell shortlist + compare + spec',pass:shellErrors.length===0,...(shellErrors.length?{errors:shellErrors}:{})});
 } finally {await browser.close();await server?.close();}
 const failed=results.filter(r=>!r.pass);

@@ -17,5 +17,14 @@ export function section(s: Section): string {
   return `<section class="s s-${s.type}" id="${esc(s.id)}">${body}</section>`;
 }
 export function render(content: PageContent, hero: HeroOption, ctx: HeroCtx, mark: MarkOption): string {
- return `<div class="bg" data-motion-root aria-hidden="true"></div><a class="skip" href="#main">Skip to content</a><header class="nav"><a class="brand" href="#top"><span class="brand-mark">${mark.svg({size:32,title:content.brand})}</span><span class="brand-name">${ctx.wordmark()}</span></a><nav class="nav-links" aria-label="Primary">${content.nav.map(a=>link(a)).join('')}</nav><div class="nav-actions"><button class="theme-toggle" aria-label="Switch colour theme">◐</button>${content.navCta?link(content.navCta,'btn btn-primary btn-sm'):''}</div></header><main id="main"><section class="hero" data-hero-root>${hero.render(ctx)}</section>${content.sections.map(section).join('')}</main><footer class="foot"><p class="foot-line">${esc(content.footer.line)}</p><nav class="foot-links" aria-label="Footer">${content.footer.links.map(a=>link(a)).join('')}</nav></footer><button class="motion-toggle" aria-pressed="false">Pause motion</button>`;
+ return `<div class="bg" data-motion-root aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="${esc(content.brand)}"><span class="brand-mark">${mark.svg({size:32,title:content.brand})}</span><span class="brand-name">${ctx.wordmark()}</span></a>
+    <nav class="nav-links" aria-label="Primary">${content.nav.map(a=>link(a)).join('')}</nav>
+    <div class="nav-actions"><button class="theme-toggle" aria-label="Switch colour theme">◐</button>${content.navCta?link(content.navCta,'btn btn-primary btn-sm'):''}</div>
+  </header>
+  <main id="main" tabindex="-1"><section class="hero" data-hero-root>${hero.render(ctx)}</section>${content.sections.map(section).join('')}</main>
+  <footer class="foot"><p class="foot-line">${esc(content.footer.line)}</p><nav class="foot-links" aria-label="Footer">${content.footer.links.map(a=>link(a)).join('')}</nav></footer>
+  <button class="motion-toggle" aria-pressed="false">Pause motion</button>`;
 }
