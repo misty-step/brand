@@ -42,3 +42,4 @@ Written like a good work order: defined terms used the same way every time (the 
 - How soon discovery can start after the call.
 - `hello@mistystep.io` is public on mistystep.io/book, and the conductor cleared it on 2026-10-29, so the studio footer links it. It belongs in facts.ts next to `LINKS.book`.
 - The round 2 brief's "no hourly rates, tiers, free audits or retainers": the conductor ruled to publish only what mistystep.io already says. This copy therefore says "No open-ended retainer" and does not mention hourly rates, tiers or free audits.
+- Harness status: the mistystack guide README says OMP shipped first and that the other adapters and their proofs are tracked by issue #591 (open), "not claimed as shipped". The stack copy therefore names the install commands ("Install commands for OMP, Claude Code, Codex and pi.") and does not claim shipped support. Once #591 closes, the proof line can read "Installs natively in OMP, Claude Code, Codex and pi."
