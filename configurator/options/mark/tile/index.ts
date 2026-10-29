@@ -35,7 +35,9 @@ function draw(t: Tile, px: number): string {
   });
 }
 
-// A's pixel capitals: two-cell strokes, seven rows, standing in a two-row fog band. A, C and K are new, drawn to match.
+// A's pixel capitals: two-cell strokes, seven rows. A, C and K are new, drawn to match. A's fog band under the
+// letters is gone: on a flat ground a one-row dither reads as a chequered border or a link underline, so the mist
+// lives in the symbol, where it has the rows to thin out.
 const CAPS: PixelFont = { height: 7, space: 2, tracking: 1, glyphs: {
   M: ['##....##', '###..###', '########', '##.##.##', '##....##', '##....##', '##....##'],
   I: ['##', '##', '##', '##', '##', '##', '##'],
@@ -52,14 +54,12 @@ const CAPS: PixelFont = { height: 7, space: 2, tracking: 1, glyphs: {
 function wordmark(name: string): string {
   const set = setPixels(name, CAPS, true);
   if (!set) return esc(name);
-  const fog: Cell[] = [];
-  for (let x = 0; x < set.width; x++) { if (x % 4 === 3) fog.push([x, 7]); if (x % 2 === 0) fog.push([x, 8]); }
   const groups = new Map<number, Cell[]>();
   for (const c of set.cells) { const k = bayer(c[0], c[1]); (groups.get(k) ?? groups.set(k, []).get(k)!).push(c); }
   const letters = [...groups.entries()].sort((a, b) => a[0] - b[0]).map(([k, list]) => `<path data-b="${k}" d="${runs(list)}"/>`).join('');
   return svg({
-    viewBox: [set.width, 10], width: set.width * 2, height: 20, cls: 'mk-wm mk-tile-wm', crisp: true, label: name,
-    body: `<g fill="currentColor">${letters}<path data-fog="" d="${runs(fog)}"/></g>`,
+    viewBox: [set.width, 7], width: set.width * 2, height: 14, cls: 'mk-wm mk-tile-wm', crisp: true, label: name,
+    body: `<g fill="currentColor">${letters}</g>`,
   });
 }
 
@@ -68,27 +68,27 @@ export default {
   layer: 'mark',
   label: 'Tile',
   origin: 'A',
-  summary: 'Three tiled panes, one lit and one dithered into mist, beside pixel capitals standing in fog: the studio as a workspace you step between.',
+  summary: 'Three tiled panes, one lit and one dithered into mist, beside drawn pixel capitals that land in dither order: the studio as a workspace you step between.',
   refs: [
     { name: 'Omarchy', url: 'https://omarchy.org', what: 'A tiling workspace worn as identity, and a logotype drawn cell by cell instead of set in a font.' },
     { name: 'Making Software', url: 'https://makingsoftware.com', what: 'A pixel wordmark that arrives once on load and then holds still.' },
   ],
   svg: ({ size }) => size <= 20 ? draw(FAVICON, 1) : size < 64 ? draw(NAV, cell(size, 16, 2)) : draw(DISPLAY, cell(size, 32)),
   wordmark: ({ name }) => wordmark(name),
-  // The signature from A: letters and mist land in Bayer order, sixteen hard cuts 40ms apart, fog last, settled by 720ms.
+  // The signature from A: letters and mist land in Bayer order, sixteen hard cuts 40ms apart, settled by 720ms.
   animateIn(el, ctx) {
     if (quiet(ctx)) return () => {};
     const brand = el.closest('.brand') ?? el;
     const anims: Animation[] = [];
     brand.querySelectorAll('[data-b]').forEach(p => anims.push(cut(p, 80 + Number(p.getAttribute('data-b')) * 40)));
-    brand.querySelectorAll('[data-fog]').forEach(p => anims.push(cut(p, 720)));
     return settle(anims);
   },
+  // The 14px capitals centre on the 20px tile; on a phone the capitals stand alone.
   css: `
 html[data-mark="tile"] .brand { gap: 10px; }
 html[data-mark="tile"] .brand-mark svg, html[data-mark="tile"] .brand-name svg { display: block; }
 html[data-mark="tile"] .brand-mark svg { width: 20px; height: 20px; }
-html[data-mark="tile"] .brand-name svg { width: auto; height: 20px; }
+html[data-mark="tile"] .brand-name svg { width: auto; height: 14px; }
 html[data-mark="tile"] .brand-name { line-height: 0; }
 @media (max-width: 480px) { html[data-mark="tile"] .brand-mark { display: none; } }
 `,
