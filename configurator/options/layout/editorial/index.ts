@@ -207,6 +207,7 @@ ${S} .s-code .codefig { grid-column: 6 / -1; padding-top: 28px; }
 ${S} .s-code .code {
   margin: 0; padding: clamp(24px, 3vw, 40px); border: 0; border-radius: var(--radius); background: var(--bg-3);
   font-size: var(--step--1); line-height: 1.8; max-width: none;
+  white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible;
 }
 ${S} .s-code figcaption { margin-top: 14px; font-size: var(--step--1); color: var(--ink-2); max-width: var(--measure); }
 

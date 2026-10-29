@@ -89,13 +89,13 @@ ${S} .s-steps .s-items {
 }
 ${S} .s-steps .item {
   display: flex; flex-direction: column; gap: 8px;
-  min-height: clamp(260px, 24vw, 320px);
+  min-height: 0;
   padding: var(--tile-pad) var(--tile-pad) calc(var(--tile-pad) + 8px);
 }
 ${S} .s-steps .item:first-child { padding-left: 0; }
 ${S} .s-steps .item:last-child { padding-right: 0; }
 ${S} .s-steps .item + .item { border-left: var(--rule) solid var(--line); }
-${S} .s-steps .item-label { margin-bottom: auto; padding-bottom: 32px; color: var(--ink-3); }
+${S} .s-steps .item-label { margin-bottom: 0; padding-bottom: clamp(32px, 5vw, 72px); color: var(--ink-3); }
 ${S} .s-steps .item-terms { font-size: var(--step-0); font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 ${S} .s-steps .item-body { max-width: 40ch; }
 
@@ -232,6 +232,7 @@ ${S} .s-code .codefig { display: grid; grid-template-columns: minmax(0, 1fr); ov
 ${S} .s-code .code {
   margin: 0; padding: clamp(20px, 3vw, 40px); border: 0; background: transparent;
   font-size: var(--step--1); line-height: 1.8; max-width: none;
+  white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible;
 }
 ${S} .s-code figcaption {
   margin: 0; max-width: none; padding: 14px clamp(20px, 3vw, 40px);

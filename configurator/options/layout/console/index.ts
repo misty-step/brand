@@ -210,7 +210,7 @@ ${S} .s-code figcaption {
   border-bottom: var(--rule) solid var(--line); background: var(--bg-2);
   font-size: var(--step--1); color: var(--ink-2);
 }
-${S} .s-code .code { margin: 0; padding: var(--pad); border: 0; background: var(--bg-3); font-size: var(--step--1); line-height: 1.8; }
+${S} .s-code .code { margin: 0; padding: var(--pad); border: 0; background: var(--bg-3); font-size: var(--step--1); line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
 
 /* ---- Closing: one panel row, the claim left, the actions right ---- */
 ${S} .s-cta {

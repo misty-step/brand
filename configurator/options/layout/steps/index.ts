@@ -228,7 +228,7 @@ ${S} .s-code figcaption {
   margin: 0; max-width: none; padding: 12px 20px; border-bottom: 1px solid var(--line);
   font-size: var(--step--1); color: var(--ink-2);
 }
-${S} .s-code .code { margin: 0; padding: 16px 20px 24px; border: 0; background: transparent; font-size: var(--step--1); line-height: 1.7; }
+${S} .s-code .code { margin: 0; padding: 16px 20px 24px; border: 0; background: transparent; font-size: var(--step--1); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
 
 /* ---- Closing (a band): the claim left, the terms and the action right ---- */
 ${S} .s-cta > .s-title { grid-column: 1 / span 6; grid-row: 1 / span 2; max-width: 12em; }
