@@ -250,18 +250,18 @@ html[data-layout="ledger"] {
     .node:nth-child(3n + 1) { border-left: var(--l-cell); }
     .node:nth-child(odd) { border-left: 0; }
     .node:nth-child(n + 3) { border-top: var(--l-cell); }
-  }
-
-  @media (max-width: 700px) {
-    --l-ref: 3.5rem;
-    --nav-h: 60px;
-    .nav-links, .nav-actions .btn { display: none; }
     .s-steps, .s-points, .s-work { grid-template-columns: var(--l-ref) minmax(0, 1fr); }
     .s-steps .item > :not(.item-label), .s-points .item > *, .s-work .item-link > * { grid-column: 2; border-left: 0; }
     .s-steps .item-label, .s-points .item::before, .s-work .item-link::before { grid-row: 1 / span 3; }
     .s-steps .item > :not(.item-label), .s-points .item > *, .s-work .item-link > * { padding-block: 6px; }
     .s-steps .item > .item-title, .s-points .item > .item-title, .s-work .item-link > .item-title { padding-top: var(--l-pad); }
     :is(.s-steps .item, .s-points .item, .s-work .item-link) > :last-child { padding-bottom: var(--l-pad); }
+  }
+
+  @media (max-width: 700px) {
+    --l-ref: 3.5rem;
+    --nav-h: 60px;
+    .nav-links, .nav-actions .btn { display: none; }
     .diagram { grid-template-columns: minmax(0, 1fr); }
     .node, .node:nth-child(3n + 1), .node:nth-child(odd) { border-left: 0; }
     .node + .node { border-top: var(--l-cell); }
