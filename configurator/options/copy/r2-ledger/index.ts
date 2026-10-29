@@ -195,7 +195,7 @@ export default {
         sub: `mistystack is Misty Step's open method for coding agents: ${word(coreLines)} always-on lines route nontrivial work and make the agent name its outside check before it starts.`,
         primary: { label: 'Install for your harness', href: '#install' },
         secondary: { label: `Read the ${word(coreLines)} lines`, href: '#core' },
-        proof: 'Installs natively in OMP, Claude Code, Codex and pi.',
+        proof: 'Install commands for OMP, Claude Code, Codex and pi.',
       },
       sections: [
         core(`${Word(coreLines)} lines. Every session.`, 'Everything else in the method, from playbooks to principles, loads only when a task calls for it.'),
@@ -220,7 +220,7 @@ export default {
           type: 'install',
           id: 'install',
           title: 'Native installs. No custom installer.',
-          intro: "Each harness installs mistystack through its own plugin or package system and refreshes it the same way. Every command is copied from that harness's reference file in the repository.",
+          intro: "Every command goes through the harness's own plugin or package system and is copied from that harness's reference file in the repository.",
           harnesses: INSTALL_HARNESSES,
         },
         {
