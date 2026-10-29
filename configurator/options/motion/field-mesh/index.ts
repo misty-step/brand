@@ -1,0 +1,37 @@
+import type { MotionOption } from '../../../src/contract';
+
+const S = 'html[data-motion="field-mesh"]';
+
+export default {
+  id: 'field-mesh',
+  layer: 'motion',
+  renderer: 'webgl',
+  label: 'Field ribbon',
+  summary: 'One slow ribbon of the palette field colours sweeps through the hero and twists, posterised into three flat tones on a 2 px grid: a screenprint in steps rather than a glowing gradient, bowing and breathing on 27 to 43 second periods so it never repeats.',
+  origin: 'new',
+  refs: [
+    { name: 'Stripe', url: 'https://stripe.com', what: 'Precision with one indulgence: a single ribbon through the hero, behind otherwise quiet type, with a still of the same frame when WebGL is missing.' },
+    { name: 'Stripe gradient, reverse engineered (Kevin Hufnagl via Bram.us)', url: 'https://www.bram.us/2021/10/13/how-to-create-the-stripe-website-gradient-effect/', what: 'A surface moved by layered waves on incommensurate periods, so the motion never visibly loops.' },
+  ],
+  // Lazy chunk by contract: the field never loads on the critical path.
+  background: { load: () => import('./field') },
+  entrance: {
+    // The hero settles like cloth (settled by 1040 ms); sections only resolve.
+    css: `${S} [data-enter]{opacity:0;transition:opacity .45s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
+${S} .hero [data-enter]{transform:translateY(16px);transition:opacity .72s cubic-bezier(.16,1,.3,1),transform .72s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 80ms)}
+${S} [data-enter].is-in{opacity:1;transform:none}
+${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
+${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
+${S} .s-items>[data-enter]:nth-child(n+4),${S} .diagram>[data-enter]:nth-child(n+4){--enter-i:3}`,
+  },
+  interaction: {
+    css: `${S} .btn{transition:transform .2s cubic-bezier(.23,1,.32,1),background-color .24s ease,border-color .24s ease,color .24s ease}
+${S} .btn:active{transform:scale(.98)}
+${S} a.link,${S} .item-link{transition:text-decoration-thickness .24s ease,text-underline-offset .24s cubic-bezier(.23,1,.32,1),color .24s ease,background-color .24s ease}`,
+  },
+  budget: {
+    gzipKB: 4.6,
+    frameMs: 'Main-thread JS under 0.001 ms per frame (600 frames in Bun, GL stubbed). GPU time pending the conductor: no browser may run on this Mac.',
+    note: 'Vite production chunks, gzip -9: 1.7 KB for this option plus the 2.9 KB runtime shared by the MotionB options. Raw WebGL1, one fullscreen triangle at one cell per 2 CSS px (3 and 4 px on lower tiers), 30 fps cap. Without WebGL the same still is painted once on the CPU (10.7 ms at 1440x820, 4.6 ms for a 480x640 panel).',
+  },
+} satisfies MotionOption & { renderer: 'webgl' };

@@ -97,8 +97,9 @@ function paint() {
     const locked = state.locks.includes(layer);
     if (lock) {
       lock.setAttribute('aria-pressed', String(locked));
-      lock.textContent = locked ? '●' : '○';
+      lock.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1"/><path d="${locked ? 'M8 10V6a4 4 0 0 1 8 0v4' : 'M8 10V6a4 4 0 0 1 7.8-1.2'}"/></svg>`;
       lock.setAttribute('aria-label', (locked ? 'Unlock ' : 'Lock ') + layer);
+      lock.title = (locked ? 'Unlock ' : 'Lock ') + layer;
     }
     const summary = document.getElementById('summary-' + layer);
     if (summary) summary.textContent = option?.summary ?? '';
@@ -125,7 +126,7 @@ function commit(next = state) {
   localStorage.setItem('lab-motion-paused', String(state.paused));
   paint();
   syncFrames();
-  (window as unknown as { __LAB__: unknown }).__LAB__ = { ready: true, state, options: options.map(({ id, layer, label }) => ({ id, layer, label })) };
+  (window as unknown as { __LAB__: unknown }).__LAB__ = { ready: true, state, options: options.map(({ id, layer, label }) => ({ id, layer, label })), presets };
 }
 function choose(layer: Layer, id: string) { state.picks = { ...state.picks, [layer]: id }; commit(); }
 function step(layer: Layer, delta: number) {

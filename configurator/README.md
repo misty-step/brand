@@ -15,6 +15,18 @@ npm run smoke
 
 `npm run smoke` serves the production build and uses only Playwright's bundled `chrome-headless-shell`, via `chromium.launch({ headless: true })`. Desktop Chrome, browser channels, executable overrides, the operator's relay, Tern and GUI apps are forbidden. Only LabCore runs browser verification, one run at a time. Builders use builds/type checks/source review and report visual checks as pending conductor. Set `LAB_URL` to smoke a deployed preview. The script checks every option against the plain baseline on both pages, 390/1440, light/dark, plus reduced motion for motion options. Console errors, overflow, missing h1, offscreen canvas drawing, or reduced-motion drawing fail the run. Machine evidence goes to ignored `evidence/smoke.json`. This backend exercises intentional no-WebGL still fallbacks; real WebGL rendering is verified off this Mac later.
 
+### Off-Mac WebGL proof
+
+From a clean Ubuntu box, in the `configurator/` directory:
+
+```sh
+npm ci
+npx playwright install --with-deps chromium
+node scripts/smoke.mjs --url https://misty-brand-lab.misty-step.workers.dev --webgl --out shots
+```
+
+`--url` selects the deployed origin (default: local production preview). `--webgl` adds SwiftShader flags only to Playwright's bundled headless shell, and is rejected before browser launch on macOS. Never run that flag on this Mac. `--out` writes `smoke.json` plus a 1440px and a 390px screenshot per motion option and declared preset, after about 2.5 seconds. WebGL-declared options must create a canvas and a successful GL context, paint a frame, stop offscreen, and render a non-running reduced-motion still. Intentional static and Canvas2D options are reported as such, not given fabricated WebGL passes. The result records renderer/context/draw counts per state; it is a software-renderer proof, not a physical-device GPU trace.
+
 ## Add an option
 
 Create `options/<layer>/<id>/index.ts`, default-exporting the corresponding option type from `src/contract.ts`. The id must equal its directory. The Vite registry discovers it lazily with `import.meta.glob('/options/*/*/index.ts')`. Keep assets and font licence files beside the option. Helpers may live inside your layer directory without an `index.ts` at that depth. Do not modify another layer or the renderer. Branch from `origin/feat/lab-007`, use your own worktree, push your branch, and report `ready: <branch> <sha> <ids>` to LabCore.
@@ -29,11 +41,13 @@ Copy imports `src/content/facts.ts`. It is the single home for the offer, five p
 
 `preview.html` takes the same encoded JSON hash as the shell. Page, theme, reduced motion, pause, full-preview mode, every selected option and layer locks travel in the URL. Section hash links scroll without replacing that configuration. The shell's shortlist and notes stay in localStorage. Alt+R shuffles unlocked layers, Alt+S saves, Alt+L copies the share link. Native select controls support keyboard navigation; dialogs and full-preview mode close with Escape. The compact rail keeps every layer on one line; select its name to expand the summary and references. At a 1440px shell the desktop preview occupies more than 65% of the viewport, beside a 240px-wide phone frame. Full preview hides the controls. Frame sizing responds only to user/layout events, with no ResizeObserver or animation loop. Page and option changes start at scroll position zero.
 
-The renderer emits the contract below. Additions: stable tab/panel ids and ARIA relationships; `id="top"` on body; `tabindex="-1"` on main so the skip link can move focus; an explicit brand-link accessible name; `data-paused` on html; external links open a new tab with `rel="noopener noreferrer"`; full-hero backgrounds use an aria-hidden `.hero-motion-host`; panel heroes without a motion slot receive `.hero-visual[data-motion-slot]`. The optional mark extension `css?: string` is restricted to `.brand`, `.brand-mark`, `.brand-name`, scoped under its data-mark id; canonical contract types remain unchanged and authors may use `MarkOption & { css: string }`.
+The renderer emits the contract below. Additions: stable tab/panel ids and ARIA relationships; `id="top"` on body; `tabindex="-1"` on main so the skip link can move focus; an explicit brand-link accessible name; `data-paused` on html; external links open a new tab with `rel="noopener noreferrer"`; full-hero backgrounds use an aria-hidden `.hero-motion-host`; panel heroes without a motion slot receive `.hero-visual[data-motion-slot]`. The optional mark extension `css?: string` is restricted to `.brand`, `.brand-mark`, `.brand-name`, scoped under its data-mark id; authors may use `MarkOption & { css: string }`. Mark colours may use `currentColor`, `--ink*`, `--accent`, and the approved text-safe `--accent-2` highlight token. The renderer resolves these tokens into the 16px themed SVG favicon.
 
 The renderer also emits `<nav class="toc" aria-label="Contents"><ol><li><a class="link" href="#section-id">Section title</a></li>…</ol></nav>` immediately after the hero. It is hidden by default; book/ledger layouts may opt in. Shared navigation, footer, diagram and contents links have 44px minimum targets.
 
 Type faces use local `@font-face` with swap and the declared weight/style/range. Color and type tokens are injected into the root. Theme-only updates call the existing motion handle's `update()`; option/page swaps destroy it. Backgrounds lazy-load after semantic first paint, mount at the hero's requested host, stop offscreen/hidden/paused, and receive `dprCap: 1.5`. Reduced motion shows the final still state. One entrance observer adds `.is-in` to `[data-enter]`. The motion toggle pauses all CSS animation and the background.
+
+Approved motion contract extension: `renderer?: 'webgl'|'canvas2d'|'none'`. If omitted it derives from `background` presence (`webgl` when present, `none` otherwise). A Canvas2D signature must declare it explicitly. The off-Mac proof reads this metadata, never option-id exemptions.
 
 ## Markup the renderer emits (layouts and heroes style exactly this)
 ```html

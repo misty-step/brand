@@ -1,0 +1,764 @@
+[
+  {
+    "id": "precise-grotesk",
+    "build": "precise",
+    "label": "Precise grotesk",
+    "origin": "new",
+    "comment": "Linear's display discipline (an in-between weight, tracking held as a token) on Wix Madefor's Display and Text cuts.",
+    "summary": "Linear's display discipline (one in-between weight, tight tracking held as tokens) set on Wix Madefor's separate Display and Text cuts, with JetBrains Mono for commands: exact and quiet, so the offer's numbers carry the page.",
+    "refs": [
+      {
+        "name": "Linear",
+        "url": "https://linear.app",
+        "what": "Display as a house cut: Inter at an in-between 510 weight, -0.022em tracking and 1.0 leading, all tokens, over 15px/1.6 body. This takes the discipline, not the face (Inter as display is the canon's default case), and swaps its commercial Berkeley Mono for JetBrains Mono."
+      },
+      {
+        "name": "Wix Madefor (Dalton Maag)",
+        "url": "https://github.com/wix/wixmadefor",
+        "what": "A superfamily drawn as separate Display and Text cuts, the same optical split Linear gets from Inter's display size, so headlines can run tight while 16px text stays open."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Wix Madefor Display",
+        "file": "madefor-display-latin.woff2",
+        "weight": "480 700"
+      },
+      {
+        "family": "Wix Madefor Text",
+        "file": "madefor-text-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "JetBrains Mono",
+        "file": "jetbrains-mono-latin.woff2",
+        "weight": "400 600"
+      }
+    ],
+    "licences": {
+      "OFL-WixMadefor.txt": "gf/wixmadefordisplay/OFL.txt",
+      "OFL-JetBrainsMono.txt": "gf/jetbrainsmono/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Wix Madefor Display', 'Wix Madefor Text', system-ui, sans-serif",
+      "--font-body": "'Wix Madefor Text', system-ui, sans-serif",
+      "--font-ui": "'Wix Madefor Text', system-ui, sans-serif",
+      "--font-mono": "'JetBrains Mono', ui-monospace, monospace",
+      "--display-weight": "530",
+      "--display-tracking": "-0.03em",
+      "--display-leading": "1.02",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.6",
+      "--measure": "62ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        15
+      ],
+      "--step-0": [
+        16,
+        17
+      ],
+      "--step-1": [
+        18,
+        20
+      ],
+      "--step-2": [
+        20,
+        24
+      ],
+      "--step-3": [
+        28,
+        48
+      ],
+      "--step-4": [
+        32,
+        60
+      ],
+      "--step-5": [
+        34,
+        72
+      ]
+    },
+    "license": "OFL-1.1: Wix Madefor Display and Wix Madefor Text (Dalton Maag for Wix), JetBrains Mono (JetBrains). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "geist-pixel",
+    "build": "geist-pixel",
+    "label": "Geist with pixel display",
+    "origin": "new",
+    "comment": "Geist Pixel Square is drawn on a 38/1000 em grid (26.316 pixels per em). Display sizes snap to the nearest multiple of 13.158px, so one pixel is a whole device pixel at DPR 2.",
+    "summary": "Vercel's family moved one step toward the owner's pixels: Geist Pixel Square sets the headlines on its native grid (sizes snap to whole pixels), while Geist and Geist Mono keep every paragraph, control and command plain; the live site already reads in Geist.",
+    "refs": [
+      {
+        "name": "Vercel",
+        "url": "https://vercel.com/font",
+        "what": "Geist Pixel is drawn on Geist's metrics and vercel.com loads Geist, Geist Mono and five Geist Pixel cuts together. This keeps Vercel's pairing and gives the pixel cut the one display job."
+      },
+      {
+        "name": "Omarchy",
+        "url": "https://omarchy.org",
+        "what": "Pixels stay in the display layer (its pixel logotype) while reading text stays in Geist and a real mono. Here the pixel face is likewise never body, label or control text."
+      },
+      {
+        "name": "pi",
+        "url": "https://pi.dev",
+        "what": "One pixel element as the brand moment above calm reading text, never pixel paragraphs."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Geist Pixel Square",
+        "file": "geist-pixel-square-latin.woff2",
+        "weight": "400"
+      },
+      {
+        "family": "Geist",
+        "file": "geist-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "Geist Mono",
+        "file": "geist-mono-latin.woff2",
+        "weight": "400 600"
+      }
+    ],
+    "licences": {
+      "OFL-Geist.txt": "gf/geist/OFL.txt",
+      "OFL-GeistPixel.txt": "geist/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Geist Pixel Square', 'Geist Mono', ui-monospace, monospace",
+      "--font-body": "'Geist', system-ui, sans-serif",
+      "--font-ui": "'Geist', system-ui, sans-serif",
+      "--font-mono": "'Geist Mono', ui-monospace, monospace",
+      "--display-weight": "400",
+      "--display-tracking": "0em",
+      "--display-leading": "1",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.6",
+      "--measure": "64ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        15
+      ],
+      "--step-0": [
+        16,
+        16.5
+      ],
+      "--step-1": [
+        19.7368,
+        26.3158,
+        6.5789
+      ],
+      "--step-2": [
+        19,
+        22
+      ],
+      "--step-3": [
+        26.3158,
+        39.4737,
+        13.1579
+      ],
+      "--step-4": [
+        26.3158,
+        52.6316,
+        13.1579
+      ],
+      "--step-5": [
+        26.3158,
+        65.7895,
+        13.1579
+      ]
+    },
+    "license": "OFL-1.1: Geist, Geist Mono and Geist Pixel Square (Vercel). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "light-ledger",
+    "build": "ledger",
+    "label": "Light ledger",
+    "origin": "new",
+    "comment": "Mona Sans and Source Code Pro reserve their names ('Mona', 'Source'), so these instanced Latin subsets are renamed inside the font and in CSS, as the OFL requires of modified versions.",
+    "summary": "Stripe's register in OFL faces: an Akzidenz-rooted grotesk (Mona Sans, renamed in the subset) set light, 300 for headlines and 350 for reading, with Source Code Pro for code; calm and expensive, and easy to read about money.",
+    "refs": [
+      {
+        "name": "Stripe",
+        "url": "https://stripe.com",
+        "what": "Söhne at weight 300 for display and body alike, with Source Code Pro Medium for code (stripe.com CSS, 2026-10-29). Söhne is commercial, so the light grotesk here is Mona Sans, which shares its Akzidenz-Grotesk ancestry; body sits at 350 so it stays readable on the dark theme."
+      },
+      {
+        "name": "Mona Sans (GitHub)",
+        "url": "https://github.com/github/mona-sans",
+        "what": "An OFL grotesk drawn from industrial-era grotesques; at weight 300 its joins stay crisp at 84px, which is what makes a light headline look deliberate rather than faint."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Misty Ledger Sans",
+        "file": "ledger-sans-latin.woff2",
+        "weight": "300 700"
+      },
+      {
+        "family": "Misty Ledger Code",
+        "file": "ledger-code-latin.woff2",
+        "weight": "400 600"
+      }
+    ],
+    "licences": {
+      "OFL-MonaSans.txt": "gf/monasans/OFL.txt",
+      "OFL-SourceCodePro.txt": "gf/sourcecodepro/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Misty Ledger Sans', system-ui, sans-serif",
+      "--font-body": "'Misty Ledger Sans', system-ui, sans-serif",
+      "--font-ui": "'Misty Ledger Sans', system-ui, sans-serif",
+      "--font-mono": "'Misty Ledger Code', ui-monospace, monospace",
+      "--display-weight": "300",
+      "--display-tracking": "-0.025em",
+      "--display-leading": "1.04",
+      "--display-transform": "none",
+      "--body-weight": "350",
+      "--body-leading": "1.6",
+      "--measure": "60ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        15
+      ],
+      "--step-0": [
+        17,
+        18
+      ],
+      "--step-1": [
+        18,
+        21
+      ],
+      "--step-2": [
+        20,
+        26
+      ],
+      "--step-3": [
+        30,
+        52
+      ],
+      "--step-4": [
+        32,
+        64
+      ],
+      "--step-5": [
+        34,
+        84
+      ]
+    },
+    "license": "OFL-1.1: Mona Sans (GitHub) and Source Code Pro (Adobe). Both reserve their names ('Mona', 'Source'), so these modified Latin subsets are renamed Misty Ledger Sans and Misty Ledger Code; OFL texts in fonts/."
+  },
+  {
+    "id": "book-italic",
+    "build": "folio",
+    "label": "Book italic",
+    "origin": "new",
+    "comment": "The Brygada italic file is registered as its own family in normal style, so --font-display alone turns headlines italic without another layer setting font-style.",
+    "summary": "pi and Earendil's book voice: Brygada 1918 italic for headlines, its roman for 19px reading text and controls, and Commit Mono for commands, so a software studio reads like a well-set book.",
+    "refs": [
+      {
+        "name": "pi",
+        "url": "https://pi.dev",
+        "what": "Plantin italic for h1 and h2, roman Plantin for 22px reading text, Commit Mono for commands. Plantin is commercial; Brygada 1918 is the OFL old-style serif nearest its sturdy, large-x-height texture, and Commit Mono is used as pi uses it."
+      },
+      {
+        "name": "Earendil",
+        "url": "https://earendil.com",
+        "what": "One italic statement carries the page while everything around it stays quiet; the italic is the voice, not decoration on every heading."
+      },
+      {
+        "name": "Brygada 1918",
+        "url": "https://github.com/kosmynkab/Brygada-1918",
+        "what": "A revival of a 1918 Polish Garalde whose italic keeps its calligraphic warmth at 84px and whose roman stays even at 19px."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Brygada 1918 Italic",
+        "file": "brygada-italic-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "Brygada 1918",
+        "file": "brygada-roman-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "Commit Mono",
+        "file": "commit-mono-400-latin.woff2",
+        "weight": "400"
+      }
+    ],
+    "licences": {
+      "OFL-Brygada1918.txt": "gf/brygada1918/OFL.txt",
+      "OFL-CommitMono.txt": "commit/CommitMono-1.143/license.txt"
+    },
+    "tokens": {
+      "--font-display": "'Brygada 1918 Italic', Georgia, serif",
+      "--font-body": "'Brygada 1918', Georgia, serif",
+      "--font-ui": "'Brygada 1918', Georgia, serif",
+      "--font-mono": "'Commit Mono', ui-monospace, monospace",
+      "--display-weight": "430",
+      "--display-tracking": "-0.02em",
+      "--display-leading": "1.04",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.6",
+      "--measure": "64ch"
+    },
+    "steps": {
+      "--step--1": [
+        15,
+        16
+      ],
+      "--step-0": [
+        18,
+        19
+      ],
+      "--step-1": [
+        20,
+        24
+      ],
+      "--step-2": [
+        22,
+        28
+      ],
+      "--step-3": [
+        30,
+        52
+      ],
+      "--step-4": [
+        34,
+        64
+      ],
+      "--step-5": [
+        36,
+        84
+      ]
+    },
+    "license": "OFL-1.1: Brygada 1918 (Capitalics: Mateusz Machalski, Borys Kosmynka, Ania Wieluńska, Przemysław Hoffer), Commit Mono (Eigil Nikolajsen). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "mono-console",
+    "build": "console",
+    "label": "Mono console",
+    "origin": "new",
+    "comment": "Martian Mono is instanced twice from one variable file: width 87.5 for headlines, width 100 for controls and code.",
+    "summary": "A developer system where mono is the declared material: Martian Mono in a narrow cut for headlines and at regular width for controls and code, with Host Grotesk for every paragraph; it fits stack.mistystep.io, where commands are the product.",
+    "refs": [
+      {
+        "name": "Greptile",
+        "url": "https://www.greptile.com",
+        "what": "Mono as the product's own material: nav, links and labels in Space Mono beside a heavy display face and a plain sans for sentences. Here mono moves up into the headline and the controls, and paragraphs stay in a grotesk."
+      },
+      {
+        "name": "Macroscope",
+        "url": "https://macroscope.com",
+        "what": "Geist Mono beside Geist for an AI code reviewer: mono reads as the code tool's voice without ever setting a paragraph."
+      },
+      {
+        "name": "Martian Mono (Evil Martians)",
+        "url": "https://github.com/evilmartians/mono",
+        "what": "A width axis lets one family give the headline a narrower, denser cut than the controls."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Martian Mono Narrow",
+        "file": "martian-mono-narrow-latin.woff2",
+        "weight": "500 700"
+      },
+      {
+        "family": "Martian Mono",
+        "file": "martian-mono-latin.woff2",
+        "weight": "400 600"
+      },
+      {
+        "family": "Host Grotesk",
+        "file": "host-grotesk-latin.woff2",
+        "weight": "400 700"
+      }
+    ],
+    "licences": {
+      "OFL-MartianMono.txt": "gf/martianmono/OFL.txt",
+      "OFL-HostGrotesk.txt": "gf/hostgrotesk/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Martian Mono Narrow', ui-monospace, monospace",
+      "--font-body": "'Host Grotesk', system-ui, sans-serif",
+      "--font-ui": "'Martian Mono', ui-monospace, monospace",
+      "--font-mono": "'Martian Mono', ui-monospace, monospace",
+      "--display-weight": "580",
+      "--display-tracking": "-0.04em",
+      "--display-leading": "1.06",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.6",
+      "--measure": "62ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        14.5
+      ],
+      "--step-0": [
+        16,
+        16.5
+      ],
+      "--step-1": [
+        18,
+        20
+      ],
+      "--step-2": [
+        19,
+        22
+      ],
+      "--step-3": [
+        24,
+        40
+      ],
+      "--step-4": [
+        26,
+        52
+      ],
+      "--step-5": [
+        28,
+        66
+      ]
+    },
+    "license": "OFL-1.1: Martian Mono (Evil Martians), Host Grotesk (Element Type). Latin subsets, unhinted; Martian Mono instanced at widths 87.5 and 100; OFL texts in fonts/."
+  },
+  {
+    "id": "industrial-condensed",
+    "build": "works",
+    "label": "Industrial condensed",
+    "origin": "new",
+    "comment": "Display runs in capitals through --display-transform; reading text and controls never do.",
+    "summary": "Brass Hands' industrial register: Sofia Sans Extra Condensed in capitals for headlines, Sofia Sans for reading and controls, and Kode Mono for code; loud at the top, plain everywhere else.",
+    "refs": [
+      {
+        "name": "Brass Hands",
+        "url": "https://www.brasshands.com",
+        "what": "Status-plate type: brasshands.com sets every visible line in one square mono (Construct Mono, commercial, by Marius Roosendaal) beside a condensed wordmark, and its client systems pair display capitals with mono spec tables. Here Sofia Sans Extra Condensed carries the capitals and Kode Mono the square technical voice, both under the OFL."
+      },
+      {
+        "name": "Grok",
+        "url": "https://grok.com",
+        "what": "grok.com runs one grotesk family in Text and Display cuts (Universal Sans, commercial) for every word, keeps monos (IBM Plex Mono, Geist Mono) for code, and uses five sizes on its home page. Here Sofia Sans plays both cuts (Extra Condensed for display, regular width for reading) and Kode Mono is only for code."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Sofia Sans Extra Condensed",
+        "file": "sofia-sans-extra-condensed-latin.woff2",
+        "weight": "600 800"
+      },
+      {
+        "family": "Sofia Sans",
+        "file": "sofia-sans-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "Kode Mono",
+        "file": "kode-mono-latin.woff2",
+        "weight": "400 600"
+      }
+    ],
+    "licences": {
+      "OFL-SofiaSans.txt": "gf/sofiasans/OFL.txt",
+      "OFL-KodeMono.txt": "gf/kodemono/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif",
+      "--font-body": "'Sofia Sans', system-ui, sans-serif",
+      "--font-ui": "'Sofia Sans', system-ui, sans-serif",
+      "--font-mono": "'Kode Mono', ui-monospace, monospace",
+      "--display-weight": "720",
+      "--display-tracking": "-0.01em",
+      "--display-leading": "0.95",
+      "--display-transform": "uppercase",
+      "--body-weight": "400",
+      "--body-leading": "1.55",
+      "--measure": "64ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        15
+      ],
+      "--step-0": [
+        16,
+        18
+      ],
+      "--step-1": [
+        19,
+        22
+      ],
+      "--step-2": [
+        20,
+        26
+      ],
+      "--step-3": [
+        32,
+        60
+      ],
+      "--step-4": [
+        36,
+        72
+      ],
+      "--step-5": [
+        42,
+        96
+      ]
+    },
+    "license": "OFL-1.1: Sofia Sans and Sofia Sans Extra Condensed (Lettersoup: Botio Nikoltchev, Ani Petrova), Kode Mono (Isa Ozler). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "a-tiling",
+    "build": "a-tiling",
+    "label": "Tiling (A)",
+    "origin": "A",
+    "comment": "Round A's type, ported: --fs-h1 clamp(30px, 5.4vw, 80px), display 640 at -0.035em and 1.0, body 17 -> 18px at 1.6, Chivo Mono only for code, paths and status values.",
+    "summary": "Round A's type, ported: Schibsted Grotesk for everything you read, display at 640 and -0.035em, body at 17 to 18px, and Chivo Mono only for code, paths and status values.",
+    "refs": [
+      {
+        "name": "Omarchy",
+        "url": "https://omarchy.org",
+        "what": "A's lineage: a tiled workspace where mono reports status. A kept that and moved all reading text into a grotesk."
+      },
+      {
+        "name": "Schibsted Grotesk",
+        "url": "https://github.com/schibsted/schibsted-grotesk",
+        "what": "A newsroom grotesk (Bakken & Bæck for Schibsted) that stays calm at 18px and tightens well to -0.035em at 80px; Chivo Mono shares its sturdy proportions."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Schibsted Grotesk",
+        "file": "schibsted-grotesk-latin.woff2",
+        "weight": "400 700"
+      },
+      {
+        "family": "Chivo Mono",
+        "file": "chivo-mono-latin.woff2",
+        "weight": "400 600"
+      }
+    ],
+    "licences": {
+      "OFL-SchibstedGrotesk.txt": "gf/schibstedgrotesk/OFL.txt",
+      "OFL-ChivoMono.txt": "gf/chivomono/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Schibsted Grotesk', system-ui, sans-serif",
+      "--font-body": "'Schibsted Grotesk', system-ui, sans-serif",
+      "--font-ui": "'Schibsted Grotesk', system-ui, sans-serif",
+      "--font-mono": "'Chivo Mono', ui-monospace, monospace",
+      "--display-weight": "640",
+      "--display-tracking": "-0.035em",
+      "--display-leading": "1",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.6",
+      "--measure": "66ch"
+    },
+    "steps": {
+      "--step--1": [
+        14,
+        14
+      ],
+      "--step-0": [
+        17,
+        18
+      ],
+      "--step-1": [
+        18,
+        21
+      ],
+      "--step-2": [
+        21,
+        24
+      ],
+      "--step-3": [
+        28,
+        40
+      ],
+      "--step-4": [
+        30,
+        56
+      ],
+      "--step-5": "clamp(1.875rem, 5.4vw, 5rem)"
+    },
+    "license": "OFL-1.1: Schibsted Grotesk (Bakken & Bæck, Henrik Kongsvoll for Schibsted), Chivo Mono (Omnibus-Type). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "b-atelier",
+    "build": "b-atelier",
+    "label": "Atelier (B)",
+    "origin": "B",
+    "comment": "Round B's type, ported: display clamp(2.375rem, 0.9rem + 4.6vw, 5rem) at 400 and -0.022em, body 18 -> 19px, Literata's opsz axis follows the size (optical sizing auto). Departure Mono is drawn on an 11px grid: crisp at 22px.",
+    "summary": "Round B's type, ported: Literata on its optical-size axis for headlines and reading, and Departure Mono for controls and code; the editorial book with a pixel mono.",
+    "refs": [
+      {
+        "name": "pi",
+        "url": "https://pi.dev",
+        "what": "Book typography for a developer tool, with Departure Mono for nav, tabs and buttons. B kept the pixel mono in sentence case and untracked."
+      },
+      {
+        "name": "Earendil",
+        "url": "https://earendil.com",
+        "what": "A serif statement against small pixel chrome; restraint around one voice."
+      },
+      {
+        "name": "Literata",
+        "url": "https://github.com/googlefonts/literata",
+        "what": "Optical sizes from 7 to 72 let one family carry an 80px display and 19px reading text."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Literata",
+        "file": "literata-latin.woff2",
+        "weight": "380 520"
+      },
+      {
+        "family": "Departure Mono",
+        "file": "departure-mono-latin.woff2",
+        "weight": "400"
+      }
+    ],
+    "licences": {
+      "OFL-Literata.txt": "gf/literata/OFL.txt",
+      "OFL-DepartureMono.txt": "departure/DepartureMono-1.500/LICENSE"
+    },
+    "tokens": {
+      "--font-display": "'Literata', Georgia, serif",
+      "--font-body": "'Literata', Georgia, serif",
+      "--font-ui": "'Departure Mono', ui-monospace, monospace",
+      "--font-mono": "'Departure Mono', ui-monospace, monospace",
+      "--display-weight": "400",
+      "--display-tracking": "-0.022em",
+      "--display-leading": "1.02",
+      "--display-transform": "none",
+      "--body-weight": "400",
+      "--body-leading": "1.62",
+      "--measure": "64ch"
+    },
+    "steps": {
+      "--step--1": [
+        15,
+        16
+      ],
+      "--step-0": "clamp(1.125rem, 1.07rem + 0.2vw, 1.1875rem)",
+      "--step-1": "clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem)",
+      "--step-2": [
+        22,
+        26
+      ],
+      "--step-3": "clamp(1.875rem, 1.3rem + 2.1vw, 3rem)",
+      "--step-4": [
+        34,
+        60
+      ],
+      "--step-5": "clamp(2.375rem, 0.9rem + 4.6vw, 5rem)"
+    },
+    "license": "OFL-1.1: Literata (TypeTogether for Google), Departure Mono (Helena Zhang). Latin subsets, unhinted; OFL texts in fonts/."
+  },
+  {
+    "id": "c-steps",
+    "build": "c-steps",
+    "label": "Steps (C)",
+    "origin": "C",
+    "comment": "Round C's type, ported. Bitcount Grid Single (element shape 50: solid square pixels) covers only the digits and '/' inside the display family, so large figures set in --font-display turn pixel while letters stay Archivo. Its face repeats the Archivo display face's descriptors and comes last, so browsers merge the two by unicode-range.",
+    "summary": "Round C's type, ported: Archivo wide and heavy for display and at normal width for reading, Fragment Mono for code, and Bitcount pixel numerals inside the display stack so large figures turn pixel.",
+    "refs": [
+      {
+        "name": "Omarchy",
+        "url": "https://omarchy.org",
+        "what": "Pixels on one strict grid as a material. C kept pixels to numerals only, never running text or labels."
+      },
+      {
+        "name": "Bitcount (TYPETR)",
+        "url": "https://github.com/petrvanblokland/TYPETR-Bitcount",
+        "what": "Petr van Blokland's grid numerals: one element is 0.1em, so they are crisp at 40 and 80px, the sizes C used."
+      },
+      {
+        "name": "Archivo (Omnibus-Type)",
+        "url": "https://github.com/Omnibus-Type/Archivo",
+        "what": "A width axis: wide and heavy (112, 740) for display, normal width for reading, one family for a direction built on a unit."
+      }
+    ],
+    "faces": [
+      {
+        "family": "Archivo Steps Display",
+        "file": "archivo-expanded-latin.woff2",
+        "weight": "680 760"
+      },
+      {
+        "family": "Archivo Steps Display",
+        "file": "bitcount-grid-single-digits.woff2",
+        "weight": "680 760",
+        "unicodeRange": "U+0030-0039, U+002F"
+      },
+      {
+        "family": "Archivo Steps",
+        "file": "archivo-latin.woff2",
+        "weight": "380 700"
+      },
+      {
+        "family": "Fragment Mono",
+        "file": "fragment-mono-latin.woff2",
+        "weight": "400"
+      }
+    ],
+    "licences": {
+      "OFL-Archivo.txt": "gf/archivo/OFL.txt",
+      "OFL-Bitcount.txt": "gf/bitcountgridsingle/OFL.txt",
+      "OFL-FragmentMono.txt": "gf/fragmentmono/OFL.txt"
+    },
+    "tokens": {
+      "--font-display": "'Archivo Steps Display', 'Archivo Steps', system-ui, sans-serif",
+      "--font-body": "'Archivo Steps', system-ui, sans-serif",
+      "--font-ui": "'Archivo Steps', system-ui, sans-serif",
+      "--font-mono": "'Fragment Mono', ui-monospace, monospace",
+      "--display-weight": "740",
+      "--display-tracking": "-0.03em",
+      "--display-leading": "1",
+      "--display-transform": "none",
+      "--body-weight": "420",
+      "--body-leading": "1.55",
+      "--measure": "62ch"
+    },
+    "steps": {
+      "--step--1": [
+        16,
+        16
+      ],
+      "--step-0": [
+        18,
+        18
+      ],
+      "--step-1": "clamp(1.25rem, 1.67vw, 1.5rem)",
+      "--step-2": [
+        22,
+        30
+      ],
+      "--step-3": "clamp(1.875rem, 2.78vw, 2.5rem)",
+      "--step-4": [
+        34,
+        56
+      ],
+      "--step-5": "clamp(2.125rem, 5.56vw, 5rem)"
+    },
+    "license": "OFL-1.1: Archivo (Omnibus-Type), Bitcount Grid Single (Petr van Blokland, TYPETR), Fragment Mono (Wei Huang, URW Design Studio). Latin subsets, unhinted; Archivo instanced at widths 112 and 100, Bitcount at element shape 50 with digits only; OFL texts in fonts/."
+  }
+]

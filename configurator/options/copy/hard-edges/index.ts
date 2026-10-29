@@ -19,10 +19,10 @@ export default {
     {
       "name": "Brass Hands",
       "url": "https://brasshands.com/",
-      "what": "Literal naming of the work and its status. Borrow the plainness, not the military vocabulary or industrial costume."
+      "what": "Take only the direct ownership statement, 'All work is our own.' Reject the mission-briefing voice, status labels, military vocabulary, and industrial costume."
     }
   ],
-  voice: "Stark industrial plainness. Short sentences, concrete nouns, visible prices, no grand claims. Grok's economy without borrowing its personality; Brass Hands' literal naming without its military costume.",
+  voice: "Stark plainness. Short sentences, concrete nouns, visible prices, no grand claims. Grok supplies the economy of language. Brass Hands contributes only the direct statement of ownership, never its military-industrial voice.",
   pages: {
     studio: {
       brand: STUDIO_PAGE.brand,
