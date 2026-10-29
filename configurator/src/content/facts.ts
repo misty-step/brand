@@ -542,8 +542,8 @@ export const STACK_PAGE: PageContent = {
       "type": "code",
       "id": "core",
       "title": "The always-on core",
-      "caption": "rules/core.md at b3e5084, read 2026-10-29. The trial evaluated an earlier snapshot.",
-      "code": "- Nontrivial work: load the `misty` skill first and follow its routing.\n- Before work, name the check outside yourself that will show the result is right: a failing test, the repository's verification skill, a measurement or the user's path. Done is that check passing on the real path.\n- Ship the smallest change that solves the user's problem. New work becomes a ticket, not scope.\n- Every fact has one home. Replace an old path by migrating its callers and deleting it.\n- Label every claim measured, inferred or guess in the same sentence. Link only what you produced or read.\n- Finish the work you were given. Ask one precise question for a blocked part and finish the rest.\n- Placement: Tern+OMP is the local development environment. Run portable builds, test suites, browser QA, untrusted code and long jobs on fresh Boat workers through the `boat-workers` skill.\n- Ask Phaedrus before spending money, creating or widening credentials, writing production data, messaging third parties or doing anything irreversible."
+      "caption": `rules/core.md at ${SOURCES.stack.slice(-40, -33)}, read 2026-10-29. The trial evaluated an earlier snapshot.`,
+      "code": CORE
     },
     {
       "type": "cta",
