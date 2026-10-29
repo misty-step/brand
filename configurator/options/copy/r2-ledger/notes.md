@@ -40,5 +40,5 @@ Written like a good work order: defined terms used the same way every time (the 
 - How expected value is estimated (time horizon; savings and gain), and how the value share is measured on larger work.
 - A typical build price range or duration, if one can be published.
 - How soon discovery can start after the call.
-- Proposed for facts.ts: `hello@mistystep.io`, which is public on mistystep.io/book. It was cut from the footer because it is not in facts.ts.
-- Proposed for facts.ts, if they should be published: "no hourly rates", "no tiers" and "no free audits". They are in the round 2 brief's brand truth, but in neither facts.ts nor the live site, so this copy does not use them.
+- `hello@mistystep.io` is public on mistystep.io/book, and the conductor cleared it on 2026-10-29, so the studio footer links it. It belongs in facts.ts next to `LINKS.book`.
+- The round 2 brief's "no hourly rates, tiers, free audits or retainers": the conductor ruled to publish only what mistystep.io already says. This copy therefore says "No open-ended retainer" and does not mention hourly rates, tiers or free audits.
