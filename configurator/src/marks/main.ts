@@ -204,6 +204,7 @@ async function bench() {
     ${failed.length || missing.length ? `<p class="mb-error">${[...failed, ...missing.map(id => `${id}: no such mark`)].map(esc).join('<br>')}</p>` : ''}
   </header>
   <section class="mb-sils" aria-label="Every mark at 16 px"><p class="mb-cap">Every favicon at 16 px, 1x and enlarged 4x, light and dark</p><div data-silhouettes></div></section>
+  <section class="mb-sils" aria-label="Every mark side by side"><p class="mb-cap">Every mark at 128 px over its studio nav lockup at real size</p><div class="mb-lineup">${marks.map(m => `<a class="mb-line" href="#m-${esc(m.id)}" data-mark="${esc(m.id)}" data-theme="${theme}"><span class="mb-line-mark">${m.svg({ size: 128, title: copy.pages.studio.brand })}</span>${brand(m, copy.pages.studio.brand, 32)}<span class="mb-cap">${esc(m.id)}</span></a>`).join('')}</div></section>
   ${sections.join('\n')}`;
   sizeLockups(document);
   await document.fonts.ready;
