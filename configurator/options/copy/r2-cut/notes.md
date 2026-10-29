@@ -31,7 +31,7 @@ Line breaks were measured on the Boat worker in the baseline (`~/.cache/tmp/mist
 7. **The method is plain text.** (CopyA) Every part is a Markdown file in an MIT-licensed repository.
 8. **Read it. Then make it yours.** (CopyB) Points at guide chapter 7, "Make it yours".
 9. **Finish the work you were given.** (core line 6) Anyone who has watched an agent stop halfway knows why it is there (CopyB's case).
-10. **Native installs. No custom installer.** (CopyA) From the README: thin native adapters "without ... adding a custom installer". Used as the install title.
+10. **Shipped for OMP first.** (mine, after Main's harness ruling) The install title states the status: OMP is shipped and the other adapters are in progress (#591). It replaces CopyA's "Native installs. No custom installer.", which the ruling bars.
 
 ## Credits, line by line
 Studio
@@ -42,7 +42,7 @@ Studio
 - Mine: the hero sub, the secondary action, the Poppycock, Linejam and Parlor entries, the retainer item and the footer line. The `hello@mistystep.io` link follows Main's ruling that the address is public on mistystep.io/book.
 
 Stack
-- "Eight lines. Every session.": CopyA and CopyB. "Six parts. One always on.", the brief section and its six field bodies, "Six tasks, one run each." with its limits sentence, and "Native installs. No custom installer.": CopyA.
+- "Eight lines. Every session.": CopyA and CopyB. "Six parts. One always on.", the brief section and its six field bodies, "Six tasks, one run each." with its limits sentence, and the proof line "Install commands for OMP, Claude Code, Codex and pi.": CopyA.
 - Close "Done means the check passes.": CopyA's stack hero, moved to the close as the bookend. The close body rewrites CopyA's "The method is plain text." body without its list of three.
 - Mine: the hero headline and sub, the diagram intro and the six node bodies.
 
@@ -61,7 +61,7 @@ Each claim was checked on 2026-10-29 against the product's own site or repositor
 - "All five are ours and open to inspect": all five repositories are public (`gh api repos/misty-step/<name>`). Four are MIT and Poppycock has no licence, so the copy avoids "open source".
 - `hello@mistystep.io`: https://mistystep.io/book.
 - Oracle node, "a check outside the agent that can disprove completion": https://github.com/misty-step/mistystack/blob/master/DOMAIN.md. The playbook list: https://github.com/misty-step/mistystack/tree/master/skills/misty/playbooks. Routing to a playbook or a skill, principles read when their trigger applies, and the briefing contract with "A brief with no Oracle returns to shaping instead of dispatch.": https://github.com/misty-step/mistystack/blob/master/skills/misty/SKILL.md. "Reads the task and chooses the playbook and skills": https://github.com/misty-step/mistystack/blob/master/docs/guide/02-misty.md.
-- "Native installs. No custom installer.", plugins for OMP, Claude Code and Codex and a Git package for pi: https://github.com/misty-step/mistystack (README: thin native adapters connect it "without copying the method or adding a custom installer"; "pi: Git package and core extension").
+- Install status, "Shipped for OMP first" and "The Claude Code, Codex and pi adapters are in progress (#591)": https://github.com/misty-step/mistystack/tree/master/docs/guide (README: "OMP shipped first; other adapters and their proofs are tracked by #591, not claimed as shipped here") and https://github.com/misty-step/mistystack/issues/591 (open). The install commands are in facts.ts, read from each harness's reference file. Main's ruling of 2026-10-29: show the commands for all four, call only OMP shipped, and never call the others shipped, supported, native or proven.
 - "Every part of the method is a Markdown file in a public, MIT-licensed repository" and "seven chapters": the README's one Agent Skills content tree, the MIT LICENSE, and https://github.com/misty-step/mistystack/tree/master/docs/guide (chapters 01 to 07).
 - Proposal pending Phaedrus (questions.md, question 6): the footer's spell line. Main keeps it in the lab as a proposal. Without it the footer reads "Misty Step is a software studio."
 
@@ -73,10 +73,10 @@ Sent to Main for Phaedrus on 2026-10-29: `~/.cache/tmp/misty-design/r2/copy/ques
 4. What arrives on which day of the two weeks, and what one plan entry contains.
 5. Whether the five products and client builds run on mistystack.
 6. Whether the site may say the name comes from the D&D spell Misty Step.
-Also open: the guide README at c72698f still says "OMP shipped first; other adapters and their proofs are tracked by #591, not claimed as shipped here" (#591 is open). The proof line "Installs natively in OMP, Claude Code, Codex and pi." follows facts.ts and the brief; Main should confirm it.
+Resolved: Main's harness ruling (2026-10-29) is applied. The proof line shows install commands for all four harnesses, and the install section calls only OMP shipped.
 
 ## Bar check (line by line, in renders)
 - No hype words. No dashes, exclamation marks or rhetorical questions. No "X, not Y" in our own lines; the core block quotes "a ticket, not scope" verbatim. The lists name four, six or seven real items rather than habitual threes.
-- Hero subs run 29 words (studio) and 27 (stack). The proof lines run 7 and 9 words.
+- Hero subs run 29 words (studio) and 27 (stack). The proof lines run 6 words (studio) and 9 (stack).
 - Every count spelled in prose (eight lines, seven playbooks, six parts, six tasks, five limits) is checked against facts.ts at import and fails loudly if facts.ts changes.
 - The trial appears only with its denominators (4/6, 5/6, 2/6), the measure sentence from facts.ts and all five limits. It never appears in a hero.
