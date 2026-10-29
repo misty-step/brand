@@ -14,7 +14,7 @@ document.addEventListener('keydown', event => {
 history.scrollRestoration = 'manual';
 function style(id:string,css:string){let el=document.getElementById(id) as HTMLStyleElement|null;if(!el){el=document.createElement('style');el.id=id;document.head.append(el);}el.textContent=css;}
 function context():Ctx {return {page:state.page,theme:state.theme,reducedMotion:state.reducedMotion,viewport:innerWidth<=700?'phone':'desktop'};}
-function motionContext():MotionCtx {const css=getComputedStyle(root),value=(v:string)=>css.getPropertyValue(v).trim();return {...context(),dprCap:1.5,colors:{bg:value('--bg'),ink:value('--ink'),accent:value('--accent'),field1:value('--field-1'),field2:value('--field-2'),field3:value('--field-3')}};}
+function motionContext():MotionCtx {const css=getComputedStyle(root),value=(v:string)=>css.getPropertyValue(v).trim();return {...context(),dprCap:1.5,tune:state.tune?.[state.picks.motion],colors:{bg:value('--bg'),ink:value('--ink'),accent:value('--accent'),field1:value('--field-1'),field2:value('--field-2'),field3:value('--field-3')}};}
 function updateMark() {
   if (!current) return;
   const mark = current.mark as MarkOption & { css?: string };

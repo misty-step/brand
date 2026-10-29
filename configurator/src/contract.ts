@@ -44,13 +44,17 @@ export interface HeroOption extends OptionMeta { layer: 'hero';
 }
 
 // MOTION: ambient background + entrance choreography + micro-interactions.
-export interface MotionCtx extends Ctx { colors: { bg: string; ink: string; accent: string; field1: string; field2: string; field3: string }; dprCap: number }
+export interface MotionCtx extends Ctx { colors: { bg: string; ink: string; accent: string; field1: string; field2: string; field3: string }; dprCap: number; tune?: Record<string, number> } // tune: the lab's Tune panel values for this option, keyed by MotionParam.key
 export interface MotionHandle { pause(): void; resume(): void; update(ctx: MotionCtx): void; destroy(): void }
+// A tunable number the lab shows as a slider (or a select when `options` names each integer value).
+// `value` is this option's default; the background receives overrides in MotionCtx.tune and clamps them.
+export interface MotionParam { key: string; label: string; min: number; max: number; step: number; value: number; options?: string[] }
 export interface MotionOption extends OptionMeta { layer: 'motion';
   renderer?: 'webgl'|'canvas2d'|'none'; // Defaults to webgl when background exists, otherwise none; drives off-Mac proof.
   background?: { load(): Promise<{ mount(host: HTMLElement, ctx: MotionCtx): MotionHandle }> }; // lazy; host is sized by the hero/page
   entrance: { css: string };     // scoped html[data-motion="<id>"]; animates [data-enter] -> [data-enter].is-in; respect [data-reduced-motion="1"] (show final)
   interaction?: { css: string }; // hover/press/focus micro-interactions for .btn, .item, a.link
+  params?: MotionParam[];        // optional tuner; values travel in LabState.tune[<id>]
   budget: { gzipKB: number; frameMs: string; note: string };   // measured, not guessed
 }
 // Background rules: no work on the critical path; draw nothing until visible; stop when offscreen or tab hidden; cap devicePixelRatio (<= 1.5) and render at reduced resolution where the look allows; step quality down when frames drop; under reduced motion draw one still frame and stop; respond to update() for theme/palette changes; release the GL context on destroy. Target <= 60 KB gzip incl. libraries (raw WebGL/OGL preferred; three.js only if it earns 190 KB) and <= 4 ms/frame on this Mac.

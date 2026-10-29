@@ -31,6 +31,7 @@ app.innerHTML = `
     <aside class="rail" aria-label="Brand layers">
       <div class="rail-title"><span>Layers</span><span id="option-count">Loading…</span></div>
       <div id="layers"></div>
+      <section class="tune" id="tune" aria-labelledby="tune-title" hidden></section>
       <button class="primary shuffle-all" data-action="shuffle">Shuffle unlocked</button>
       <p class="rail-hint">Select a layer name for its description and references.</p>
       <details class="about"><summary>About this lab</summary>
@@ -131,7 +132,43 @@ function paint() {
     button.setAttribute('aria-pressed', String(active));
     button.textContent = original + (active && modified ? ', modified' : '');
   });
+  paintTune();
   resize();
+}
+// Tune panel: the selected motion's params as sliders (selects for named choices). Overrides live in
+// state.tune[<motion id>], so they travel in the share link; a value back at its default is dropped.
+let tuneFor = '';
+function paintTune() {
+  const motion = resolved('motion') as MotionOption | undefined;
+  const panel = document.getElementById('tune')!;
+  const params = motion?.params ?? [];
+  panel.hidden = !params.length;
+  if (!motion || !params.length) { tuneFor = ''; return; }
+  const overrides = state.tune?.[motion.id] ?? {};
+  if (tuneFor !== motion.id) {
+    tuneFor = motion.id;
+    panel.innerHTML = `<div class="tune-head"><h2 id="tune-title">Tune ${esc(motion.label)}</h2><button data-action="tune-reset">Reset</button></div>${params.map(p => `<label class="tune-row"><span>${esc(p.label)}</span>${p.options
+      ? `<select data-tune="${esc(p.key)}">${p.options.map((name, i) => `<option value="${p.min + i * p.step}">${esc(name)}</option>`).join('')}</select>`
+      : `<output data-tune-out="${esc(p.key)}"></output><input type="range" data-tune="${esc(p.key)}" min="${p.min}" max="${p.max}" step="${p.step}">`}</label>`).join('')}`;
+  }
+  for (const p of params) {
+    const value = String(overrides[p.key] ?? p.value);
+    const input = panel.querySelector<HTMLInputElement | HTMLSelectElement>(`[data-tune="${p.key}"]`)!;
+    if (input.value !== value) input.value = value;
+    const out = panel.querySelector(`[data-tune-out="${p.key}"]`);
+    if (out) out.textContent = Number(value).toFixed(p.step < 1 ? 2 : 0);
+  }
+  panel.querySelector<HTMLButtonElement>('[data-action="tune-reset"]')!.disabled = !Object.keys(overrides).length;
+}
+function tune(key: string, value: number) {
+  const id = state.picks.motion;
+  const param = (resolved('motion') as MotionOption).params?.find(p => p.key === key);
+  if (!param) return;
+  const { [key]: _, ...rest } = state.tune?.[id] ?? {};
+  const values = value === param.value ? rest : { ...rest, [key]: value };
+  const { [id]: __, ...others } = state.tune ?? {};
+  const next = Object.keys(values).length ? { ...others, [id]: values } : others;
+  commit({ ...state, tune: Object.keys(next).length ? next : undefined });
 }
 function commit(next = state) {
   state = next;
@@ -171,6 +208,7 @@ function spec() {
     options: Object.fromEntries(LAYERS.map(layer => { const option = resolved(layer); return [layer, { id: option.id, label: option.label, summary: option.summary, origin: option.origin, refs: option.refs }]; })),
     tokens: { ...type.tokens, ...color[state.theme], ...viewportTokens.desktop }, themes: { light: color.light, dark: color.dark }, viewportTokens,
     fonts: { faces: type.faces, license: type.license }, motionBudget: motion.budget, motionRenderer: motion.renderer ?? (motion.background ? 'webgl' : 'none'),
+    ...(motion.params ? { motionParams: Object.fromEntries(motion.params.map(p => [p.key, state.tune?.[motion.id]?.[p.key] ?? p.value])) } : {}),
   };
 }
 function showSpec() {
@@ -263,6 +301,11 @@ document.addEventListener('click', event => {
     case 'share': void share(); break;
     case 'export': exportJSON(); break;
     case 'close': dialog.close(); break;
+    case 'tune-reset': {
+      const { [state.picks.motion]: _, ...others } = state.tune ?? {};
+      commit({ ...state, tune: Object.keys(others).length ? others : undefined });
+      break;
+    }
   }
 });
 document.addEventListener('change', event => {
@@ -276,6 +319,7 @@ document.addEventListener('change', event => {
 });
 document.addEventListener('input', event => {
   const element = event.target as HTMLTextAreaElement;
+  if (element.dataset.tune) { tune(element.dataset.tune, Number(element.value)); return; }
   if (element.dataset.note) { const item = saved.find(item => item.id === element.dataset.note); if (item) { item.note = element.value; persistSaved(); } }
 });
 document.addEventListener('keydown', event => {
