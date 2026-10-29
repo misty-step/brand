@@ -66,7 +66,12 @@ function layout(f: Frame): Layout {
     L = left
       ? { A: [b.x + b.w, b.y + b.h * 1.12], B: [b.x - b.w * 0.15, b.y - b.h * 0.12], half: k * 0.24, bow: k * 0.14 }
       : { A: [b.x, b.y + b.h * 1.12], B: [b.x + b.w * 1.15, b.y - b.h * 0.12], half: k * 0.24, bow: k * 0.14 };
-  } else if (b) L = { A: [b.x - b.w * 0.1, b.y + b.h * 0.9], B: [b.x + b.w * 1.1, b.y + b.h * 0.15], half: b.h * 0.22, bow: b.h * 0.1 };
+  } else if (b) {
+    // wide: sweep across the rectangle and stay inside its depth (the ribbon reaches at most 1.75
+    // half-widths from its axis at the ends, plus the bow mid-span), since a hero may set its copy
+    // on an opaque panel
+    L = { A: [b.x - b.w * 0.1, b.y + b.h * 0.64], B: [b.x + b.w * 1.1, b.y + b.h * 0.36], half: b.h * 0.19, bow: b.h * 0.1 };
+  }
   else if (f.kind !== 'panel' && W >= 700) L = { A: [W * 0.44, H * 1.15], B: [W * 1.08, -H * 0.15], half: m * 0.22, bow: m * 0.16 };
   else if (f.kind !== 'panel') L = { A: [-W * 0.1, H * 1.02], B: [W * 1.1, H * 0.64], half: W * 0.2, bow: W * 0.08 };
   else if (a > 2.4) L = { A: [-W * 0.05, H * 0.9], B: [W * 1.05, H * 0.15], half: H * 0.26, bow: H * 0.14 };
