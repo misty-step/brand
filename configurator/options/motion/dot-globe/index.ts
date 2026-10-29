@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'webgl',
   label: 'Dotted globe',
-  summary: 'The world as square points that turn once every four minutes while one accent traveller crosses it a short hop at a time, the way a misty step covers ground: never in one leap.',
+  summary: 'The world in square points, turning once every four minutes and crossed by one accent traveller a short hop at a time, the way a misty step covers ground.',
   origin: 'new',
   refs: [
     { name: 'Stripe: designing the globe', url: 'https://stripe.com/blog/globe', what: 'A sunflower (Fibonacci) lattice keeps dot spacing even from pole to pole, land-only dots draw continents without borders, and arcs travel between points.' },

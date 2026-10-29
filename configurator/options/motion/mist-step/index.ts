@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'canvas2d',
   label: 'Mist step',
-  summary: 'The company name as navigation: an in-page link gathers pixel mist over the screen, jumps while it is covered and clears at the destination, half a second in all. Nothing loops; the hero keeps a still bank of the same mist that clears once on arrival.',
+  summary: 'The company name as navigation: in-page links teleport through half a second of pixel mist instead of scrolling, and the hero keeps a still bank of the same mist that clears once on arrival.',
   origin: 'A',
   refs: [
     { name: 'Misty Step, D&D 5e SRD', url: 'https://5thsrd.org/spellcasting/spells/misty_step/', what: 'The brief for the transition: silvery mist, a short teleport, to a place you can see. Only in-page jumps step, and destinations already on screen just move.' },

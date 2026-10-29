@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'webgl',
   label: 'Field ribbon',
-  summary: 'One slow ribbon of the palette field colours sweeps through the hero and twists, posterised into three flat tones on a 2 px grid: a screenprint in steps rather than a glowing gradient, bowing and breathing on 27 to 43 second periods so it never repeats.',
+  summary: 'One slow ribbon of the palette field colours twisting through the hero, posterised into three flat tones on a 2 px grid: Stripe’s one indulgence as a screenprint in steps, never a glowing gradient.',
   origin: 'new',
   refs: [
     { name: 'Stripe', url: 'https://stripe.com', what: 'Precision with one indulgence: a single ribbon through the hero, behind otherwise quiet type, with a still of the same frame when WebGL is missing.' },

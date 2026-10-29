@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'webgl',
   label: 'Grid beams',
-  summary: 'Light climbs the page grid in steps: each beam runs a cell or two, rises one, and lands on a single accent step, and the rails it crossed glow for a moment before the grid goes dark. The structure is invisible until light crosses it, so there is never a decorative grid at rest.',
+  summary: 'Light climbs the page grid in staircases and lands on one accent step, lighting rails that are otherwise invisible, so the layout itself becomes the motion and there is never a decorative grid at rest.',
   origin: 'new',
   refs: [
     { name: 'Vercel', url: 'https://vercel.com', what: 'The structure stays still and only light moves; here the structure is the page grid, so motion explains the layout instead of decorating it.' },

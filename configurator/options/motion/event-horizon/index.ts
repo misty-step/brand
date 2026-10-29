@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'webgl',
   label: 'Event horizon',
-  summary: 'A black hole drawn in stipple: an empty shadow, one thin photon ring, and a disc whose far side bends over the top; inner orbits outrun outer ones, so the streaks shear and never repeat. Dark reads as light in a void, light as an engraved plate.',
+  summary: 'A black hole in stipple, its disc shearing slowly round an empty shadow: the single light in a void from Grok, drawn with the same pixels as the rest of the brand, and an engraved plate in the light theme.',
   origin: 'new',
   refs: [
     { name: 'xAI and Grok, as recorded by Palate', url: 'https://palatemcp.com/gallery/xai', what: 'A near-black void whose only light source is one self-lit form, its light bleeding from one side; the type sits in the dark around it and nothing else glows.' },
