@@ -1,11 +1,11 @@
 import type { HeroCtx, HeroOption } from '../../../src/contract';
 import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
-import { title, sub, actions, proof, slot, enter, fit, href, EDGE, GUTTER } from '../shared';
+import { title, sub, actions, proof, slot, enter, fit, href, twoLineLength, EDGE, GUTTER } from '../shared';
 
-const S = 'html[data-hero="treads"]';
-// The longest terms line sizes all three treads alike, so the prices read as one set.
-const termsLength = Math.max(...FACTS.offer.steps.map(s => [...s.terms].length));
+const S = 'html[data-hero="treads"] .hero';
+// The longest two-line break among the terms sizes all three treads alike, so the prices read as one set.
+const termsLength = Math.max(...FACTS.offer.steps.map(s => twoLineLength(s.terms)));
 
 /** Studio: the three priced steps, the first lit because it is the primary action. Stack: the method path, the Oracle lit as the goal. */
 function flight(ctx: HeroCtx): string {
@@ -28,16 +28,15 @@ export default {
   ],
   motionHost: 'panel',
   render: ctx => `<div class="tr-copy">${title(ctx)}<div class="tr-row">${sub(ctx)}<div class="tr-act">${actions(ctx)}${proof(ctx)}</div></div></div>${slot()}${flight(ctx)}`,
-  css: `${S} .hero{display:grid;grid-template-columns:[full-start] ${EDGE} [c-start] minmax(0,1fr) [c-end] ${EDGE} [full-end];padding-top:clamp(48px,8vh,96px)}
+  css: `${S}{display:grid;grid-template-columns:[full-start] ${EDGE} [c-start] minmax(0,1fr) [c-end] ${EDGE} [full-end];padding-top:clamp(48px,8vh,96px)}
 ${S} .tr-copy{grid-column:c;grid-row:1;container-type:inline-size}
 ${fit(S)}
-${S} .hero-title{max-width:min(100%,1080px)}
 ${S} .tr-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px 64px;margin-top:clamp(20px,3vh,32px)}
 ${S} .hero-sub{flex:1 1 440px;max-width:min(var(--measure,60ch),100%);font-size:var(--step-1);color:var(--ink-2)}
 ${S} .tr-act{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
 ${S} .actions{margin-top:0}
 ${S} .hero-proof{font-size:var(--step--1);color:var(--ink-2)}
-${S} .hero>.hero-visual{grid-column:full;grid-row:2;position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%);mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%)}
+${S}>.hero-visual{grid-column:full;grid-row:2;position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%);mask-image:linear-gradient(to bottom,transparent,var(--ink) 30%)}
 ${S} .tr-steps{grid-column:c;grid-row:2;position:relative;z-index:1;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));align-items:end;margin-top:clamp(40px,7vh,72px);--base:176px;--rise:48px}
 ${S} .tr-steps[data-n="6"]{--rise:28px}
 ${S} .tr-step{container-type:inline-size;min-height:calc(var(--base) + var(--k) * var(--rise));padding:18px clamp(14px,1.6vw,24px) 24px;background:var(--bg-2);border-top:max(var(--rule,1px),2px) solid var(--line-2)}
@@ -48,9 +47,9 @@ ${S} .tr-n{font-variant-numeric:tabular-nums;color:var(--ink-2)}
 ${S} .tr-title{font-weight:600}
 ${S} a.tr-title{display:inline-flex;align-items:center;min-height:44px;margin-block:-10px}
 ${S} .tr-count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink-2)}
-${S} .tr-terms{margin-top:14px;font-family:var(--font-display);font-weight:var(--display-weight);font-size:max(20px,min(var(--step-3),calc(100cqi / (var(--tl,24) * var(--display-advance,.55) * .6))));line-height:1.04;letter-spacing:var(--display-tracking);text-transform:var(--display-transform);text-wrap:balance}
+${S} .tr-terms{margin-top:14px;font-family:var(--font-display);font-weight:var(--display-weight);font-size:max(20px,min(var(--step-3),calc(100cqi / (var(--tl,14) * var(--display-advance,.55) * 1.1))));line-height:1.04;letter-spacing:var(--display-tracking);text-transform:var(--display-transform);text-wrap:balance}
 ${S} .tr-body{margin-top:10px;font-size:var(--step--1);color:var(--ink-2)}
-@media (max-width:700px){${S} .hero{grid-template-columns:[full-start] ${GUTTER} [c-start] minmax(0,1fr) [c-end] ${GUTTER} [full-end];padding-top:40px}
+@media (max-width:700px){${S}{grid-template-columns:[full-start] ${GUTTER} [c-start] minmax(0,1fr) [c-end] ${GUTTER} [full-end];padding-top:40px}
 ${S} .tr-row{flex-direction:column;align-items:stretch;gap:28px}
 ${S} .hero-sub{flex:none}
 ${S} .tr-act{align-items:stretch}
