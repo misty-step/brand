@@ -30,8 +30,8 @@ ${S} .btn:active{transform:scale(.98)}
 ${S} a.link,${S} .item-link{transition:text-decoration-thickness .24s ease,text-underline-offset .24s cubic-bezier(.23,1,.32,1),color .24s ease,background-color .24s ease}`,
   },
   budget: {
-    gzipKB: 5.6,
-    frameMs: '0.21 ms median, 0.30 ms p90 per frame at 1440x820, 0.21 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
-    note: 'Vite production chunks, gzip -9: 1.8 KB for this option plus the 3.8 KB runtime shared by the MotionB options (copy-aware placement and keep-clear mask included). Raw WebGL1, one fullscreen triangle at one cell per 2 CSS px (3 and 4 px on lower tiers), 30 fps cap. Without WebGL the same still is painted once on the CPU (10.7 ms at 1440x820, 4.6 ms for a 480x640 panel).',
+    gzipKB: 6.5,
+    frameMs: '0.25 ms median, 0.30 ms p90 per frame at 1440x820, 0.21 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
+    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 4.1 KB runtime shared by the MotionB options (copy-aware placement and keep-clear included). Raw WebGL1, one fullscreen triangle at one cell per 2 CSS px (3 and 4 px on lower tiers), 30 fps cap. Without WebGL the same still is painted once on the CPU (10.7 ms at 1440x820, 4.6 ms for a 480x640 panel).',
   },
 } satisfies MotionOption & { renderer: 'webgl' };

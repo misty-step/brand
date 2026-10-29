@@ -60,7 +60,7 @@ export const presets: Preset[] = [
   {
     id: 'b-atelier',
     label: 'B Atelier (previous round)',
-    note: 'Previous round B, rebuilt from its ported parts: an editorial book in Literata with Departure Mono for chrome, the pixel bird, and terraced hills surfacing from mist beside the title page.',
+    note: 'Previous round B, rebuilt from its ported parts: an editorial book set in Literata, Departure Mono kept for code and figures, the pixel bird, and terraced hills surfacing from mist beside the title page.',
     picks: { mark: 'bird', type: 'b-atelier', color: 'paper-rubric', layout: 'book', hero: 'spread', motion: 'terraces', copy: 'quiet-craft' },
   },
   {

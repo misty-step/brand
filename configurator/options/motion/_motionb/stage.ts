@@ -24,15 +24,17 @@ export interface Frame {
   /** pointer in CSS px from the host's top-left; s eases 0..1 while a fine pointer is near */
   ptr: { x: number; y: number; s: number };
   ctx: MotionCtx;
-  /** Full and page hosts: the widest strip clear of the hero copy, where the focal object goes. */
+  /** Full and page hosts: the clear rectangle around the hero copy, where the focal object goes. */
   band: Band | null;
+  /** Full hosts: hero copy boxes (x0, y0, x1, y1, CSS px) the field thins away from, at most 8. */
+  keep: Box[];
 }
 /**
- * A full-width row or full-height column of the host, in CSS px, with nothing of the hero copy in
- * it. `along` is where along the strip's long axis the focal object sits best (0..1), away from
- * the copy's centre of mass.
+ * A rectangle of the host, in CSS px, with nothing of the hero copy in it. `along` is where along
+ * a full-width row the focal object sits best (0..1), away from the copy's centre of mass.
  */
 export interface Band { x: number; y: number; w: number; h: number; along: number }
+export type Box = [number, number, number, number];
 export interface Stage extends Frame { gl: WebGLRenderingContext; canvas: HTMLCanvasElement; host: HTMLElement }
 export interface Pixels { data: Uint8ClampedArray; width: number; height: number }
 
@@ -148,7 +150,7 @@ function fit(f: Frame, canvas: HTMLCanvasElement, host: HTMLElement, scene: Scen
   const px = scene.scale(f.tier, dpr, Math.min(f.ctx.dprCap || 1.5, 1.5));
   const w = Math.max(1, Math.floor(r.width * px)), h = Math.max(1, Math.floor(r.height * px));
   f.px = px; f.w = w; f.h = h; f.cssW = w / px; f.cssH = h / px;
-  composeAroundCopy(f, host, canvas);
+  composeAroundCopy(f, host);
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
   canvas.style.width = f.cssW + 'px';
   canvas.style.height = f.cssH + 'px';
@@ -156,7 +158,6 @@ function fit(f: Frame, canvas: HTMLCanvasElement, host: HTMLElement, scene: Scen
 
 /** The hero's own words and pieces, which a full-bleed field composes around (the visual panel is not copy). */
 const COPY = '[data-hero-root] :is(.hero-title, .hero-sub, .actions, .hero-proof, [data-enter]:not(.hero-visual))';
-type Box = [number, number, number, number];
 
 /** Hero copy boxes in host CSS px (x0, y0, x1, y1), clipped to the host. */
 function copyBoxes(host: HTMLElement, W: number, H: number): Box[] {
@@ -170,20 +171,60 @@ function copyBoxes(host: HTMLElement, W: number, H: number): Box[] {
 }
 
 /**
- * Full and page hosts: find where the focal object goes (Frame.band). Full hosts also get a soft
- * CSS mask on the canvas so the field never draws under the copy, whatever the hero's layout.
- * Page hosts scroll under the copy, so they are not masked.
+ * Full and page hosts: find where the focal object goes (Frame.band). Full hosts also keep the
+ * copy boxes (Frame.keep) so every scene thins away from the text on its own pixel grid. Page
+ * hosts scroll under the copy, so they keep nothing.
  */
-export function composeAroundCopy(f: Frame, host: HTMLElement, canvas: HTMLCanvasElement) {
+export function composeAroundCopy(f: Frame, host: HTMLElement) {
   const boxes = f.kind === 'panel' ? [] : copyBoxes(host, f.cssW, f.cssH);
   f.band = boxes.length ? clearRect(boxes, f.cssW, f.cssH) : null;
-  if (f.kind === 'full') keepClear(canvas, boxes, f.cssW, f.cssH);
+  f.keep = f.kind === 'full' ? boxes.sort((p, q) => (q[2] - q[0]) * (q[3] - q[1]) - (p[2] - p[0]) * (p[3] - p[1])).slice(0, 8) : [];
 }
 
+/** Keep-clear distances in CSS px: nothing within KEEP_IN of the copy, full field beyond KEEP_IN + KEEP_SPAN. */
+export const KEEP_IN = 8, KEEP_SPAN = 40;
+
 /**
- * The largest rectangle of the host that keeps 8 px clear of every copy box, scored by its
- * shorter side (a round focal object needs both), on a 16 px grid. Null when the best is under
- * 30% of the host's short side: the copy fills the hero and the scene keeps its default.
+ * GLSL for scenes: keep(css, th) is 1 away from the hero copy and 0 next to it, with a dithered
+ * edge (th: the fragment's or dot's threshold, 0..1) so the field thins out on its own grid.
+ */
+export const KEEP_GLSL = `
+uniform vec4 uKeep[8];
+uniform float uKeepN;
+float keep(vec2 css, float th) {
+  float d = 1e4;
+  for (int i = 0; i < 8; i++) {
+    if (float(i) >= uKeepN) break;
+    vec2 q = max(max(uKeep[i].xy - css, css - uKeep[i].zw), 0.0);
+    d = min(d, length(q));
+  }
+  return step(th, (d - ${KEEP_IN.toFixed(1)}) / ${KEEP_SPAN.toFixed(1)});
+}`;
+
+const keepData = new Float32Array(32);
+/** Upload Frame.keep to a program that includes KEEP_GLSL. */
+export function setKeep(gl: WebGLRenderingContext, U: Record<string, WebGLUniformLocation | null>, f: Frame) {
+  keepData.fill(0);
+  f.keep.forEach((b, i) => keepData.set(b, i * 4));
+  gl.uniform4fv(U['uKeep[0]'], keepData);
+  gl.uniform1f(U.uKeepN, f.keep.length);
+}
+
+/** The same keep-clear on the CPU: how far from the copy a CSS point is, 0..1 across the dithered edge. */
+export function keepAt(f: Frame, x: number, y: number): number {
+  let d = Infinity;
+  for (const [x0, y0, x1, y1] of f.keep) d = Math.min(d, Math.hypot(Math.max(x0 - x, 0, x - x1), Math.max(y0 - y, 0, y - y1)));
+  return (d - KEEP_IN) / KEEP_SPAN;
+}
+
+/** Interleaved gradient noise: the per-cell dither threshold the scenes share. */
+export const ign = (x: number, y: number) => { const v = 52.9829189 * ((0.06711056 * x + 0.00583715 * y) % 1); return v - Math.floor(v); };
+
+/**
+ * The largest rectangle of the host that keeps 8 px clear of every copy box, on a 16 px grid,
+ * scored by its shorter side (a round focal object needs both) with a small bonus for length (a
+ * longer strip of nearly the same depth gives ribbons, discs and banks room). Null when the shorter
+ * side is under 18% of the host's: the copy fills the hero and the scene keeps its default.
  */
 export function clearRect(boxes: Box[], W: number, H: number): Band | null {
   const C = 16, M = 8, gw = Math.ceil(W / C), gh = Math.ceil(H / C);
@@ -195,7 +236,7 @@ export function clearRect(boxes: Box[], W: number, H: number): Band | null {
   }
   // largest rectangle in the histogram of free runs ending at each row
   const run = new Int32Array(gw), stack: number[] = [];
-  let best: Band | null = null, bestSide = 0.3 * Math.min(W, H), bestArea = 0;
+  let best: Band | null = null, bestScore = 0;
   for (let gy = 0; gy < gh; gy++) {
     for (let gx = 0; gx < gw; gx++) run[gx] = busy[gy * gw + gx] ? 0 : run[gx] + 1;
     stack.length = 0;
@@ -204,8 +245,8 @@ export function clearRect(boxes: Box[], W: number, H: number): Band | null {
       while (stack.length && run[stack[stack.length - 1]] >= hgt) {
         const top = stack.pop()!, left = stack.length ? stack[stack.length - 1] + 1 : 0;
         const x = left * C, y = (gy - run[top] + 1) * C, w = Math.min(W, gx * C) - x, h = Math.min(H, (gy + 1) * C) - y;
-        const side = Math.min(w, h);
-        if (side > bestSide || (side === bestSide && w * h > bestArea)) { bestSide = side; bestArea = w * h; best = { x, y, w, h, along: 0.5 }; }
+        const side = Math.min(w, h), score = side * (1 + 0.12 * Math.log(Math.max(w, h) / side));
+        if (side >= 0.18 * Math.min(W, H) && score > bestScore) { bestScore = score; best = { x, y, w, h, along: 0.5 }; }
       }
       stack.push(gx);
     }
@@ -220,27 +261,13 @@ export function clearRect(boxes: Box[], W: number, H: number): Band | null {
   return best;
 }
 
-/** A soft mask (8 px cells, 8 px margin, 24 px feather) that hides the canvas under the copy boxes. */
-function keepClear(canvas: HTMLCanvasElement, boxes: Box[], W: number, H: number) {
-  const style = canvas.style as CSSStyleDeclaration & { webkitMaskImage: string; webkitMaskSize: string };
-  if (!boxes.length) { style.maskImage = style.webkitMaskImage = ''; return; }
-  const C = 8, mw = Math.ceil(W / C), mh = Math.ceil(H / C);
-  const m = document.createElement('canvas');
-  m.width = mw; m.height = mh;
-  const c2 = m.getContext('2d');
-  if (!c2) return;
-  const img = c2.createImageData(mw, mh);
-  for (let gy = 0; gy < mh; gy++) for (let gx = 0; gx < mw; gx++) {
-    const x = (gx + 0.5) * C, y = (gy + 0.5) * C;
-    let d = Infinity;
-    for (const [x0, y0, x1, y1] of boxes) d = Math.min(d, Math.hypot(Math.max(x0 - x, 0, x - x1), Math.max(y0 - y, 0, y - y1)));
-    const k = Math.min(1, Math.max(0, (d - 8) / 24));
-    img.data[(gy * mw + gx) * 4 + 3] = Math.round(255 * k * k * (3 - 2 * k));
+/** CPU stills: drop the pixels the keep-clear edge removes, with the shaders' dither. */
+function keepPoster(img: Pixels, f: Frame) {
+  if (!f.keep.length) return;
+  for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) {
+    const i = (y * f.w + x) * 4;
+    if (img.data[i + 3] && keepAt(f, (x + 0.5) / f.px, (y + 0.5) / f.px) < ign(x, f.h - 1 - y)) img.data[i + 3] = 0;
   }
-  c2.putImageData(img, 0, 0);
-  const url = `url(${m.toDataURL()})`;
-  style.maskImage = style.webkitMaskImage = url;
-  style.maskSize = style.webkitMaskSize = '100% 100%';
 }
 
 /** Resize the field with its host, and recompose it when the hero copy reflows (wrapping, late fonts). */
@@ -255,7 +282,7 @@ function mountPoster(host: HTMLElement, ctx0: MotionCtx, scene: Scene, replace?:
   const canvas = canvasFor(host, true);
   const c2 = canvas.getContext('2d');
   if (!c2) return NOOP;
-  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: palette(ctx0), ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null };
+  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: palette(ctx0), ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null, keep: [] };
   if (replace) replace.replaceWith(canvas); else host.append(canvas);
   let visible = false, dirty = true, dead = false;
   const paint = () => {
@@ -265,6 +292,7 @@ function mountPoster(host: HTMLElement, ctx0: MotionCtx, scene: Scene, replace?:
     for (f.tier = 0; ; f.tier++) { fit(f, canvas, host, scene); if (f.w * f.h <= 160_000 || f.tier >= scene.tiers - 1) break; }
     const img = c2.createImageData(f.w, f.h);
     scene.paint(img, f, scene.still);
+    keepPoster(img, f);
     c2.putImageData(img, 0, 0);
     canvas.style.opacity = '1';
   };
@@ -286,7 +314,7 @@ export function mountStage(host: HTMLElement, ctx0: MotionCtx, scene: Scene): Mo
   host.append(canvas);
 
   let target = palette(ctx0);
-  const s: Stage = { gl, canvas, host, kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: target, ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null };
+  const s: Stage = { gl, canvas, host, kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1, tier: 0, pal: target, ptr: { x: -1e4, y: -1e4, s: 0 }, ctx: ctx0, band: null, keep: [] };
   let from = target, mixStart = 0, mixing = false;
   let t = scene.still, last = 0, lastDraw = 0, raf = 0, eased = 0;
   // stale: the last presented frame no longer matches size, palette or time, so a still must be redrawn

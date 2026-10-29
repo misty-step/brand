@@ -3,7 +3,7 @@
 // its head a bright pixel, its tail fading over 150 CSS px, and every rail it crossed stays faintly
 // lit for a few seconds before the grid goes dark again. Raw WebGL1, axis-aligned quads only.
 import type { MotionCtx } from '../../../src/contract';
-import { blend, crisp, mountStage, program, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
+import { KEEP_GLSL, blend, crisp, mountStage, program, setKeep, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
 
 const STILL = 14;          // seconds of simulation behind the still frame
 const SPEED = 200;         // CSS px per second along the rails
@@ -18,14 +18,21 @@ attribute vec2 aTone;  // x: alpha, y: tone (0 lit rail, 1 tail, 2 head, 3 point
 uniform vec2 uRes;
 uniform vec3 uF3, uInk, uAcc;
 varying vec4 vCol;
+varying vec2 vCss;
 void main() {
+  vCss = aPos;
   float k = aTone.y;
   vec3 col = k < 0.5 ? uF3 : (k < 1.5 ? mix(uF3, uInk, aTone.x * 0.8) : (k < 2.5 ? uInk : (k < 3.5 ? uF3 : uAcc)));
   vCol = vec4(col * aTone.x, aTone.x);
   vec2 clip = aPos / uRes * 2.0 - 1.0;
   gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
 }`;
-const FS = `precision mediump float; varying vec4 vCol; void main() { gl_FragColor = vCol; }`;
+const FS = `precision mediump float;
+varying vec4 vCol;
+varying vec2 vCss;
+${KEEP_GLSL}
+// beams dissolve, dithered per pixel, as they near the hero copy
+void main() { gl_FragColor = vCol * keep(vCss, fract(52.9829189 * fract(dot(floor(gl_FragCoord.xy), vec2(0.06711056, 0.00583715))))); }`;
 
 /** Rail module in CSS px: a calmer, wider grid on wide hosts. */
 const moduleFor = (W: number) => (W >= 900 ? 80 : W >= 560 ? 64 : 48);
@@ -159,7 +166,7 @@ export function scene(): Scene {
     init(s) {
       const gl = s.gl;
       prog = program(gl, VS, FS);
-      U = uniforms(gl, prog, ['uRes', 'uF3', 'uInk', 'uAcc']);
+      U = uniforms(gl, prog, ['uRes', 'uF3', 'uInk', 'uAcc', 'uKeep[0]', 'uKeepN']);
       aPos = gl.getAttribLocation(prog, 'aPos'); aTone = gl.getAttribLocation(prog, 'aTone');
       buf = gl.createBuffer()!;
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -184,6 +191,7 @@ export function scene(): Scene {
       gl.useProgram(prog);
       gl.uniform2f(U.uRes, s.cssW, s.cssH);
       gl.uniform3fv(U.uF3, p.f3); gl.uniform3fv(U.uInk, p.ink); gl.uniform3fv(U.uAcc, p.accent);
+      setKeep(gl, U, s);
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, verts.subarray(0, n * 24));
       gl.enableVertexAttribArray(aPos); gl.enableVertexAttribArray(aTone);
