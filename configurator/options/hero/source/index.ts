@@ -68,9 +68,9 @@ ${S} .src-panel{display:none}
 ${switches}
 ${S} .src-panel .copy{margin-top:12px}
 @supports not selector(:has(*)){${S} .src-panel{display:block}${S} .src-panel+.src-panel{margin-top:24px}}
-@media (max-width:899px){${S}{grid-template-columns:[full-start] ${GUTTER} [copy-start art-start] minmax(0,1fr) [copy-end art-end] ${GUTTER} [full-end];row-gap:clamp(40px,7vh,64px);padding-block:40px 64px}
-${S} .src-card{grid-row:2;margin-top:112px}
-${S}>.hero-visual{grid-column:full;grid-row:2;align-self:start;height:176px;margin:0;border-radius:0}}
+@media (max-width:899px){${S}{grid-template-columns:[full-start] ${GUTTER} [copy-start art-start] minmax(0,1fr) [copy-end art-end] ${GUTTER} [full-end];row-gap:32px;padding-block:40px 64px}
+${S} .src-card{grid-row:2;margin-block:24px}
+${S}>.hero-visual{grid-column:full;grid-row:2;align-self:stretch;height:auto;margin:0;border-radius:0}}
 @media (max-width:700px){${S} .actions{flex-direction:column;align-items:stretch}
 ${S} .src-card{padding:16px}
 ${S} .src-card .code{padding:16px}}`,
