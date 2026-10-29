@@ -159,9 +159,11 @@ ${S} .node-count { grid-area: count; align-self: start; color: var(--ink-2); }
 ${S} .node-label { grid-area: label; margin: 0; }
 ${S} .node-label a.link { text-decoration-color: var(--line-2); }
 ${S} .node-body { grid-area: body; max-width: 44ch; }
-${S} .node[data-node="oracle"] .node-label { display: flex; align-items: center; gap: 12px; }
+/* Markers hang in the padding, so the heading stays one run of text (headings can hold nowrap spans) */
+${S} .node[data-node="oracle"] .node-label { position: relative; padding-left: 22px; }
 ${S} .node[data-node="oracle"] .node-label::before {
-  content: ""; flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--accent-2);
+  content: ""; position: absolute; left: 0; top: calc(50% - 5px);
+  width: 10px; height: 10px; border-radius: 3px; background: var(--accent-2);
 }
 
 /* ---- Install: a segmented harness switch over one wide command panel ---- */

@@ -108,8 +108,9 @@ ${S} .s-points .item {
   column-gap: var(--pad); row-gap: 4px; align-items: baseline; padding: 18px var(--pad);
 }
 ${S} .s-points .item + .item { border-top: var(--rule) solid var(--line); }
-${S} .s-points .item-title { display: flex; align-items: baseline; gap: 12px; }
-${S} .s-points .item-title::before { content: ""; flex: none; width: 8px; height: 8px; background: var(--accent-2); }
+/* Markers hang in the padding, so the heading stays one run of text (headings can hold nowrap spans) */
+${S} .s-points .item-title { position: relative; padding-left: 20px; }
+${S} .s-points .item-title::before { content: ""; position: absolute; left: 0; top: calc(0.675em - 4px); width: 8px; height: 8px; background: var(--accent-2); }
 
 /* ---- Work: a table of projects with their hosts ---- */
 ${S} .s-work .group + .group { border-top: var(--rule) solid var(--line); }
@@ -142,8 +143,8 @@ ${S} .node-label a.link { text-decoration-color: var(--line-2); }
 ${S} .node-count { grid-area: count; align-self: center; }
 ${S} .node-body { grid-area: body; max-width: 40ch; }
 ${S} .node[data-node="oracle"] { background: var(--bg-2); }
-${S} .node[data-node="oracle"] .node-label { display: flex; align-items: center; gap: 10px; }
-${S} .node[data-node="oracle"] .node-label::before { content: ""; flex: none; width: 8px; height: 8px; background: var(--accent-2); }
+${S} .node[data-node="oracle"] .node-label { position: relative; padding-left: 18px; }
+${S} .node[data-node="oracle"] .node-label::before { content: ""; position: absolute; left: 0; top: calc(50% - 4px); width: 8px; height: 8px; background: var(--accent-2); }
 
 /* ---- Install: the harness list beside its command ---- */
 ${S} .s-install { display: grid; grid-template-columns: minmax(168px, 3fr) minmax(0, 9fr); grid-template-areas: "head head" "tabs panel"; }
