@@ -1,7 +1,7 @@
 import type { PageContent, Section, Link, HeroOption, HeroCtx, MarkOption } from '../contract';
 import { esc } from '../html';
 const heading = (value: string) => esc(value).replace(/[^\s-]+(?:-[^\s-]+)+/g, word => `<span class="nowrap">${word}</span>`);
-const link = (a: Link, cls='link', format: (value: string) => string = esc) => `<a class="${cls}" href="${esc(a.href)}"${a.href.startsWith('#')?'':' target="_blank" rel="noopener noreferrer"'}>${format(a.label)}</a>`;
+const link = (a: Link, cls='link', format: (value: string) => string = esc) => `<a class="${cls}" href="${esc(a.href)}"${a.href.startsWith('#')?'':' target="_blank" rel="noopener noreferrer"'}>${format === esc ? esc(a.label) : `<span class="link-text">${format(a.label)}</span>`}</a>`;
 const head = (s: Section) => `<div class="s-head" data-enter><h2 class="s-title">${heading(s.title)}</h2>${'intro' in s&&s.intro?`<p class="s-intro">${esc(s.intro)}</p>`:''}</div>`;
 export function section(s: Section): string {
   let body = '';

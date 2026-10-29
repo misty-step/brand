@@ -60,7 +60,7 @@ With no hash the shell starts from the first house preset. Plain baseline remain
 
 On phones the motion control is an in-flow hero row. Heroes with empty explicit grid rows must place `.hero-motion-controls` in a row after the copy, and it must not stretch over the field.
 
-Core-file excerpts are prose and may wrap within a layout or hero; install commands preserve preformatted lines and scroll internally.
+Core-file excerpts wrap at spaces in every layout; install commands preserve preformatted lines and scroll internally. Formatted node links keep one `.link-text` label child so `.nowrap` compounds do not turn into separate flex columns.
 
 ## Markup the renderer emits (layouts and heroes style exactly this)
 ```html

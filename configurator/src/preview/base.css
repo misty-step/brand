@@ -20,6 +20,7 @@ html[data-paused="1"] [data-enter] {
 }
 .nowrap { white-space: nowrap; }
 pre.code { white-space: pre; overflow-x: auto; overflow-wrap: normal; word-break: normal; }
+.s-code pre.code { white-space: pre-wrap; overflow-wrap: anywhere; }
 .hero-motion-controls { display: none; }
 @media (max-width: 700px) {
   .hero > .hero-motion-controls { display: flex; grid-column: 1 / -1; grid-row: auto; order: 99; align-self: start; align-items: flex-start; justify-content: flex-end; padding: 12px var(--edge, 20px); }

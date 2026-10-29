@@ -139,17 +139,22 @@ async function checkState({ label, state, width, option, shot }) {
           ? document.querySelector('.hero-motion-host')
           : document.querySelector('[data-motion-slot]');
       const canvases = [...document.querySelectorAll('canvas')];
+      const core = document.querySelector('.s-code pre.code');
       return {
         h1: document.querySelectorAll('h1.hero-title').length,
         width: document.documentElement.scrollWidth, viewport: innerWidth,
         runtime, canvases: canvases.length,
         canvasDraws: canvases.reduce((sum, canvas) => sum + (canvas.__labDraws ?? 0), 0),
         stillArt: !!host?.querySelector('svg,img') || (!!host && getComputedStyle(host).backgroundImage !== 'none'),
+        core: core ? { whiteSpace: getComputedStyle(core).whiteSpace, overflow: core.scrollWidth > core.clientWidth + 1 } : null,
+        splitNodeLink: [...document.querySelectorAll('.s-diagram .node-label a.link')].some(link => link.childNodes.length !== 1 || !link.firstElementChild?.classList.contains('link-text')),
         ...window.__labSmoke,
       };
     });
     if (shape.h1 !== 1) errors.push(`Expected one h1.hero-title, got ${shape.h1}`);
     if (shape.width > shape.viewport + 1) errors.push(`Horizontal overflow: ${shape.width} > ${shape.viewport}`);
+    if (shape.core && (shape.core.whiteSpace !== 'pre-wrap' || shape.core.overflow)) errors.push('Core prose does not wrap without internal horizontal clipping: ' + JSON.stringify(shape.core));
+    if (shape.splitNodeLink) errors.push('A formatted node link splits its label into flex items');
     if (width === 390) {
       const control = await page.evaluate(() => {
         const button = document.querySelector('.motion-toggle'), r = button?.getBoundingClientRect();
