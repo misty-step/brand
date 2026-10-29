@@ -17,8 +17,8 @@ function context():Ctx {return {page:state.page,theme:state.theme,reducedMotion:
 function motionContext():MotionCtx {const css=getComputedStyle(root),value=(v:string)=>css.getPropertyValue(v).trim();return {...context(),dprCap:1.5,colors:{bg:value('--bg'),ink:value('--ink'),accent:value('--accent'),field1:value('--field-1'),field2:value('--field-2'),field3:value('--field-3')}};}
 function updateMark(){if(!current)return;const mark=current.mark as MarkOption & {css?:string};style('lab-mark',mark.css??'');const css=getComputedStyle(root);const svg=mark.svg({size:16,title:current.copy.pages[state.page].brand}).replace(/currentColor/g,css.getPropertyValue('--ink').trim()).replace(/var\((--[\w-]+)\)/g,(_,name:string)=>css.getPropertyValue(name).trim());let icon=document.querySelector<HTMLLinkElement>('link[rel="icon"]');if(!icon){icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';document.head.append(icon);}icon.href='data:image/svg+xml,'+encodeURIComponent(svg);}
 function applyTheme(){if(!current)return;root.dataset.theme=state.theme;root.dataset.reducedMotion=state.reducedMotion?'1':'0';root.dataset.paused=state.paused?'1':'0';for(const [k,v] of Object.entries(current.color[state.theme]))root.style.setProperty(k,v);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',getComputedStyle(root).getPropertyValue('--bg').trim());document.querySelector('.theme-toggle')?.setAttribute('aria-label','Switch to '+(state.theme==='dark'?'light':'dark')+' theme');const b=document.querySelector<HTMLButtonElement>('.motion-toggle');if(b){b.textContent=state.paused?'Resume motion':'Pause motion';b.setAttribute('aria-pressed',String(state.paused));}motion?.update(motionContext());motion?.pause(state.paused);if(state.reducedMotion)document.querySelectorAll('[data-enter]').forEach(el=>el.classList.add('is-in'));}
-function publish(){updateMark();(window as unknown as {__LAB__:unknown}).__LAB__={ready:true,state,ids:state.picks,motion:{renderer:current?.motion.renderer??(current?.motion.background?'webgl':'none'),hasBackground:!!current?.motion.background,host:current?.hero.motionHost}};parent.postMessage({type:'lab:state',state},location.origin);}
-function change(next:LabState){state=next;localStorage.setItem('lab-motion-paused',String(state.paused));history.replaceState(null,'',encode(state));applyTheme();publish();}
+function publish(){updateMark();(window as unknown as {__LAB__:unknown}).__LAB__={ready:true,state,ids:state.picks,motion:{renderer:current?.motion.renderer??(current?.motion.background?'webgl':'none'),hasBackground:!!current?.motion.background,host:current?.hero.motionHost}};}
+function change(next:LabState){state=next;localStorage.setItem('lab-motion-paused',String(state.paused));history.replaceState(null,'',encode(state));applyTheme();publish();if(parent!==window)parent.postMessage({type:'lab:controls',theme:state.theme,paused:state.paused},location.origin);}
 async function mount() {
   const ticket = ++serial;
   const loaded = await Promise.all(LAYERS.map(layer => loadOption(layer, state.picks[layer])));
@@ -47,6 +47,11 @@ async function mount() {
   };
   document.body.id = 'top';
   document.body.innerHTML = render(page, options.hero, ctx, options.mark);
+  document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(anchor => {
+    if (anchor.getAttribute('href')!.startsWith('#')) return;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+  });
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   applyTheme();
   motion = new MotionLifecycle(options.motion, options.hero, motionContext(), state.paused);

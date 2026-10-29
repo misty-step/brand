@@ -145,11 +145,19 @@ function spec() {
   const color = resolved('color') as ColorOption;
   const type = resolved('type') as TypeOption;
   const motion = resolved('motion') as MotionOption;
+  const geometry = (id: string) => {
+    const frame = document.getElementById(id) as HTMLIFrameElement;
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument || frameDocument.documentElement.dataset.layout !== state.picks.layout) return {};
+    const css = frame.contentWindow!.getComputedStyle(frameDocument.documentElement);
+    return Object.fromEntries(['--page-max', '--gutter', '--edge', '--radius', '--rule', '--nav-h'].map(key => [key, css.getPropertyValue(key).trim()]));
+  };
+  const viewportTokens = { desktop: geometry('desktop'), phone: geometry('phone') };
   return {
     version: 1, createdAt: new Date().toISOString(), page: state.page, theme: state.theme, state,
     options: Object.fromEntries(LAYERS.map(layer => { const option = resolved(layer); return [layer, { id: option.id, label: option.label, summary: option.summary, origin: option.origin, refs: option.refs }]; })),
-    tokens: { ...type.tokens, ...color[state.theme] }, themes: { light: color.light, dark: color.dark },
-    fonts: { faces: type.faces, license: type.license }, motionBudget: motion.budget,
+    tokens: { ...type.tokens, ...color[state.theme], ...viewportTokens.desktop }, themes: { light: color.light, dark: color.dark }, viewportTokens,
+    fonts: { faces: type.faces, license: type.license }, motionBudget: motion.budget, motionRenderer: motion.renderer ?? (motion.background ? 'webgl' : 'none'),
   };
 }
 function showSpec() {
@@ -279,9 +287,9 @@ window.addEventListener('message', event => {
     commit({ ...state, fullPreview: false });
     return;
   }
-  if (event.data?.type !== 'lab:state') return;
-  const next = decode(encode(event.data.state));
-  if (JSON.stringify(next) !== JSON.stringify(state)) commit(next);
+  if (event.data?.type !== 'lab:controls') return;
+  // The shell owns configuration. Frames report only actual user-control deltas, never state echoes.
+  commit({ ...state, theme: event.data.theme, paused: event.data.paused });
 });
 window.addEventListener('hashchange', () => { state = decode(location.hash); paint(); syncFrames(); });
 

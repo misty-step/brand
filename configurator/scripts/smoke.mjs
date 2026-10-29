@@ -197,6 +197,20 @@ try {
   if (await desktop.evaluate(() => scrollY) !== 0) errors.push('Changed page did not start at the top');
   await shell.locator('[data-page="studio"]').click();
   await desktop.waitForFunction(() => document.documentElement.dataset.page === 'studio' && window.__LAB__?.ready);
+  await shell.evaluate(() => {
+    window.__labControlMessages = 0;
+    window.addEventListener('message', event => {
+      if (event.data?.type === 'lab:state' || event.data?.type === 'lab:controls') window.__labControlMessages++;
+    });
+  });
+  await shell.locator('[data-action="theme"]').click({ clickCount: 3 });
+  await shell.waitForFunction(() => ['desktop', 'phone'].every(id => document.getElementById(id).contentWindow.__LAB__?.state.theme === window.__LAB__.state.theme));
+  await shell.waitForTimeout(200);
+  if (await shell.evaluate(() => window.__labControlMessages) !== 0) errors.push('Preview echoed programmatic state updates');
+  const themeBefore = await shell.evaluate(() => window.__LAB__.state.theme);
+  await shell.frameLocator('#phone').locator('.theme-toggle').click();
+  await shell.waitForFunction(before => window.__LAB__.state.theme !== before && ['desktop', 'phone'].every(id => document.getElementById(id).contentWindow.__LAB__?.state.theme === window.__LAB__.state.theme), themeBefore);
+  if (await shell.evaluate(() => window.__labControlMessages) !== 1) errors.push('Preview user control did not produce exactly one parent update');
   await shell.screenshot({ path: path.join(out, 'shell-1440.png'), timeout: 20000 });
   results.push({ label: 'shell shortlist + compare + spec + full preview + scroll reset', pass: !errors.length, ...(errors.length ? { errors } : {}) });
   await shell.close();

@@ -49,6 +49,8 @@ Type faces use local `@font-face` with swap and the declared weight/style/range.
 
 Approved motion contract extension: `renderer?: 'webgl'|'canvas2d'|'none'`. If omitted it derives from `background` presence (`webgl` when present, `none` otherwise). A Canvas2D signature must declare it explicitly. The off-Mac proof reads this metadata, never option-id exemptions.
 
+The shell is the single state owner. Programmatic iframe updates are one-way; previews report only actual theme/pause control deltas, so the two frames cannot echo stale configurations back and forth. Spec export includes layout geometry tokens resolved independently in the desktop and phone frames, as well as type/colour tokens, font licences and motion capability/budget.
+
 ## Markup the renderer emits (layouts and heroes style exactly this)
 ```html
 <html data-page data-theme data-reduced-motion data-mark data-type data-color data-layout data-hero data-motion data-copy>
