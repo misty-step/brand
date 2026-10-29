@@ -1,4 +1,5 @@
 import type { MotionOption } from '../../../src/contract';
+import { heroEntranceCss } from '../_motionb/entrance';
 
 const S = 'html[data-motion="grid-beams"]';
 
@@ -16,11 +17,11 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero arrives from the left along the rails, like a beam (settled by 840 ms); sections only resolve.
-    // Hidden states use opacity and transform only: a clip-path on an observed element hides it from the
-    // renderer's IntersectionObserver, which then never adds .is-in.
+    // The hero arrives from the left along the rails, like a beam, timed by CSS from render: h1, sub
+    // and action settle by 500 ms. Sections only resolve. Starting states use opacity and transform
+    // only: a clip-path on an observed element would hide it from the renderer's IntersectionObserver.
     css: `${S} [data-enter]{opacity:0;transition:opacity .32s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{transform:translateX(-12px);transition:opacity .56s cubic-bezier(.16,1,.3,1),transform .56s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
+${heroEntranceCss(S, { name: 'mb-grid-beams-hero', from: 'opacity:0;transform:translateX(-12px)', ms: 400, ease: 'cubic-bezier(.16,1,.3,1)', stagger: 50 })}
 ${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}

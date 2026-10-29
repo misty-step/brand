@@ -1,4 +1,5 @@
 import type { MotionOption } from '../../../src/contract';
+import { heroEntranceCss } from '../_motionb/entrance';
 
 const S = 'html[data-motion="event-horizon"]';
 
@@ -17,9 +18,10 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero comes into focus like light settling (settled by 880 ms); sections only resolve.
+    // The hero comes into focus like light settling, timed by CSS from render: h1, sub and action
+    // settle by 540 ms. Sections only resolve.
     css: `${S} [data-enter]{opacity:0;transition:opacity .4s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{filter:blur(6px);transition:opacity .6s cubic-bezier(.16,1,.3,1),filter .6s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
+${heroEntranceCss(S, { name: 'mb-event-horizon-hero', from: 'opacity:0;filter:blur(6px)', ms: 440, ease: 'cubic-bezier(.16,1,.3,1)', stagger: 50 })}
 ${S} [data-enter].is-in{opacity:1;filter:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
