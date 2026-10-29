@@ -63,7 +63,7 @@ export default {
   origin: 'new',
   summary: 'A chamfered industrial plate with a heavy M cut through it over the weather-map sign for mist; at display size the sign resolves into plate lettering and a run of thinning bars.',
   refs: [
-    { name: 'Brass Hands', url: 'https://www.brasshands.com', what: 'Neo-Industrial identity: a letter used as a machined container, horizontal interruptions as flow, and spec-sheet lettering instead of ornament.' },
+    { name: 'Brass Hands', url: 'https://www.brasshands.com', what: 'Identity as field equipment: data plates, unit lettering and one heavy glyph drawn to pass their shipping-container test, so it survives stencilling, embroidery and a 16px tab.' },
     { name: 'Brass Hands for Helix-DB', url: 'https://www.usbrandingstudio.com/projects/brass-hands-frames-helix-dbs-ai-infrastructure-as-industrial-machinery', what: 'A mark simple enough to hold at any scale that compresses the whole system; a row of bars thinning out as a graphic device.' },
   ],
   svg: ({ size }) => draw(size),

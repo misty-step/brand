@@ -111,7 +111,7 @@ export default {
   origin: 'new',
   summary: 'The name drawn as one lowercase geometric wordmark whose single detail is the dot of the i, caught one short step up and ahead of its stem: the spell at the scale of a letter.',
   refs: [
-    { name: 'Stripe', url: 'https://stripe.com', what: 'A custom-drawn lowercase wordmark is the whole logo, set tight, and the favicon is cut from its own letterform on a solid tile.' },
+    { name: 'Stripe', url: 'https://stripe.com', what: 'A custom-drawn lowercase wordmark is the whole logo in the nav, with no symbol beside it, and the favicon is a separate solid tile in the brand colour.' },
     { name: 'Vercel', url: 'https://vercel.com', what: 'Geometric construction from circles and straight strokes, with nothing decorative to lose at small sizes.' },
   ],
   svg: ({ size }) => symbol(size),
