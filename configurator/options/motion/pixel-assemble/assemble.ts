@@ -1,11 +1,22 @@
 // Pixel assemble: once per load, a dithered cloud of mist pixels over the headline's own box
 // condenses into the headline in a left-to-right wave, sharpens through one finer mosaic and
-// hands over to the real text. About 0.7 s, then nothing runs at all.
-// The h1 stays real text throughout: CSS holds it (fail-safe 700ms) while this canvas draws.
+// hands over to the real text. About 0.6 s, then nothing runs at all.
+//
+// Timing contract (the h1 stays real text throughout):
+// - CSS alone holds the h1 for at most 700ms, so it appears even if this script never arrives.
+// - The assembly starts only if it can begin within 300ms of that hold starting; otherwise the
+//   hold is released and the headline shows at once.
+// - A started assembly stretches the hold to its own end, never later than 900ms after the hold
+//   began. The reveal is that hold ending (a compositor animation), so the h1 appears on time
+//   even when this script's frames stall; the canvas fades out on the same clock.
+// - Nothing here ever hides a headline: the script only shortens or extends a hold that is
+//   already running.
 import type { MotionCtx, MotionHandle } from '../../../src/contract';
 import { palette, parseColor, type RGB } from '../_motion-a/color';
 
-const WAVE = 300, JITTER = 60, TRAVEL = 260, SHARPEN = 80, PRE = 120;
+const START_BY = 300, VISIBLE_BY = 900, PLANNED = 600, MIN_RUN = 450;
+// Phase lengths for the planned 600ms run; a late start scales them all down together.
+const PRE = 60, WAVE = 200, JITTER = 40, TRAVEL = 200, SHARPEN = 50;
 const inert: MotionHandle = { pause() {}, resume() {}, update() {}, destroy() {} };
 const expo = (p: number) => (1 - 2 ** (-10 * p)) / (1 - 2 ** -10);
 const pack = (c: RGB) => (255 << 24) | (Math.round(c[2] * 255) << 16) | (Math.round(c[1] * 255) << 8) | Math.round(c[0] * 255);
@@ -68,8 +79,14 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
   const hero = document.querySelector<HTMLElement>('[data-hero-root]');
   const title = hero?.querySelector<HTMLElement>('.hero-title');
   if (!hero || !title || ctx.reducedMotion || document.documentElement.dataset.paused === '1') return inert;
+  // Only a hold that is still running can be taken over; anything else means the h1 already shows.
   const hold = title.getAnimations().find((a) => a instanceof CSSAnimation && a.animationName === 'ma-pa-hold');
   if (!hold || hold.playState !== 'running') return inert;
+  /** ms since the hold began; Infinity once it no longer hides the h1. */
+  const elapsed = () => (hold.playState === 'running' && typeof hold.currentTime === 'number' ? hold.currentTime : Infinity);
+  // Released holds show the headline at once: [data-ma-pa] drops the hold animation in CSS.
+  const release = () => { title.dataset.maPa = 'done'; };
+  if (elapsed() > START_BY) { release(); return inert; }
 
   // The canvas covers the hero from the first moment, so the renderer can follow it for visibility.
   const canvas = document.createElement('canvas');
@@ -78,28 +95,28 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
   const first = hero.getBoundingClientRect();
   canvas.style.cssText = `position:absolute;left:0;top:0;width:${first.width}px;height:${first.height}px;pointer-events:none;image-rendering:pixelated;z-index:1`;
   hero.append(canvas);
-  let state: 'waiting' | 'running' | 'done' = 'waiting', raf = 0;
+  let state: 'waiting' | 'running' | 'done' = 'waiting', raf = 0, timer = 0;
   const startY = scrollY;
 
+  // Ends everything at once: the canvas goes, the hold goes, the real headline shows.
   const finish = () => {
     if (state === 'done') return;
-    const wasRunning = state === 'running';
     state = 'done';
     cancelAnimationFrame(raf);
+    clearTimeout(timer);
     removeEventListener('scroll', onScroll);
     removeEventListener('resize', finish);
     canvas.remove();
-    if (wasRunning) title.dataset.maPa = 'done';
+    release();
   };
   const onScroll = () => { if (Math.abs(scrollY - startY) > 4) finish(); };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', finish);
 
-  // Start once the faces are in (or after 300ms, whichever comes first).
+  // Starts once the faces are in, but only inside the start window.
   const run = () => {
     if (state !== 'waiting') return;
-    // Too late: the CSS fail-safe is about to show the headline, so let it.
-    if (hold.playState !== 'running' || Number(hold.currentTime) > 450) return finish();
+    if (elapsed() > START_BY) return finish();
     const fontSize = parseFloat(getComputedStyle(title).fontSize);
     const c = fontSize >= 48 ? 4 : 2;
     const box = hero.getBoundingClientRect();
@@ -107,7 +124,13 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
     const raster = rasterise(title, 2);
     const coarse = cells(raster, 2, c, box, cols, rows);
     const fine = c >= 4 ? cells(raster, 2, c / 2, box, cols * 2, rows * 2) : null;
-    if (!coarse.length) return finish();
+    // Rasterising can be slow on a loaded machine: fit the run before VISIBLE_BY or skip it.
+    const at = elapsed();
+    const total = Math.min(PLANNED, VISIBLE_BY - at);
+    if (!coarse.length || !(total >= MIN_RUN)) return finish();
+    const k = total / PLANNED;
+    // The hold now ends exactly when the assembly does, so the reveal never waits on our frames.
+    hold.effect?.updateTiming({ duration: at + total });
 
     const pal = palette(ctx, hero);
     const ink = pack(parseColor(getComputedStyle(title).color, title, pal.ink));
@@ -131,19 +154,22 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
       const gx = coarse[i * 2], gy = coarse[i * 2 + 1];
       sx[i] = Math.min(cols - 1, Math.max(0, gx + Math.round((Math.random() + Math.random() - 1) * spread * 2)));
       sy[i] = Math.min(rows - 1, Math.max(0, gy + Math.round((Math.random() + Math.random() - 1) * spread)));
-      delay[i] = PRE + (WAVE * (gx - minX)) / Math.max(1, maxX - minX) + Math.random() * JITTER;
-      seen[i] = Math.random() * PRE;
+      delay[i] = (PRE + (WAVE * (gx - minX)) / Math.max(1, maxX - minX) + Math.random() * JITTER) * k;
+      seen[i] = Math.random() * PRE * k;
     }
-    const landed = PRE + WAVE + JITTER + TRAVEL;
-    title.dataset.maPa = 'run';
+    const travel = TRAVEL * k, sharpenAt = (PRE + WAVE + JITTER + TRAVEL + SHARPEN) * k;
     state = 'running';
+    clearTimeout(timer);
+    // Backstops when frames stall: the canvas fades on the compositor at the end, a timer cleans up.
+    canvas.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1, delay: total, fill: 'forwards' });
+    timer = window.setTimeout(finish, total + 40);
     const t0 = performance.now();
 
     const frame = (now: number) => {
       if (state !== 'running') return;
       const t = now - t0;
-      if (t >= landed + SHARPEN * (fine ? 2 : 1)) return finish();
-      if (fine && t >= landed + SHARPEN) {
+      if (t >= total) return finish();
+      if (fine && t >= sharpenAt) {
         // One finer mosaic in ink, then the real glyphs.
         if (canvas.width !== cols * 2) {
           canvas.width = cols * 2; canvas.height = rows * 2;
@@ -156,7 +182,7 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
         px.fill(0);
         for (let i = 0; i < n; i++) {
           if (t < seen[i]) continue;
-          const p = Math.min(1, Math.max(0, (t - delay[i]) / TRAVEL));
+          const p = Math.min(1, Math.max(0, (t - delay[i]) / travel));
           const e = expo(p);
           const x = Math.round(sx[i] + (coarse[i * 2] - sx[i]) * e), y = Math.round(sy[i] + (coarse[i * 2 + 1] - sy[i]) * e);
           px[y * cols + x] = p >= 1 ? ink : mist;
@@ -168,7 +194,8 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
     raf = requestAnimationFrame(frame);
   };
   void document.fonts.ready.then(run);
-  setTimeout(run, 300);
+  // Faces not in by the end of the start window: let the headline show as it is.
+  timer = window.setTimeout(() => { if (state === 'waiting') finish(); }, Math.max(0, START_BY - elapsed()));
 
   return {
     pause: finish,
