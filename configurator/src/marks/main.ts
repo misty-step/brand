@@ -70,7 +70,8 @@ function tabs(m: Mark, color: ColorOption, copy: CopyOption, scheme: Theme, scal
 function section(m: Mark, color: ColorOption, copy: CopyOption): string {
   const studio = copy.pages.studio, stack = copy.pages.stack;
   const state = (path: string) => path + encode({ v: 1, page: 'studio', theme, reducedMotion: false, paused: false, preset: 'chosen', picks: { ...chosen, mark: m.id }, locks: [] });
-  const frame = (width: number) => `<iframe class="mb-phone" title="${esc(m.label)}: phone navs at ${width} px" width="${width}" height="129" loading="lazy" src="?frame=nav&amp;mark=${encodeURIComponent(m.id)}&amp;theme=${theme}"></iframe>`;
+  // Eager on purpose: full-page captures never scroll, so lazy frames below the fold would stay blank.
+  const frame = (width: number) => `<iframe class="mb-phone" title="${esc(m.label)}: phone navs at ${width} px" width="${width}" height="129" src="?frame=nav&amp;mark=${encodeURIComponent(m.id)}&amp;theme=${theme}"></iframe>`;
   const tile = (scheme: Theme, label: string) => `<div class="mb-tile" style="${esc(cssVars(color[scheme]))}"><div class="mb-tile-mark">${oneColour(m.svg({ size: 128, title: studio.brand }))}</div><div class="mb-tile-lockup">${oneColour(brand(m, studio.brand, 32))}</div><p class="mb-cap">${label}</p></div>`;
   return `<section class="mb-mark" id="m-${esc(m.id)}" data-mark="${esc(m.id)}" data-theme="${theme}">
   <header class="mb-head">
