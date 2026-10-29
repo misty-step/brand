@@ -21,8 +21,10 @@ async function mount() {
   const loaded = await Promise.all(LAYERS.map(layer => loadOption(layer, state.picks[layer])));
   if (ticket !== serial) return;
   motion?.destroy();
+  motion = undefined;
   entrances?.disconnect();
   disposeMark?.();
+  disposeMark = undefined;
   current = Object.fromEntries(loaded.map(option => [option.layer, option])) as typeof current;
   const options = current!;
   for (const layer of LAYERS) root.dataset[layer] = state.picks[layer];

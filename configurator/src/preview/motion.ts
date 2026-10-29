@@ -86,12 +86,14 @@ export class MotionLifecycle {
   }
 
   update(ctx: MotionCtx) {
+    if (this.dead) return;
     this.ctx = ctx;
     this.handle?.update(ctx);
     void this.sync();
   }
 
   pause(value: boolean) {
+    if (this.dead) return;
     this.stopped = value;
     void this.sync();
   }
