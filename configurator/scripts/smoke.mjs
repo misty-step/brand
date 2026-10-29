@@ -6,18 +6,20 @@ import path from 'node:path';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const layers = ['mark', 'type', 'color', 'layout', 'hero', 'motion', 'copy'];
-const usage = `Usage: node scripts/smoke.mjs [--url <origin>] [--webgl] [--out <dir>]
+const usage = `Usage: node scripts/smoke.mjs [--url <origin>] [--webgl] [--out <dir>] [--quick]
   --url     Test a deployed build instead of serving local dist/.
   --webgl   Enable SwiftShader and require WebGL proof for WebGL motion options.
             Run this mode on a Linux Boat worker.
   --out     Write smoke.json and 390/1440 screenshots for each motion and preset.
+  --quick   Predeploy subset: layouts, motion hero visibility, and every preset.
 All browser modes are forbidden on macOS. Use a Linux Boat worker.
 Default: Playwright bundled headless shell only. Never desktop Chrome or a relay.`;
-const config = { url: process.env.LAB_URL, webgl: false, out: null };
+const config = { url: process.env.LAB_URL, webgl: false, out: null, quick: false };
 for (let i = 2; i < process.argv.length; i++) {
   const flag = process.argv[i];
   if (flag === '--help' || flag === '-h') { console.log(usage); process.exit(0); }
   if (flag === '--webgl') { config.webgl = true; continue; }
+  if (flag === '--quick') { config.quick = true; continue; }
   if (flag === '--url' || flag === '--out') {
     const value = process.argv[++i];
     if (!value || value.startsWith('--')) throw new Error(`${flag} needs a value.\n${usage}`);
@@ -124,7 +126,7 @@ async function checkState({ label, state, width, option, shot }) {
     await page.waitForFunction(() => window.__LAB__?.ready, null, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => document.fonts.ready);
-    const settleAt = (config.webgl && option?.layer === 'motion') || shot ? 2500 : 0;
+    const settleAt = (!config.quick && config.webgl && option?.layer === 'motion') || shot ? 2500 : 0;
     await page.waitForTimeout(settleAt ? Math.max(0, settleAt - (Date.now() - navigationStart)) : 180);
     const heroAfterSettle = option?.layer === 'motion' ? await page.evaluate(() => window.__labHeroVisibility()) : null;
     if (heroAfterSettle?.some(item => !item.visible)) errors.push('Hero content hidden after startup: ' + JSON.stringify(heroAfterSettle));
@@ -190,9 +192,10 @@ async function checkState({ label, state, width, option, shot }) {
 
 try {
   browser = await chromium.launch(launch);
-  for (const option of inventory) {
+  for (const option of inventory.filter(item => !config.quick || item.layer === 'layout' || item.layer === 'motion')) {
     const modes = option.layer === 'motion' ? [{ reducedMotion: false, paused: false }, { reducedMotion: true, paused: false }, { reducedMotion: false, paused: true }] : [{ reducedMotion: false, paused: false }];
-    for (const page of ['studio', 'stack']) for (const width of [390, 1440]) for (const theme of ['light', 'dark']) for (const mode of modes) {
+    for (const page of ['studio', 'stack']) for (const width of [390, 1440]) for (const theme of (config.quick ? ['light'] : ['light', 'dark'])) for (const mode of modes) {
+      if (config.quick && option.layer === 'motion' && width === 1440 && (mode.reducedMotion || mode.paused)) continue;
       const state = { ...baseline(), page, theme, ...mode };
       state.picks[option.layer] = option.id;
       const label = `${option.layer}/${option.id} ${page} ${width} ${theme}${mode.reducedMotion ? ' reduced' : ''}${mode.paused ? ' paused' : ''}`;
@@ -248,8 +251,13 @@ try {
   results.push({ label: 'shell shortlist + compare + spec + full preview + scroll reset', pass: !errors.length, ...(errors.length ? { errors } : {}) });
   await shell.close();
   // Presets are declared by the shell; this automatically covers the curator's later additions.
-  if (config.out) for (const preset of shellInfo.presets ?? []) for (const width of [390, 1440]) {
-    await checkState({ label: `preset/${preset.id} studio ${width} light`, state: { ...baseline(), picks: preset.picks }, width, shot: `preset-${safeName(preset.id)}-${width}.png` });
+  if (config.out || config.quick) for (const preset of shellInfo.presets ?? []) for (const page of (config.quick ? ['studio', 'stack'] : ['studio'])) for (const width of [390, 1440]) {
+    await checkState({
+      label: `preset/${preset.id} ${page} ${width} light`,
+      state: { ...baseline(), page, picks: preset.picks }, width,
+      option: { layer: 'motion', id: preset.picks.motion },
+      shot: config.out ? `preset-${safeName(preset.id)}-${page}-${width}.png` : null,
+    });
   }
 } catch (error) {
   results.push({ label: 'runner', pass: false, errors: [error.message] });
@@ -259,7 +267,7 @@ try {
   await server?.close();
 }
 const failed = results.filter(result => !result.pass);
-const summary = { at: new Date().toISOString(), base, platform: process.platform, backend: config.webgl ? 'Bundled Playwright headless shell with SwiftShader, off-Mac WebGL proof' : 'Bundled Playwright headless shell, no desktop browser or relay', webgl: config.webgl, inventory, states: results.length, passed: results.length - failed.length, failed: failed.length, results };
+const summary = { at: new Date().toISOString(), base, platform: process.platform, subset: config.quick ? 'quick-layouts-motion-presets' : 'full', backend: config.webgl ? 'Bundled Playwright headless shell with SwiftShader, off-Mac WebGL proof' : 'Bundled Playwright headless shell, no desktop browser or relay', webgl: config.webgl, inventory, states: results.length, passed: results.length - failed.length, failed: failed.length, results };
 await writeFile(path.join(out, 'smoke.json'), JSON.stringify(summary, null, 2) + '\n');
 console.log(JSON.stringify({ states: summary.states, passed: summary.passed, failed: summary.failed, inventory: inventory.length, out }));
 if (failed.length) process.exitCode = 1;

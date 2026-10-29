@@ -26,6 +26,8 @@ node scripts/smoke.mjs --url https://misty-brand-lab.misty-step.workers.dev --we
 
 `--url` selects the deployed origin (default: local production preview). `--webgl` adds SwiftShader flags only to Playwright's bundled headless shell. All browser modes are rejected on macOS; run them on a Linux Boat worker. `--out` writes `smoke.json` plus a 1440px and a 390px screenshot per motion option and declared preset, after about 2.5 seconds. WebGL-declared options must create a canvas and a successful GL context, paint a frame, stop offscreen, and render a non-running reduced/paused still. Intentional static and Canvas2D options are reported as such, not given fabricated WebGL passes. The result records renderer/context/draw counts and hero-readiness measurements per state; it is a software-renderer proof, not a physical-device GPU trace.
 
+For rapid review deployments, run `node scripts/smoke.mjs --webgl --quick` on the Linux worker first. This tests every layout on both pages at 390/1440 in light mode, every motion's hero-visibility and lifecycle gates (including phone reduced/paused), the shell, and all presets on both pages and sizes. It omits the 2.5-second capture delay unless `--out` is requested. Deploy after that subset is green, then run the full `--webgl --out` matrix immediately after deployment. The full result is reported separately; a quick pass is not a full-matrix pass.
+
 ## Add an option
 
 Create `options/<layer>/<id>/index.ts`, default-exporting the corresponding option type from `src/contract.ts`. The id must equal its directory. The Vite registry discovers it lazily with `import.meta.glob('/options/*/*/index.ts')`. Keep assets and font licence files beside the option. Helpers may live inside your layer directory without an `index.ts` at that depth. Do not modify another layer or the renderer. Branch from `origin/feat/lab-007`, use your own worktree, push your branch, and report `ready: <branch> <sha> <ids>` to LabCore.
@@ -106,4 +108,4 @@ npm run build
 pass-env run -f ~/.cache/tmp/misty-design/preview/.env.pass -- npx wrangler deploy
 ```
 
-Only deploy after the production smoke is green. Never deploy another Worker from this lab.
+Only deploy after the requested Linux predeploy gate is green. Run the full matrix after a rapid review deployment. Never deploy another Worker from this lab.
