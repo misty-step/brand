@@ -39,5 +39,5 @@ export default {
   ],
   entrance: { css },
   interaction: { css: interactionCss('quiet', 'smooth') },
-  budget: { gzipKB: 1.9, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 1.9 KB gzip option module (CSS plus lab metadata), vite build. Focal sequence 560ms + 4 x 60ms stagger = 0.8 s from first paint; reveals 300ms with at most 150ms of stagger. Reduced motion and Pause show the finished page.' },
+  budget: { gzipKB: 2.0, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 2.0 KB gzip option module (CSS plus lab metadata), vite build. Focal sequence 560ms + 4 x 60ms stagger = 0.8 s from first paint; reveals 300ms with at most 150ms of stagger. Reduced motion and Pause show the finished page.' },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

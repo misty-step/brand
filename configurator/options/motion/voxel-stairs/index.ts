@@ -33,8 +33,8 @@ export default {
   entrance: { css },
   interaction: { css: interactionCss('voxel-stairs', 'pixel') },
   budget: {
-    gzipKB: 9.5,
+    gzipKB: 10.0,
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 0.5 ms (358x220 panel) to 6.2 ms (1440x820 full)',
-    note: 'Measured: 9.5 KB gzip (1.9 option + 7.6 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL2, one instanced draw per frame (32 boxes x 18 vertices, three visible faces), one cell = 4 CSS px; world scale 4 px per unit, 2 on small hosts so the focal flight stays whole. Tiers 30/15/8 fps, still below the last. Reduced motion, Save-Data, no WebGL2 and context loss rasterise the same boxes on the CPU with a depth test, no GPU context. Shaders validated with glslang (ESSL 3.00).',
+    note: 'Measured: 10.0 KB gzip (2.3 option + 7.8 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL2, one instanced draw per frame (32 boxes x 18 vertices, three visible faces), one cell = 4 CSS px; world scale 4 px per unit, 2 on small hosts so the focal flight stays whole. Tiers 30/15/8 fps, still below the last. Reduced motion, Save-Data, no WebGL2 and context loss rasterise the same boxes on the CPU with a depth test, no GPU context. Shaders validated with glslang (ESSL 3.00).',
   },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

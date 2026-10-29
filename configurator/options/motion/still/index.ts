@@ -16,5 +16,5 @@ export default {
   ],
   entrance: { css: 'html[data-motion="still"] [data-enter]{opacity:1;translate:none}' },
   interaction: { css: interactionCss('still', 'smooth') },
-  budget: { gzipKB: 1.3, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 1.3 KB gzip is the option module (CSS strings plus lab metadata) in a vite build. No entrance, no ambient frames; transitions run only on press, hover and theme change.' },
+  budget: { gzipKB: 1.4, frameMs: '0 ms: no background module and no animation loop', note: 'Measured: 1.4 KB gzip is the option module (CSS strings plus lab metadata) in a vite build. No entrance, no ambient frames; transitions run only on press, hover and theme change.' },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

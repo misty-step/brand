@@ -29,8 +29,8 @@ export default {
   entrance: { css },
   interaction: { css: interactionCss('pixel-assemble', 'pixel') },
   budget: {
-    gzipKB: 4.5,
+    gzipKB: 4.8,
     frameMs: 'Runs about 0.7 s once, then no loop. Pixel moves: 0.07 ms median, 0.30 ms p95 per frame for 3,200 pixels on a 360x225 grid (JavaScriptCore, this Mac); glyph rasterising and putImageData pending conductor (no browser allowed on this Mac)',
-    note: 'Measured: 4.5 KB gzip (1.7 option + 2.8 lazy module), vite build. One 2D canvas over the hero, no GPU context, removed when done. The h1 stays real text: CSS holds it at most 700ms, so it appears even if the script never arrives; reduced motion, Pause, scroll, resize and theme change all hand back the finished headline at once.',
+    note: 'Measured: 4.8 KB gzip (2.0 option + 2.8 lazy module), vite build. One 2D canvas over the hero, no GPU context, removed when done. The h1 stays real text: CSS holds it at most 700ms, so it appears even if the script never arrives; reduced motion, Pause, scroll, resize and theme change all hand back the finished headline at once.',
   },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

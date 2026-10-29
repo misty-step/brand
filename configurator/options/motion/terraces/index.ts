@@ -30,8 +30,8 @@ export default {
   entrance: { css },
   interaction: { css: interactionCss('terraces', 'smooth') },
   budget: {
-    gzipKB: 8.5,
+    gzipKB: 9.2,
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 7.4 ms (358x220 panel) to 33.3 ms (1440x820 full), painted in idle slices of at most 8 ms',
-    note: 'Measured: 8.5 KB gzip (1.8 option + 6.8 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, nearest ridge first with an early exit. One cell = 2 CSS px (0.5x backing store), then 4 CSS px tiers: 30, 24, 12 fps with 3/2/1 mist octaves; still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
+    note: 'Measured: 9.2 KB gzip (2.2 option + 6.9 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, nearest ridge first with an early exit. One cell = 2 CSS px (0.5x backing store), then 4 CSS px tiers: 30, 24, 12 fps with 3/2/1 mist octaves; still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
   },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };

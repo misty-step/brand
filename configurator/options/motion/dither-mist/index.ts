@@ -34,8 +34,8 @@ export default {
   entrance: { css },
   interaction: { css: interactionCss('dither-mist', 'pixel') },
   budget: {
-    gzipKB: 8.0,
+    gzipKB: 8.6,
     frameMs: 'GPU draw: pending conductor (no browser allowed on this Mac; bench at /options/motion/_motion-a/bench.html). CPU still, once: 1.7 ms (358x220 panel) to 16.9 ms (1440x820 full), painted in idle slices of at most 8 ms',
-    note: 'Measured: 8.0 KB gzip (2.0 option + 6.0 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, one cell = 4 CSS px at any DPR (0.25x backing store, under the 1.5 cap). Tiers 5/4/3 octaves at 24/15/10 fps, 2 s frame-rate sampling, still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
+    note: 'Measured: 8.6 KB gzip (2.4 option + 6.1 lazy field incl. runtime), vite build; CPU still timed in JavaScriptCore on this Mac. Raw WebGL1, one fullscreen triangle, one cell = 4 CSS px at any DPR (0.25x backing store, under the 1.5 cap). Tiers 5/4/3 octaves at 24/15/10 fps, 2 s frame-rate sampling, still below the last tier. Reduced motion, Save-Data, no WebGL and context loss draw the same composition on the CPU with no GPU context. Shaders validated with glslang (ESSL 1.00).',
   },
 } satisfies MotionOption & { renderer: 'webgl' | 'canvas2d' | 'none' };
