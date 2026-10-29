@@ -4,7 +4,7 @@ export interface OptionMeta {
   id: string; layer: Layer; label: string;                      // short picker label
   summary: string;                                              // one sentence: what it is, why it suits Misty Step
   refs: Ref[];                                                  // at least one
-  origin?: 'A'|'B'|'C'|'baseline'|'new';
+  origin?: 'A'|'B'|'C'|'baseline'|'new'|'r2';                  // 'r2': round 2 (after Phaedrus's 29 Oct pick); listed first
 }
 export interface Ctx { page: 'studio'|'stack'; theme: 'light'|'dark'; reducedMotion: boolean; viewport: 'phone'|'desktop' }
 

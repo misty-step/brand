@@ -307,13 +307,13 @@ window.addEventListener('message', event => {
 });
 window.addEventListener('hashchange', () => { state = decode(location.hash); paint(); syncFrames(); });
 
-options = await catalog();
+options = (await catalog()).sort((a, b) => Number(b.origin === 'r2') - Number(a.origin === 'r2'));
 const layerLabel = (layer: Layer) => ({ mark: 'Mark', type: 'Type', color: 'Colour', layout: 'Layout', hero: 'Hero', motion: 'Motion', copy: 'Copy' }[layer]);
 document.getElementById('layers')!.innerHTML = LAYERS.map(layer => `
   <section class="layer">
     <div class="layer-row">
       <details class="layer-info"><summary id="label-${layer}">${layerLabel(layer)}</summary><div class="layer-description"><h2 id="detail-title-${layer}"></h2><p class="summary" id="summary-${layer}"></p><div class="refs" id="refs-${layer}"></div><button data-random="${layer}">Shuffle this layer</button></div></details>
-      <select id="pick-${layer}" aria-label="${layerLabel(layer)}" data-layer="${layer}">${options.filter(option => option.layer === layer).map(option => `<option value="${option.id}">${esc(option.label)}${option.origin === 'baseline' ? ' (plain)' : ''}</option>`).join('')}</select>
+      <select id="pick-${layer}" aria-label="${layerLabel(layer)}" data-layer="${layer}">${options.filter(option => option.layer === layer).map(option => `<option value="${option.id}">${esc(option.label)}${option.origin === 'baseline' ? ' (plain)' : option.origin === 'r2' ? ' (round 2)' : ''}</option>`).join('')}</select>
       <button data-prev="${layer}" aria-label="Previous ${layer}">‹</button><button data-next="${layer}" aria-label="Next ${layer}">›</button><button data-lock="${layer}" aria-pressed="false" aria-label="Lock ${layer}">○</button>
     </div>
   </section>`).join('');

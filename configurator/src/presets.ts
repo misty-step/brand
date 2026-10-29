@@ -1,8 +1,14 @@
 import type { Layer } from './contract';
 export interface Preset { id: string; label: string; note: string; picks: Record<Layer,string> }
 // Opinionated starting points: each is one complete direction, all seven layers chosen together.
-// The three previous-round directions come last, rebuilt from their ported parts.
+// 'Chosen' is Phaedrus's pick (29 Oct) and opens by default; the three previous-round directions come last.
 export const presets: Preset[] = [
+  {
+    id: 'chosen',
+    label: 'Chosen',
+    note: 'Phaedrus\'s pick on 29 Oct: Plate\'s mark, industrial condensed type, mono, editorial layout, horizon hero, dither mist and Show the work copy. The baseline for round 2, which redoes the marks, the copy and the motion.',
+    picks: { mark: 'plate', type: 'industrial-condensed', color: 'mono', layout: 'editorial', hero: 'horizon', motion: 'dither-mist', copy: 'show-the-work' },
+  },
   {
     id: 'mist',
     label: 'Mist',
