@@ -33,8 +33,8 @@ ${S} a.link,${S} .item-link{transition:text-decoration-thickness .15s ease,text-
 @media (hover:hover) and (pointer:fine){${S} a.link:hover{text-underline-offset:.3em}}`,
   },
   budget: {
-    gzipKB: 5.8,
+    gzipKB: 6.2,
     frameMs: '0.28 ms median, 0.43 ms p90 per frame at 1440x820, 0.26 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
-    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 3.4 KB runtime shared by the MotionB options. Raw WebGL1, at most 512 axis-aligned quads in one draw, 60 fps cap because beams travel 200 px/s, DPR capped with whole-number upscaling; the lower tier renders at 1 CSS px. Without WebGL the same still is painted once on the CPU (1.1 ms at 1440x820).',
+    note: 'Vite production chunks, gzip -9: 2.4 KB for this option plus the 3.8 KB runtime shared by the MotionB options (copy-aware placement and keep-clear mask included). Raw WebGL1, at most 512 axis-aligned quads in one draw, 60 fps cap because beams travel 200 px/s, DPR capped with whole-number upscaling; the lower tier renders at 1 CSS px. Without WebGL the same still is painted once on the CPU (1.1 ms at 1440x820).',
   },
 } satisfies MotionOption & { renderer: 'webgl' };

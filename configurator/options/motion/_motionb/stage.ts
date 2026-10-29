@@ -148,7 +148,7 @@ function fit(f: Frame, canvas: HTMLCanvasElement, host: HTMLElement, scene: Scen
   const px = scene.scale(f.tier, dpr, Math.min(f.ctx.dprCap || 1.5, 1.5));
   const w = Math.max(1, Math.floor(r.width * px)), h = Math.max(1, Math.floor(r.height * px));
   f.px = px; f.w = w; f.h = h; f.cssW = w / px; f.cssH = h / px;
-  f.band = f.kind === 'panel' ? null : clearBand(host, f.cssW, f.cssH);
+  composeAroundCopy(f, host, canvas);
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
   canvas.style.width = f.cssW + 'px';
   canvas.style.height = f.cssH + 'px';
@@ -156,38 +156,91 @@ function fit(f: Frame, canvas: HTMLCanvasElement, host: HTMLElement, scene: Scen
 
 /** The hero's own words and pieces, which a full-bleed field composes around (the visual panel is not copy). */
 const COPY = '[data-hero-root] :is(.hero-title, .hero-sub, .actions, .hero-proof, [data-enter]:not(.hero-visual))';
+type Box = [number, number, number, number];
 
-/**
- * The widest row or column of the host that none of the hero copy crosses, or null when no strip
- * is at least 30% of the host's short side (the copy fills the hero; the scene keeps its default).
- */
-export function clearBand(host: HTMLElement, W: number, H: number): Band | null {
-  const hr = host.getBoundingClientRect(), boxes: [number, number, number, number][] = [];
+/** Hero copy boxes in host CSS px (x0, y0, x1, y1), clipped to the host. */
+function copyBoxes(host: HTMLElement, W: number, H: number): Box[] {
+  const hr = host.getBoundingClientRect(), boxes: Box[] = [];
   for (const el of document.querySelectorAll(COPY)) {
     const b = el.getBoundingClientRect();
     const x0 = Math.max(0, b.left - hr.left), y0 = Math.max(0, b.top - hr.top), x1 = Math.min(W, b.right - hr.left), y1 = Math.min(H, b.bottom - hr.top);
     if (x1 > x0 && y1 > y0) boxes.push([x0, y0, x1, y1]);
   }
-  if (!boxes.length) return null;
-  let cx = 0, area = 0;
-  for (const [x0, y0, x1, y1] of boxes) { const a = (x1 - x0) * (y1 - y0); cx += (a * (x0 + x1)) / 2; area += a; }
-  cx /= area;
-  // gaps between the boxes' projections onto one axis (lo, hi: box indices of that axis)
-  const gaps = (lo: 0 | 1, hi: 2 | 3, size: number) => {
-    const out: [number, number][] = [];
-    let at = 0;
-    for (const b of [...boxes].sort((p, q) => p[lo] - q[lo])) { if (b[lo] > at) out.push([at, b[lo]]); at = Math.max(at, b[hi]); }
-    if (size > at) out.push([at, size]);
-    return out;
-  };
-  let best: Band | null = null, score = 0.3 * Math.min(W, H);
-  for (const [a, b] of gaps(1, 3, H)) {
-    if (Math.min(W, b - a) > score) { score = Math.min(W, b - a); best = { x: 0, y: a, w: W, h: b - a, along: cx < W * 0.45 ? 0.7 : cx > W * 0.55 ? 0.3 : 0.5 }; }
+  return boxes;
+}
+
+/**
+ * Full and page hosts: find where the focal object goes (Frame.band). Full hosts also get a soft
+ * CSS mask on the canvas so the field never draws under the copy, whatever the hero's layout.
+ * Page hosts scroll under the copy, so they are not masked.
+ */
+export function composeAroundCopy(f: Frame, host: HTMLElement, canvas: HTMLCanvasElement) {
+  const boxes = f.kind === 'panel' ? [] : copyBoxes(host, f.cssW, f.cssH);
+  f.band = boxes.length ? clearRect(boxes, f.cssW, f.cssH) : null;
+  if (f.kind === 'full') keepClear(canvas, boxes, f.cssW, f.cssH);
+}
+
+/**
+ * The largest rectangle of the host that keeps 8 px clear of every copy box, scored by its
+ * shorter side (a round focal object needs both), on a 16 px grid. Null when the best is under
+ * 30% of the host's short side: the copy fills the hero and the scene keeps its default.
+ */
+export function clearRect(boxes: Box[], W: number, H: number): Band | null {
+  const C = 16, M = 8, gw = Math.ceil(W / C), gh = Math.ceil(H / C);
+  const busy = new Uint8Array(gw * gh);
+  for (const [x0, y0, x1, y1] of boxes) {
+    for (let gy = Math.max(0, Math.floor((y0 - M) / C)); gy < Math.min(gh, Math.ceil((y1 + M) / C)); gy++) {
+      for (let gx = Math.max(0, Math.floor((x0 - M) / C)); gx < Math.min(gw, Math.ceil((x1 + M) / C)); gx++) busy[gy * gw + gx] = 1;
+    }
   }
-  for (const [a, b] of gaps(0, 2, W)) {
-    if (Math.min(b - a, H) > score) { score = Math.min(b - a, H); best = { x: a, y: 0, w: b - a, h: H, along: 0.5 }; }
+  // largest rectangle in the histogram of free runs ending at each row
+  const run = new Int32Array(gw), stack: number[] = [];
+  let best: Band | null = null, bestSide = 0.3 * Math.min(W, H), bestArea = 0;
+  for (let gy = 0; gy < gh; gy++) {
+    for (let gx = 0; gx < gw; gx++) run[gx] = busy[gy * gw + gx] ? 0 : run[gx] + 1;
+    stack.length = 0;
+    for (let gx = 0; gx <= gw; gx++) {
+      const hgt = gx < gw ? run[gx] : 0;
+      while (stack.length && run[stack[stack.length - 1]] >= hgt) {
+        const top = stack.pop()!, left = stack.length ? stack[stack.length - 1] + 1 : 0;
+        const x = left * C, y = (gy - run[top] + 1) * C, w = Math.min(W, gx * C) - x, h = Math.min(H, (gy + 1) * C) - y;
+        const side = Math.min(w, h);
+        if (side > bestSide || (side === bestSide && w * h > bestArea)) { bestSide = side; bestArea = w * h; best = { x, y, w, h, along: 0.5 }; }
+      }
+      stack.push(gx);
+    }
+  }
+  if (best && best.x === 0 && best.w >= W - 1) {
+    // a full-width row: sit along it away from the copy's centre of mass
+    let cx = 0, area = 0;
+    for (const [x0, y0, x1, y1] of boxes) { const a = (x1 - x0) * (y1 - y0); cx += (a * (x0 + x1)) / 2; area += a; }
+    cx /= area;
+    best.along = cx < W * 0.45 ? 0.7 : cx > W * 0.55 ? 0.3 : 0.5;
   }
   return best;
+}
+
+/** A soft mask (8 px cells, 8 px margin, 24 px feather) that hides the canvas under the copy boxes. */
+function keepClear(canvas: HTMLCanvasElement, boxes: Box[], W: number, H: number) {
+  const style = canvas.style as CSSStyleDeclaration & { webkitMaskImage: string; webkitMaskSize: string };
+  if (!boxes.length) { style.maskImage = style.webkitMaskImage = ''; return; }
+  const C = 8, mw = Math.ceil(W / C), mh = Math.ceil(H / C);
+  const m = document.createElement('canvas');
+  m.width = mw; m.height = mh;
+  const c2 = m.getContext('2d');
+  if (!c2) return;
+  const img = c2.createImageData(mw, mh);
+  for (let gy = 0; gy < mh; gy++) for (let gx = 0; gx < mw; gx++) {
+    const x = (gx + 0.5) * C, y = (gy + 0.5) * C;
+    let d = Infinity;
+    for (const [x0, y0, x1, y1] of boxes) d = Math.min(d, Math.hypot(Math.max(x0 - x, 0, x - x1), Math.max(y0 - y, 0, y - y1)));
+    const k = Math.min(1, Math.max(0, (d - 8) / 24));
+    img.data[(gy * mw + gx) * 4 + 3] = Math.round(255 * k * k * (3 - 2 * k));
+  }
+  c2.putImageData(img, 0, 0);
+  const url = `url(${m.toDataURL()})`;
+  style.maskImage = style.webkitMaskImage = url;
+  style.maskSize = style.webkitMaskSize = '100% 100%';
 }
 
 /** Resize the field with its host, and recompose it when the hero copy reflows (wrapping, late fonts). */

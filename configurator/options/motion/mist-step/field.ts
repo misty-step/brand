@@ -4,7 +4,7 @@
 // the destination in 320 ms, rising as it goes. The hero keeps a still bank of the same mist, which
 // clears once on arrival. Canvas 2D at 4 to 6 CSS px per cell: no WebGL context, nothing loops.
 import type { MotionCtx, MotionHandle } from '../../../src/contract';
-import { blend, clearBand, hostKind, observeLayout, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
+import { blend, composeAroundCopy, hostKind, observeLayout, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
 
 const BANK_CELL = 4;       // CSS px per mist cell in the hero bank
 const VEIL_CELL = 6;       // CSS px per mist cell in the viewport veil
@@ -50,12 +50,17 @@ export function bankField(f: Frame): Float32Array {
   return d;
 }
 
-/** The bank in two field tones. `cover` 0 is the resting bank; 1 hides the whole host (the arrival starts there). */
+/**
+ * The bank in two field tones. `cover` 0 is the resting bank; 1 hides the whole host (the arrival
+ * starts there). Light palettes keep their fields closer to the ground than dark ones, so the light
+ * bank uses the two stronger tones to read as clearly as the dark one.
+ */
 export function paintBank(img: Pixels, f: Frame, d: Float32Array, cover: number) {
-  const edge = 0.78 - cover * 1.1;
+  const edge = 0.78 - cover * 1.1, p = f.pal;
+  const [thin, dense] = f.ctx.theme === 'light' ? [p.f2, p.f3] : [p.f1, p.f2];
   for (let i = 0; i < d.length; i++) {
     if (d[i] <= edge) continue;
-    blend(img, i % f.w, Math.floor(i / f.w), d[i] > edge + 0.3 ? f.pal.f2 : f.pal.f1, 1);
+    blend(img, i % f.w, Math.floor(i / f.w), d[i] > edge + 0.3 ? dense : thin, 1);
   }
 }
 
@@ -100,7 +105,7 @@ export function mount(host: HTMLElement, ctx0: MotionCtx): MotionHandle {
     if (relayout || w !== f.w || h !== f.h) {
       relayout = false;
       f.w = w; f.h = h; f.cssW = w * BANK_CELL; f.cssH = h * BANK_CELL;
-      f.band = f.kind === 'panel' ? null : clearBand(host, f.cssW, f.cssH);
+      composeAroundCopy(f, host, bank);
       bank.width = w; bank.height = h;
       bank.style.width = f.cssW + 'px'; bank.style.height = f.cssH + 'px';
       density = bankField(f);

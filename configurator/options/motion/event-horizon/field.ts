@@ -1,7 +1,8 @@
 // Event horizon: a black hole seen almost edge on, drawn as stipple. The shadow is empty, a thin
 // photon ring circles it, the near side of the disc crosses in front, and the far side is lensed
 // into arcs over and under the shadow. The disc turns faster inside than out (Keplerian), so its
-// streaks shear and never repeat. Light theme reads as an engraved plate, dark as light in a void.
+// streaks shear and never repeat. Dark is light in a void (three tones); light is an engraved plate
+// (one ink, dot density follows brightness, the ring a continuous line).
 // Raw WebGL1, one fullscreen triangle, one stipple cell per 2 CSS px, upscaled crisp.
 import type { MotionCtx } from '../../../src/contract';
 import { blend, cover, mountStage, program, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
@@ -20,7 +21,7 @@ precision highp float;
 precision mediump float;
 #endif
 uniform vec2 uRes;
-uniform float uCell, uT;
+uniform float uCell, uT, uLight;
 uniform vec3 uHole, uPtr, uF1, uF2, uF3, uInk;
 float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float noise(vec2 p) {
@@ -47,33 +48,41 @@ void main() {
   float rho = length(q), phi = atan(q.y, q.x);
   vec2 d = vec2(q.x, q.y / ${INC});
   float r = length(d), a = atan(d.y, d.x);
-  float L = 0.0;
-  if (rho > 1.0 || d.y < 0.0) L = disc(r, a) * 1.15;       // direct image; the far half hides behind the shadow
+  float Ld = (rho > 1.0 || d.y < 0.0) ? disc(r, a) * 1.15 : 0.0; // direct image; the far half hides behind the shadow
   float over = smoothstep(1.02, 1.1, rho) * (1.0 - smoothstep(1.45, 1.95, rho)) * smoothstep(-0.25, 0.55, q.y / rho);
   float under = smoothstep(1.03, 1.08, rho) * (1.0 - smoothstep(1.16, 1.3, rho)) * smoothstep(0.1, 0.9, -q.y / rho);
-  L = max(L, over * disc(1.55 + (rho - 1.05) * 3.4, phi) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6.0, -phi) * 0.8);
-  L = max(L, (1.0 - smoothstep(0.006, 0.03, abs(rho - 1.03))) * (0.55 - 0.45 * cos(phi))); // photon ring, brightest on the approaching side
+  float L = max(Ld, over * disc(1.55 + (rho - 1.05) * 3.4, phi) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6.0, -phi) * 0.8);
+  // the photon ring: one cell wide at any size, behind the near side of the disc
+  float ring = step(abs(rho - 1.03) * uHole.z / uCell, 0.5) * (1.0 - step(0.0, -d.y) * step(0.25, Ld));
+  float doppler = 0.5 - 0.5 * cos(phi);                    // 1 on the approaching side (left)
   if (rho < 1.0 && d.y >= 0.0) L = 0.0;                    // the shadow itself
   // stipple: interleaved gradient noise, fixed to the screen so the grain never crawls
   float th = fract(52.9829189 * fract(dot(cell, vec2(0.06711056, 0.00583715))));
-  float lv = floor(clamp(L, 0.0, 1.0) * 3.0 + th);
-  vec3 col = lv < 1.5 ? uF1 : (lv < 2.5 ? uF2 : uF3);
-  if (L > 1.0 && th < (L - 1.0) * 2.0) col = uInk;          // a few ink cells where the ring burns
-  float alpha = lv < 0.5 ? 0.0 : 1.0;
+  vec3 col; float alpha;
+  if (uLight > 0.5) {
+    alpha = step(th, clamp(L, 0.0, 1.0) * 0.78);
+    col = mix(uF3, uInk, 0.3);
+    if (ring > 0.5) { alpha = 1.0; col = mix(uF3, uInk, 0.42 + 0.3 * doppler); }
+  } else {
+    float lv = floor(clamp(L, 0.0, 1.0) * 3.0 + th);
+    col = lv < 1.5 ? uF1 : (lv < 2.5 ? uF2 : uF3);
+    alpha = lv < 0.5 ? 0.0 : 1.0;
+    if (ring > 0.5) { alpha = 1.0; col = mix(uF3, uInk, 0.15 + 0.4 * doppler); }
+  }
   gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
 /**
- * The hole sits in the strip the hero copy leaves clear; without one, beside the copy on wide
+ * The hole sits in the clear rectangle the hero copy leaves; without one, beside the copy on wide
  * full-bleed hosts and low on phones. Panels centre it.
  */
 function place(f: Frame): [number, number, number] {
   const W = f.cssW, H = f.cssH, b = f.band;
-  // the drawing spans about 8.8 shadow radii across (the disc) and 3.4 down (lensed arc to under-arc)
-  if (b && b.h >= H) { const rs = Math.min(b.w / 8.8, H * 0.13); return [b.x + b.w / 2, H * 0.5, rs]; }
   if (b) {
-    const rs = Math.min(b.h / 4.4, W / 9.2);
-    return [Math.min(W - rs * 3.2, Math.max(rs * 3.2, b.w * b.along)), b.y + b.h * 0.52, rs];
+    // the drawing spans about 8.8 shadow radii across (the disc) and 3.4 down (lensed arc to under-arc)
+    const rs = Math.min(b.w / 8.8, b.h / 4.4, Math.min(W, H) * 0.13);
+    const x = b.x <= 1 && b.x + b.w >= W - 1 ? Math.min(W - rs * 3.2, Math.max(rs * 3.2, W * b.along)) : b.x + b.w / 2;
+    return [x, b.y + b.h * 0.52, rs];
   }
   if (f.kind !== 'panel') {
     if (W >= 700) { const rs = Math.min(W * 0.068, H * 0.13); return [W - rs * 4.1, H * 0.5, rs]; }
@@ -117,7 +126,7 @@ export function scene(): Scene {
     init(s) {
       const gl = s.gl;
       prog = program(gl, VS, FS);
-      U = uniforms(gl, prog, ['uRes', 'uCell', 'uT', 'uHole', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk']);
+      U = uniforms(gl, prog, ['uRes', 'uCell', 'uT', 'uLight', 'uHole', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk']);
       loc = gl.getAttribLocation(prog, 'p');
       cover(gl);
     },
@@ -130,32 +139,37 @@ export function scene(): Scene {
       gl.uniform2f(U.uRes, s.w, s.h);
       gl.uniform1f(U.uCell, 1 / s.px);
       gl.uniform1f(U.uT, t);
+      gl.uniform1f(U.uLight, s.ctx.theme === 'light' ? 1 : 0);
       gl.uniform3f(U.uHole, x, y, rs);
       gl.uniform3f(U.uPtr, s.ptr.x, s.ptr.y, s.ptr.s);
       gl.uniform3fv(U.uF1, p.f1); gl.uniform3fv(U.uF2, p.f2); gl.uniform3fv(U.uF3, p.f3); gl.uniform3fv(U.uInk, p.ink);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
     paint(img, f, t) {
-      const [hx, hy, rs] = place(f), cell = 1 / f.px, p = f.pal;
-      const ct = Math.cos(TILT), st = Math.sin(TILT);
+      const [hx, hy, rs] = place(f), cell = 1 / f.px, p = f.pal, light = f.ctx.theme === 'light';
+      const mix = (k: number): RGB => [p.f3[0] + (p.ink[0] - p.f3[0]) * k, p.f3[1] + (p.ink[1] - p.f3[1]) * k, p.f3[2] + (p.ink[2] - p.f3[2]) * k];
+      const ct = Math.cos(TILT), st = Math.sin(TILT), dots = mix(0.3);
       for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) {
         const ux = ((x + 0.5) * cell - hx) / rs, uy = ((y + 0.5) * cell - hy) / rs;
         const qx = ct * ux + st * uy, qy = st * ux - ct * uy; // the shader's lean, then y up
         const rho = Math.hypot(qx, qy), phi = Math.atan2(qy, qx);
         const dx = qx, dy = qy / INC, r = Math.hypot(dx, dy), a = Math.atan2(dy, dx);
-        let L = rho > 1 || dy < 0 ? disc(r, a, t) * 1.15 : 0;
+        const Ld = rho > 1 || dy < 0 ? disc(r, a, t) * 1.15 : 0;
         const over = sstep(1.02, 1.1, rho) * (1 - sstep(1.45, 1.95, rho)) * sstep(-0.25, 0.55, qy / rho);
         const under = sstep(1.03, 1.08, rho) * (1 - sstep(1.16, 1.3, rho)) * sstep(0.1, 0.9, -qy / rho);
-        L = Math.max(L, over * disc(1.55 + (rho - 1.05) * 3.4, phi, t) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6, -phi, t) * 0.8);
-        L = Math.max(L, (1 - sstep(0.006, 0.03, Math.abs(rho - 1.03))) * (0.55 - 0.45 * Math.cos(phi)));
+        let L = Math.max(Ld, over * disc(1.55 + (rho - 1.05) * 3.4, phi, t) * 1.1 + under * disc(1.7 + (rho - 1.03) * 6, -phi, t) * 0.8);
+        const ring = (Math.abs(rho - 1.03) * rs) / cell <= 0.5 && !(dy <= 0 && Ld >= 0.25);
+        const doppler = 0.5 - 0.5 * Math.cos(phi);
         if (rho < 1 && dy >= 0) L = 0;
         const gy = f.h - 1 - y; // the shader's cell rows count from the bottom
         const th = fract(52.9829189 * fract(x * 0.06711056 + gy * 0.00583715));
-        const lv = Math.floor(Math.min(1, Math.max(0, L)) * 3 + th);
-        if (lv < 1) continue;
-        let col: RGB = lv < 2 ? p.f1 : lv < 3 ? p.f2 : p.f3;
-        if (L > 1 && th < (L - 1) * 2) col = p.ink;
-        blend(img, x, y, col, 1);
+        const k = Math.min(1, Math.max(0, L));
+        if (ring) blend(img, x, y, mix(light ? 0.42 + 0.3 * doppler : 0.15 + 0.4 * doppler), 1);
+        else if (light) { if (th <= k * 0.78) blend(img, x, y, dots, 1); }
+        else {
+          const lv = Math.floor(k * 3 + th);
+          if (lv >= 1) blend(img, x, y, lv < 2 ? p.f1 : lv < 3 ? p.f2 : p.f3, 1);
+        }
       }
     },
   };
