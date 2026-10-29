@@ -114,7 +114,7 @@ html[data-layout="tiling"] {
   }
   .s-work .item { container-type: inline-size; }
   .item-link { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: clamp(20px, 1.7vw, 24px); }
-  .item-link:focus-visible { outline: none; }
+  .item-link:focus-visible { outline-offset: -2px; }
   .s-work .item-title { font-family: var(--font-display); font-size: var(--step-1); font-weight: var(--display-weight); line-height: 1.2; }
   .s-work .item-body { color: var(--ink-2); }
   .item-host {
@@ -211,6 +211,11 @@ html[data-layout="tiling"] {
   .foot-links { display: flex; flex-wrap: wrap; gap: 0 20px; }
   .foot-links .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); }
   .motion-toggle { border-radius: 0; font-size: var(--step--1); }
+  .motion-toggle::before {
+    content: ""; display: inline-block; width: 10px; height: 12px; margin-right: 12px;
+    border-inline: 3px solid currentColor; vertical-align: -1px;
+  }
+  .motion-toggle[aria-pressed="true"]::before { border: 0; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
 
   @media (hover: hover) and (pointer: fine) {
     .nav-links .link:hover { color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
@@ -260,11 +265,6 @@ html[data-layout="tiling"] {
       padding: 0 0 0 16px; border: 0; border-left: var(--rule) solid var(--line);
       background: var(--bg); color: var(--ink); text-align: left;
     }
-    .motion-toggle::before {
-      content: ""; display: inline-block; width: 10px; height: 12px; margin-right: 12px;
-      border-inline: 3px solid currentColor; vertical-align: -1px;
-    }
-    .motion-toggle[aria-pressed="true"]::before { border: 0; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
   }
 
   @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
@@ -282,6 +282,7 @@ html[data-layout="tiling"] {
     &:has(.theme-toggle:focus-visible) .foot::after { content: "switches the theme"; content: "switches the theme" / ""; }
     &:has(.copy:focus-visible) .foot::after { content: "copies the command"; content: "copies the command" / ""; }
     &:has(.motion-toggle:focus-visible) .foot::after { content: "pauses motion"; content: "pauses motion" / ""; }
+    &:has(.motion-toggle[aria-pressed="true"]:focus-visible) .foot::after { content: "resumes motion"; content: "resumes motion" / ""; }
     &:has(.tabs :focus-visible) .foot::before { content: "\2190 \2192"; content: "\2190 \2192" / ""; }
     &:has(.tabs :focus-visible) .foot::after { content: "switches harness"; content: "switches harness" / ""; }
   }
