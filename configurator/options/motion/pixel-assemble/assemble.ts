@@ -1,12 +1,12 @@
 // Pixel assemble: once per load, a dithered cloud of mist pixels over the headline's own box
 // condenses into the headline in a left-to-right wave, sharpens through one finer mosaic and
-// hands over to the real text. About 0.6 s, then nothing runs at all.
+// hands over to the real text. About 0.45 s, then nothing runs at all.
 //
 // Timing contract (the h1 stays real text throughout):
-// - CSS alone holds the h1 for at most 700ms, so it appears even if this script never arrives.
-// - The assembly starts only if it can begin within 300ms of that hold starting; otherwise the
+// - CSS alone holds the h1 for at most 320ms, so it appears even if this script never arrives.
+// - The assembly starts only if it can begin within 240ms of that hold starting; otherwise the
 //   hold is released and the headline shows at once.
-// - A started assembly stretches the hold to its own end, never later than 900ms after the hold
+// - A started assembly stretches the hold to its own end, never later than 660ms after the hold
 //   began. The reveal is that hold ending (a compositor animation), so the h1 appears on time
 //   even when this script's frames stall; the canvas fades out on the same clock.
 // - Nothing here ever hides a headline: the script only shortens or extends a hold that is
@@ -14,9 +14,10 @@
 import type { MotionCtx, MotionHandle } from '../../../src/contract';
 import { palette, parseColor, type RGB } from '../_motion-a/color';
 
-const START_BY = 300, VISIBLE_BY = 900, PLANNED = 600, MIN_RUN = 450;
-// Phase lengths for the planned 600ms run; a late start scales them all down together.
-const PRE = 60, WAVE = 200, JITTER = 40, TRAVEL = 200, SHARPEN = 50;
+const START_BY = 240, VISIBLE_BY = 660, PLANNED = 450, MIN_RUN = 380;
+// Phases of the planned 450ms run (cloud appears, wave, travel, a beat in coarse ink, then the
+// finer mosaic until the end); a late start scales them all down together.
+const PRE = 40, WAVE = 140, JITTER = 30, TRAVEL = 160, SHARPEN = 30;
 const inert: MotionHandle = { pause() {}, resume() {}, update() {}, destroy() {} };
 const expo = (p: number) => (1 - 2 ** (-10 * p)) / (1 - 2 ** -10);
 const pack = (c: RGB) => (255 << 24) | (Math.round(c[2] * 255) << 16) | (Math.round(c[1] * 255) << 8) | Math.round(c[0] * 255);
@@ -160,8 +161,10 @@ export function mount(_host: HTMLElement, ctx: MotionCtx): MotionHandle {
     const travel = TRAVEL * k, sharpenAt = (PRE + WAVE + JITTER + TRAVEL + SHARPEN) * k;
     state = 'running';
     clearTimeout(timer);
-    // Backstops when frames stall: the canvas fades on the compositor at the end, a timer cleans up.
-    canvas.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1, delay: total, fill: 'forwards' });
+    // Backstops when frames stall: the canvas fades on the hold's own clock (same start time, so
+    // it disappears in the frame the h1 appears), and a timer cleans up.
+    const fade = canvas.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1, delay: total, fill: 'forwards' });
+    if (typeof hold.startTime === 'number') { fade.effect?.updateTiming({ delay: at + total }); fade.startTime = hold.startTime; }
     timer = window.setTimeout(finish, total + 40);
     const t0 = performance.now();
 
