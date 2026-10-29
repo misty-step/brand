@@ -219,8 +219,8 @@ export default {
         {
           type: 'install',
           id: 'install',
-          title: 'Native installs. No custom installer.',
-          intro: "Every command goes through the harness's own plugin or package system and is copied from that harness's reference file in the repository.",
+          title: 'Shipped for OMP. Three more to prove.',
+          intro: "Claude Code, Codex and pi have documented install commands, and their proofs are tracked in mistystack#591. Every command goes through the harness's own plugin or package system and is copied from its reference file in the repository.",
           harnesses: INSTALL_HARNESSES,
         },
         {

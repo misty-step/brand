@@ -21,7 +21,7 @@ Written like a good work order: defined terms used the same way every time (the 
 3. **Six parts. One always on.** (diagram) The bill of materials, with the one part that never unloads.
 4. **Every handoff gets a brief.** (briefing contract) mistystack's own work order: six fields, and no Oracle means no dispatch.
 5. **Six tasks, one run each.** (evidence) The trial's first limit as its title, so the bars cannot be read without it.
-6. **Native installs. No custom installer.** (install) A spec line taken from the README's own boundary.
+6. **Shipped for OMP. Three more to prove.** (install) Status written as a work order writes it. Pending proof suits a method whose hero line is "Done means the check passes". Replaced "Native installs. No custom installer.", which the conductor's harness ruling bars.
 7. **The method is plain text.** (closing statement) Every rule and skill is a Markdown file you can read before you run it.
 8. **Name the check before the work.** Core line 2 as an instruction; the strongest alternative hero.
 9. **Finish the work you were given.** Core line 6 verbatim; a work order's first rule. Unused, kept for a points title.
@@ -42,4 +42,4 @@ Written like a good work order: defined terms used the same way every time (the 
 - How soon discovery can start after the call.
 - `hello@mistystep.io` is public on mistystep.io/book, and the conductor cleared it on 2026-10-29, so the studio footer links it. It belongs in facts.ts next to `LINKS.book`.
 - The round 2 brief's "no hourly rates, tiers, free audits or retainers": the conductor ruled to publish only what mistystep.io already says. This copy therefore says "No open-ended retainer" and does not mention hourly rates, tiers or free audits.
-- Harness status: the mistystack guide README says OMP shipped first and that the other adapters and their proofs are tracked by issue #591 (open), "not claimed as shipped". The stack copy therefore names the install commands ("Install commands for OMP, Claude Code, Codex and pi.") and does not claim shipped support. Once #591 closes, the proof line can read "Installs natively in OMP, Claude Code, Codex and pi."
+- Harness status, per the conductor's ruling in the round 2 brief: mistystack is shipped for OMP. Claude Code, Codex and pi have documented install commands, but their proofs are tracked in mistystack#591 (open), so copy may show the commands and must not call them shipped, supported or proven. The stack copy follows that rule: the proof line is "Install commands for OMP, Claude Code, Codex and pi." and the install title is "Shipped for OMP. Three more to prove." When #591 closes, both lines should change.
