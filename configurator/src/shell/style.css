@@ -34,6 +34,14 @@ button.primary:hover { background: #4c5d41; }
 .layer-description button { font-size: 12px; margin-top: 12px; width: 100%; }
 .refs { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 10px; }
 .ref { font-size: 12px; color: #476033; text-decoration-thickness: 1px; }
+.tune { margin-top: 12px; padding: 12px 2px 4px; border-top: 1px solid #cad2c2; }
+.tune-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.tune-head h2 { font-size: 12px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tune-head button { font-size: 12px; min-height: 28px; padding: 3px 8px; background: transparent; }
+.tune-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 8px; padding-block: 3px; font-size: 12px; color: #4f5d45; }
+.tune-row output { font-variant-numeric: tabular-nums; color: #647157; }
+.tune-row input, .tune-row select { grid-column: 1 / -1; width: 100%; margin: 2px 0 0; accent-color: #4c653a; }
+.tune-row select { min-height: 30px; padding: 3px 6px; font-size: 12px; }
 .shuffle-all { width: 100%; margin-top: 16px; font-size: 12px; }
 .rail-hint { font-size: 12px; line-height: 1.5; color: #69765e; padding: 12px 2px; }
 .about { font-size: 12px; color: #5c6a51; padding: 12px 2px; border-top: 1px solid #d5ddcc; }
@@ -121,7 +129,7 @@ dialog::backdrop { background: #1c291780; }
   .layer-row select, .layer-row > button, .layer-info > summary { min-height: 44px; }
   .layer-row select { font-size: 14px; }
   .layer-description { top: 48px; padding: 20px; }
-  .layer-description button, .shuffle-all { min-height: 44px; }
+  .layer-description button, .shuffle-all, .tune-head button, .tune-row input, .tune-row select { min-height: 44px; }
   .rail-hint, .about { display: none; }
   .stage { padding: 16px 10px; overflow: visible; }
   .toolbar { align-items: flex-start; }

@@ -62,6 +62,10 @@ On phones the motion control is an in-flow hero row. Heroes with empty explicit 
 
 Core-file excerpts wrap at spaces in every layout; install commands preserve preformatted lines and scroll internally. Formatted node links keep one `.link-text` label child so `.nowrap` compounds do not turn into separate flex columns.
 
+## Motion tuner
+
+A motion option may declare `params?: MotionParam[]` (`src/contract.ts`): `{ key, label, min, max, step, value, options? }`, where `value` is the option's default and `options` names each integer value of a choice. When the selected motion has params, the shell shows a Tune panel under the layer rail: a slider per number, a select per choice, and Reset. Overrides live in `LabState.tune[<motion id>][<key>]`, so they travel in the share link and in saved combinations, survive switching to another motion and back, and Reset clears them for the current motion; a value moved back to its default is dropped. `decode()` keeps only finite numbers under known motion ids. The preview hands the current motion's overrides to its background as `MotionCtx.tune`; a tune-only change calls the existing handle's `update()` without a remount, and the background clamps each value to its param's range. Spec export adds `motionParams`, the resolved values. The `r2-mist-*` options use it; their shared engine is described in `options/motion/_r2-mist/README.md`.
+
 ## Markup the renderer emits (layouts and heroes style exactly this)
 ```html
 <html data-page data-theme data-reduced-motion data-mark data-type data-color data-layout data-hero data-motion data-copy>
