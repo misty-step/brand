@@ -47,6 +47,7 @@ export interface HeroOption extends OptionMeta { layer: 'hero';
 export interface MotionCtx extends Ctx { colors: { bg: string; ink: string; accent: string; field1: string; field2: string; field3: string }; dprCap: number }
 export interface MotionHandle { pause(): void; resume(): void; update(ctx: MotionCtx): void; destroy(): void }
 export interface MotionOption extends OptionMeta { layer: 'motion';
+  renderer?: 'webgl'|'canvas2d'|'none'; // Defaults to webgl when background exists, otherwise none; drives off-Mac proof.
   background?: { load(): Promise<{ mount(host: HTMLElement, ctx: MotionCtx): MotionHandle }> }; // lazy; host is sized by the hero/page
   entrance: { css: string };     // scoped html[data-motion="<id>"]; animates [data-enter] -> [data-enter].is-in; respect [data-reduced-motion="1"] (show final)
   interaction?: { css: string }; // hover/press/focus micro-interactions for .btn, .item, a.link

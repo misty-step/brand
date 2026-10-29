@@ -22,9 +22,9 @@ button.primary:hover { background: #4c5d41; }
 .rail { min-height: 0; overflow-y: auto; padding: 20px 10px; border-right: 1px solid #cad2c2; background: #f6f8f2; }
 .rail-title { display: flex; justify-content: space-between; margin-bottom: 12px; padding-inline: 2px; font-size: 12px; color: #647157; }
 .layer { position: relative; padding-block: 4px; border-top: 1px solid #dbe1d3; }
-.layer-row { display: grid; grid-template-columns: 39px minmax(0, 1fr) 20px 20px 20px; gap: 3px; align-items: center; min-height: 42px; }
+.layer-row { display: grid; grid-template-columns: 39px minmax(0, 1fr) 24px 24px 24px; gap: 3px; align-items: center; min-height: 42px; }
 .layer-row select { min-width: 0; width: 100%; height: 32px; padding: 4px 2px; font-size: 12px; border-color: transparent; background: transparent; text-overflow: ellipsis; }
-.layer-row > button { padding: 0; min-height: 28px; min-width: 20px; border: 0; background: transparent; font-size: 16px; color: #5c6b50; }
+.layer-row > button { display: grid; place-items: center; padding: 0; min-height: 28px; min-width: 24px; border: 0; background: transparent; font-size: 16px; color: #5c6b50; }
 .layer-row > button[aria-pressed="true"] { background: #dce7d2; }
 .layer-info > summary { list-style: none; font-size: 12px; font-weight: 600; cursor: pointer; min-height: 32px; display: flex; align-items: center; text-decoration: underline dotted #9eab92; text-underline-offset: 4px; }
 .layer-info > summary::-webkit-details-marker { display: none; }
@@ -100,7 +100,7 @@ dialog::backdrop { background: #1c291780; }
   .workspace { grid-template-columns: 190px minmax(0,1fr); }
   .frame-wrap.phone { width: 195px; }
   .rail { padding-inline: 7px; }
-  .layer-row { grid-template-columns: 36px minmax(0,1fr) 18px 18px 18px; gap: 2px; }
+  .layer-row { grid-template-columns: 36px minmax(0,1fr) 24px 24px 24px; gap: 2px; }
   .frames { gap: 12px; }
 }
 @media (max-width: 800px) {
@@ -111,7 +111,7 @@ dialog::backdrop { background: #1c291780; }
   .head-actions button { min-height: 44px; }
   .workspace { display: flex; flex-direction: column; height: auto; }
   .rail { padding: 12px; border-right: 0; border-bottom: 1px solid #cad2c2; overflow: visible; }
-  .layer-row { grid-template-columns: 56px minmax(0,1fr) 36px 36px 36px; gap: 4px; }
+  .layer-row { grid-template-columns: 56px minmax(0,1fr) 44px 44px 44px; gap: 4px; }
   .layer-row select, .layer-row > button, .layer-info > summary { min-height: 44px; }
   .layer-row select { font-size: 14px; }
   .layer-description { top: 48px; padding: 20px; }
