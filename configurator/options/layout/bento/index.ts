@@ -328,7 +328,10 @@ ${S} .s-install .tab:focus-visible, ${S} .s-install .copy:focus-visible { outlin
   ${S} .s-evidence .bars { padding: 24px 20px; gap: 24px; }
   ${S} .s-code .code { padding: 20px 18px; }
   ${S} .s-code figcaption { padding-inline: 18px; }
-  ${S} .s-cta { text-align: left; font-size: var(--step-2); }
+  ${S} .s-cta { text-align: left; }
+  ${S} .s-cta .s-title { display: block; }
+  ${S} .s-cta .s-title::after { content: none; }
+  ${S} .s-cta .s-intro { display: block; margin-top: 16px; font-size: var(--step-1); line-height: 1.35; }
   ${S} .s-cta .actions { flex-direction: column; align-items: stretch; }
   ${S} .s-cta .actions .btn { width: 100%; }
   ${S} .foot { flex-direction: column; align-items: flex-start; padding-top: 24px; }
