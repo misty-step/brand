@@ -110,7 +110,7 @@ export default {
       navCta: call,
       hero: {
         headline: 'Ship one thing. Quote the rest.',
-        sub: `We apply AI to one key process. In two weeks of discovery at ${price}, one quick win ships and the plan quotes each further project against the dollars it should return.`,
+        sub: `We apply AI to one key process. In two weeks of discovery at ${price}, one quick win ships and the plan prices each further project against the dollars it should return.`,
         primary: call,
         secondary: { label: 'What happens, in order', href: '#process' },
         proof: `Only the ${minutes}-minute call is free.`,
@@ -172,8 +172,10 @@ export default {
         },
       ],
       footer: {
-        line: 'Misty Step, a software studio.',
+        line: 'Misty Step, a software studio. Fixed prices, agreed before work starts.',
         links: [
+          // Public on mistystep.io/book.
+          { label: 'hello@mistystep.io', href: 'mailto:hello@mistystep.io' },
           { label: 'mistystack', href: LINKS.repo },
           { label: 'GitHub', href: 'https://github.com/misty-step' },
         ],
