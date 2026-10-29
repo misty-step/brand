@@ -111,6 +111,7 @@ function checkTheme(theme, tokens) {
 }
 
 const dirs = (await readdir(here, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name).sort();
+const palettes = [];
 let failed = 0, checked = 0;
 for (const id of dirs) {
   const file = join(here, id, 'index.ts');
@@ -123,6 +124,7 @@ for (const id of dirs) {
   const { default: option } = await import(pathToFileURL(file).href);
   if (option.id !== id || option.layer !== 'color') throw new Error(`${file}: id/layer mismatch`);
   checked++;
+  palettes.push({ id, light: option.light, dark: option.dark });
   const results = ['light', 'dark'].map((t) => checkTheme(t, option[t]));
   const fails = results.flatMap((r, i) => r.fails.map((x) => `${i ? 'dark' : 'light'}: ${x}`));
   const flags = results.flatMap((r, i) => r.flags.map((x) => `${i ? 'dark' : 'light'}: ${x}`));
@@ -143,4 +145,41 @@ for (const id of dirs) {
   }
 }
 console.log(`${checked} palettes checked, ${failed} failing`);
+
+// --pairs: lint the other layers' CSS (and the renderer's base.css) for text/background token
+// pairs the guarantees above do not cover, and report the worst ratio across every palette.
+// Same-rule pairs only: the cascade across rules needs a browser, so this is a lint, not proof.
+if (process.argv.includes('--pairs')) {
+  const COVERED = new Set([
+    ...['ink', 'ink-2', 'ink-3', 'accent-2'].flatMap((t) => ['bg', 'bg-2', 'bg-3'].map((b) => `${t}|${b}`)),
+    'accent-ink|accent', 'ink|selection', 'ink|field-1', 'ink|field-2', 'ink|field-3', 'ink-2|field-1', 'ink-2|field-2',
+  ]);
+  const covered = (a, b) => COVERED.has(`${a}|${b}`) || COVERED.has(`${b}|${a}`);
+  const ROLES = Object.keys(palettes[0]?.light ?? {}).map((k) => k.slice(2));
+  const firstVar = (value = '') => value.match(/var\(--([\w-]+)/)?.[1];
+  const worst = (fg, bg) => palettes.flatMap((p) => ['light', 'dark'].map((t) => ({ r: ratio(parse(p[t][`--${fg}`]), parse(p[t][`--${bg}`])), at: `${p.id} ${t}` }))).sort((x, y) => x.r - y.r)[0];
+  const root = dirname(here);
+  const sources = [join(root, '..', 'src', 'preview', 'base.css')];
+  for (const layer of (await readdir(root, { withFileTypes: true })).filter((d) => d.isDirectory() && d.name !== 'color')) {
+    for (const opt of await readdir(join(root, layer.name), { withFileTypes: true })) {
+      if (opt.isDirectory() && existsSync(join(root, layer.name, opt.name, 'index.ts'))) sources.push(join(root, layer.name, opt.name, 'index.ts'));
+    }
+  }
+  const findings = [];
+  for (const file of sources) {
+    const text = await readFile(file, 'utf8');
+    const css = (file.endsWith('.css') ? [text] : [...text.matchAll(/`([^`]*)`/g)].map((m) => m[1])).join('\n').replace(/\$\{[^}]*\}/g, 'X').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const [, selector, body] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const decl = Object.fromEntries([...body.matchAll(/([\w-]+)\s*:\s*([^;]+)/g)].map((m) => [m[1].toLowerCase(), m[2]]));
+      const fg = firstVar(decl.color), bg = firstVar(decl['background-color'] ?? decl.background);
+      const where = `${file.slice(root.length - 'options'.length)}  ${selector.trim().slice(-80)}`;
+      if (fg === 'accent') findings.push(`text set in --accent (a fill, may be light): ${where}`);
+      if (fg && bg && ROLES.includes(fg) && ROLES.includes(bg) && fg !== bg && !covered(fg, bg)) {
+        const w = worst(fg, bg);
+        findings.push(`--${fg} on --${bg} is not a guaranteed pair; worst ${f(w.r)} in ${w.at}: ${where}`);
+      }
+    }
+  }
+  console.log(findings.length ? findings.join('\n') : 'pairs: every same-rule text/background token pair is guaranteed');
+}
 process.exit(failed ? 1 : 0);

@@ -29,11 +29,20 @@ Layouts, heroes, marks and motion can rely on these without knowing which palett
 - Every value is `oklch(L C H)` with `L` from 0 to 1, no alpha, and inside sRGB, so the measured ratios are what the browser paints. Motion code receives these strings unchanged from `getComputedStyle`; a 1×1 canvas `fillStyle` round trip or the conversion in `check.mjs` turns them into RGB.
 - No surface is pure `#fff` or `#000`; dark grounds sit at L 0.145 to 0.18 and dark inks at L 0.92 to 0.965.
 
+## Choosing between `--accent` and `--accent-2` in a mark or a field
+
+- `--accent` is the palette's fill. It is the ink itself in `mono` and `paper-rubric`, which fill buttons with ink, and a light fill in `fog-sodium`, `tangerine` and `olive-safety` (1.5 to 2.8:1 on the light ground). A highlight pixel in `--accent` reads as a lamp but can vanish into the body.
+- `--accent-2` is the signature ink at text contrast everywhere. It is red in `paper-rubric` (Direction B's rubric beak), the ink in `mono`, and the palette's text-safe signature shade elsewhere (olive in `olive-safety`, blue in `flexoki`). Use it for any highlight that must survive a 16px favicon.
+- `MotionCtx.accent` is `--accent`. A focal cell in a field can use it, but it may equal `--ink` (in `mono` and `paper-rubric`).
+
 ## Checking
 
 ```sh
 node options/color/check.mjs          # verify every palette with a contrast block
 node options/color/check.mjs --write  # also rewrite the measured ratios into each index.ts
+node options/color/check.mjs --pairs  # also lint the other layers' CSS for unguaranteed text/background pairs
 ```
 
 The script imports each `index.ts` (Node strips the types), converts OKLCH to 8-bit sRGB, measures WCAG 2 contrast and fails on any broken guarantee above. It also reports what the design-canon probe will flag. The one flag today is `flexoki` light: the probe reads Flexoki's paper (`#F2F0E5`) as a warm cream ground. That is the theme's identity, and the palette keeps every orange and red away from it so the cream-and-terracotta look never forms.
+
+`--pairs` reads `src/preview/base.css` and every other layer's `index.ts`. It finds rules that set both a text colour and a background from these tokens, and reports any pair outside the guarantees with its worst ratio across all nine palettes. It also reports any text set in `--accent`. It sees same-rule pairs only, so it is a lint and not a rendered measurement. Rendered checks (the canon probe and screenshots in four states per palette) are pending: per the conductor's browser rule, only LabCore runs them.
