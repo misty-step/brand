@@ -9,8 +9,9 @@ const layers = ['mark', 'type', 'color', 'layout', 'hero', 'motion', 'copy'];
 const usage = `Usage: node scripts/smoke.mjs [--url <origin>] [--webgl] [--out <dir>]
   --url     Test a deployed build instead of serving local dist/.
   --webgl   Enable SwiftShader and require WebGL proof for WebGL motion options.
-            Forbidden on macOS. Run this mode on a Linux Boat worker.
+            Run this mode on a Linux Boat worker.
   --out     Write smoke.json and 390/1440 screenshots for each motion and preset.
+All browser modes are forbidden on macOS. Use a Linux Boat worker.
 Default: Playwright bundled headless shell only. Never desktop Chrome or a relay.`;
 const config = { url: process.env.LAB_URL, webgl: false, out: null };
 for (let i = 2; i < process.argv.length; i++) {
@@ -25,8 +26,8 @@ for (let i = 2; i < process.argv.length; i++) {
   }
   throw new Error(`Unknown flag: ${flag}\n${usage}`);
 }
-if (config.webgl && process.platform === 'darwin') {
-  throw new Error('--webgl is forbidden on this Mac. Use a Linux Boat worker; no browser was launched.');
+if (process.platform === 'darwin') {
+  throw new Error('All browser verification is forbidden on this Mac. Run the smoke gate on a Linux Boat worker; no browser was launched.');
 }
 if (config.url) {
   const url = new URL(config.url);
@@ -75,6 +76,19 @@ function instrument() {
     }
     return context;
   };
+  window.__labHeroVisibility = () => ['h1.hero-title', '.hero-sub', '.actions > .btn-primary'].map(selector => {
+    const element = document.querySelector('.hero ' + selector);
+    if (!element) return { selector, visible: false, opacity: 0, inViewport: false };
+    const rect = element.getBoundingClientRect();
+    let opacity = 1, entered = true;
+    for (let node = element; node instanceof Element; node = node.parentElement) {
+      opacity *= Number(getComputedStyle(node).opacity);
+      if (node.hasAttribute('data-enter') && !node.classList.contains('is-in')) entered = false;
+    }
+    const style = getComputedStyle(element);
+    const inViewport = rect.width > 0 && rect.height > 0 && rect.top >= -1 && rect.left >= -1 && rect.bottom <= innerHeight + 1 && rect.right <= innerWidth + 1;
+    return { selector, visible: entered && opacity > .9 && inViewport && style.visibility !== 'hidden' && style.display !== 'none', opacity, inViewport, entered, clipPath: style.clipPath };
+  });
 }
 const baseline = () => ({ v: 1, page: 'studio', theme: 'light', reducedMotion: false, paused: false, fullPreview: false, picks: Object.fromEntries(layers.map(layer => [layer, 'baseline-' + layer])), locks: [] });
 const href = state => base + '/preview.html#' + encodeURIComponent(JSON.stringify(state));
@@ -94,10 +108,26 @@ async function checkState({ label, state, width, option, shot }) {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   try {
-    await page.goto(href(state), { waitUntil: 'networkidle' });
+    const navigationStart = Date.now();
+    await page.goto(href(state), { waitUntil: 'domcontentloaded' });
+    let heroVisibility = null, heroReadyMs = null;
+    if (option?.layer === 'motion') {
+      try {
+        await page.waitForFunction(() => window.__labHeroVisibility().every(item => item.visible), null, { timeout: Math.max(1, 1500 - (Date.now() - navigationStart)) });
+        heroReadyMs = Date.now() - navigationStart;
+      } catch {
+        errors.push('Hero h1, subtitle and primary action were not visible within 1.5 s');
+      }
+      heroVisibility = await page.evaluate(() => window.__labHeroVisibility());
+      if (heroVisibility.some(item => !item.visible)) errors.push('Hero visibility: ' + JSON.stringify(heroVisibility));
+    }
     await page.waitForFunction(() => window.__LAB__?.ready, null, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout((config.webgl && option?.layer === 'motion') || shot ? 2500 : 180);
+    const settleAt = (config.webgl && option?.layer === 'motion') || shot ? 2500 : 0;
+    await page.waitForTimeout(settleAt ? Math.max(0, settleAt - (Date.now() - navigationStart)) : 180);
+    const heroAfterSettle = option?.layer === 'motion' ? await page.evaluate(() => window.__labHeroVisibility()) : null;
+    if (heroAfterSettle?.some(item => !item.visible)) errors.push('Hero content hidden after startup: ' + JSON.stringify(heroAfterSettle));
     const shape = await page.evaluate(() => {
       const runtime = window.__LAB__;
       const host = runtime.motion?.host === 'page'
@@ -121,20 +151,22 @@ async function checkState({ label, state, width, option, shot }) {
     if (config.webgl && option?.layer === 'motion' && !shape.runtime.motion) errors.push('Preview lacks renderer metadata. Deploy the current build before WebGL proof.');
     const renderer = shape.runtime.motion?.renderer ?? 'none';
     if (config.webgl && option?.layer === 'motion' && renderer === 'webgl') {
-      if (!state.reducedMotion) {
+      if (!state.reducedMotion && !state.paused) {
         if (!shape.canvases) errors.push('WebGL motion created no canvas');
         if (!shape.webglContexts) errors.push(`WebGL motion created no WebGL context (${shape.webglAttempts} attempts)`);
         if (!shape.canvasDraws) errors.push('WebGL motion never painted a frame');
-      } else if (!shape.canvasDraws && !shape.stillArt) {
+      } else if (state.reducedMotion && !shape.canvasDraws && !shape.stillArt) {
         errors.push('Reduced WebGL motion did not render a still canvas, image, SVG, or poster');
       }
     }
-    let reducedDrawDelta = null;
-    if (state.reducedMotion) {
+    let reducedDrawDelta = null, pausedDrawDelta = null;
+    if (state.reducedMotion || state.paused) {
       const before = await page.evaluate(() => window.__labSmoke.draws);
       await page.waitForTimeout(300);
-      reducedDrawDelta = await page.evaluate(() => window.__labSmoke.draws) - before;
-      if (reducedDrawDelta) errors.push(`Reduced motion still draws: ${reducedDrawDelta} calls`);
+      const delta = await page.evaluate(() => window.__labSmoke.draws) - before;
+      if (state.reducedMotion) reducedDrawDelta = delta;
+      if (state.paused) pausedDrawDelta = delta;
+      if (delta) errors.push(`${state.paused ? 'Paused' : 'Reduced'} motion still draws: ${delta} calls`);
     }
     if (shot) await page.screenshot({ path: path.join(out, shot), timeout: 20000 });
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -148,7 +180,7 @@ async function checkState({ label, state, width, option, shot }) {
     const offscreenDrawDelta = await page.evaluate(() => window.__labSmoke.draws) - before;
     if (offscreen && offscreenDrawDelta) errors.push(`Offscreen motion still draws: ${offscreenDrawDelta} calls`);
     if (config.webgl && option?.layer === 'motion' && renderer === 'webgl' && !offscreen) errors.push('Could not scroll the hero offscreen to prove drawing stopped');
-    evidence = { renderer, canvases: shape.canvases, webglContexts: shape.webglContexts, webglAttempts: shape.webglAttempts, canvasDraws: shape.canvasDraws, offscreen, offscreenDrawDelta, reducedDrawDelta, ...(shot ? { screenshot: shot } : {}) };
+    evidence = { renderer, canvases: shape.canvases, webglContexts: shape.webglContexts, webglAttempts: shape.webglAttempts, canvasDraws: shape.canvasDraws, offscreen, offscreenDrawDelta, reducedDrawDelta, pausedDrawDelta, heroReadyMs, heroVisibility, heroAfterSettle, ...(shot ? { screenshot: shot } : {}) };
   } catch (error) { errors.push(error.message); }
   finally { await context.close(); }
   const result = { label, pass: errors.length === 0, ...(errors.length ? { errors } : {}), ...(evidence ? { evidence } : {}) };
@@ -159,11 +191,12 @@ async function checkState({ label, state, width, option, shot }) {
 try {
   browser = await chromium.launch(launch);
   for (const option of inventory) {
-    for (const page of ['studio', 'stack']) for (const width of [390, 1440]) for (const theme of ['light', 'dark']) for (const reducedMotion of option.layer === 'motion' ? [false, true] : [false]) {
-      const state = { ...baseline(), page, theme, reducedMotion };
+    const modes = option.layer === 'motion' ? [{ reducedMotion: false, paused: false }, { reducedMotion: true, paused: false }, { reducedMotion: false, paused: true }] : [{ reducedMotion: false, paused: false }];
+    for (const page of ['studio', 'stack']) for (const width of [390, 1440]) for (const theme of ['light', 'dark']) for (const mode of modes) {
+      const state = { ...baseline(), page, theme, ...mode };
       state.picks[option.layer] = option.id;
-      const label = `${option.layer}/${option.id} ${page} ${width} ${theme}${reducedMotion ? ' reduced' : ''}`;
-      const shot = config.out && option.layer === 'motion' && page === 'studio' && theme === 'light' && !reducedMotion ? `motion-${safeName(option.id)}-${width}.png` : null;
+      const label = `${option.layer}/${option.id} ${page} ${width} ${theme}${mode.reducedMotion ? ' reduced' : ''}${mode.paused ? ' paused' : ''}`;
+      const shot = config.out && option.layer === 'motion' && page === 'studio' && theme === 'light' && !mode.reducedMotion && !mode.paused ? `motion-${safeName(option.id)}-${width}.png` : null;
       await checkState({ label, state, width, option, shot });
     }
   }

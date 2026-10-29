@@ -10,10 +10,9 @@ npm install
 npm run dev
 # http://127.0.0.1:5173
 npm run build
-npm run smoke
 ```
 
-`npm run smoke` serves the production build and uses only Playwright's bundled `chrome-headless-shell`, via `chromium.launch({ headless: true })`. Desktop Chrome, browser channels, executable overrides, the operator's relay, Tern and GUI apps are forbidden. Only LabCore runs browser verification, one run at a time. Builders use builds/type checks/source review and report visual checks as pending conductor. Set `LAB_URL` to smoke a deployed preview. The script checks every option against the plain baseline on both pages, 390/1440, light/dark, plus reduced motion for motion options. Console errors, overflow, missing h1, offscreen canvas drawing, or reduced-motion drawing fail the run. Machine evidence goes to ignored `evidence/smoke.json`. This backend exercises intentional no-WebGL still fallbacks; real WebGL rendering is verified off this Mac later.
+Browser verification runs only on Linux Boat workers, one gate at a time. No browser of any kind may run on this Mac, including bundled headless shells; the smoke script rejects macOS before launching anything. Builders use builds/type checks/source review and remote render jobs. On a worker, `npm run smoke` serves the production build with Playwright's bundled headless shell, or `--url` targets a deployed build. The gate covers every option against the plain baseline on both pages, 390/1440, light/dark; motion options also run reduced and paused states. Every motion must show its h1, subtitle and primary action at opacity greater than 0.9, fully in the viewport, within 1.5 seconds and after settling. Entrance targets must reach `.is-in`. Console errors, overflow, missing/hidden hero content, offscreen drawing, or reduced/paused drawing fail the run. Evidence goes to `evidence/smoke.json` or `--out`.
 
 ### Off-Mac WebGL proof
 
@@ -25,7 +24,7 @@ npx playwright install --with-deps chromium
 node scripts/smoke.mjs --url https://misty-brand-lab.misty-step.workers.dev --webgl --out shots
 ```
 
-`--url` selects the deployed origin (default: local production preview). `--webgl` adds SwiftShader flags only to Playwright's bundled headless shell, and is rejected before browser launch on macOS. Never run that flag on this Mac. `--out` writes `smoke.json` plus a 1440px and a 390px screenshot per motion option and declared preset, after about 2.5 seconds. WebGL-declared options must create a canvas and a successful GL context, paint a frame, stop offscreen, and render a non-running reduced-motion still. Intentional static and Canvas2D options are reported as such, not given fabricated WebGL passes. The result records renderer/context/draw counts per state; it is a software-renderer proof, not a physical-device GPU trace.
+`--url` selects the deployed origin (default: local production preview). `--webgl` adds SwiftShader flags only to Playwright's bundled headless shell. All browser modes are rejected on macOS; run them on a Linux Boat worker. `--out` writes `smoke.json` plus a 1440px and a 390px screenshot per motion option and declared preset, after about 2.5 seconds. WebGL-declared options must create a canvas and a successful GL context, paint a frame, stop offscreen, and render a non-running reduced/paused still. Intentional static and Canvas2D options are reported as such, not given fabricated WebGL passes. The result records renderer/context/draw counts and hero-readiness measurements per state; it is a software-renderer proof, not a physical-device GPU trace.
 
 ## Add an option
 
@@ -87,9 +86,19 @@ Buttons: `.btn`, `.btn-primary`, `.btn-quiet`, `.btn-sm`. Text links: `a.link`. 
 
 This lab is never part of the repository's Pages deploy. Its separate `wrangler.jsonc` targets only `misty-brand-lab` on workers.dev and serves static assets. HTML and assets carry `X-Robots-Tag: noindex, nofollow`; a robots file also excludes crawling.
 
+Run the build and complete smoke gate on a Linux Boat worker at the SHA being deployed:
+
+```sh
+npm ci
+npm run build
+npx playwright install --with-deps chromium
+node scripts/smoke.mjs --webgl --out evidence
+```
+
+After that gate is green, build the same SHA locally (no browser) and deploy only this Worker:
+
 ```sh
 npm run build
-npm run smoke
 pass-env run -f ~/.cache/tmp/misty-design/preview/.env.pass -- npx wrangler deploy
 ```
 
