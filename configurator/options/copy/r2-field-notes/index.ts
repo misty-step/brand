@@ -1,13 +1,13 @@
 import type { CopyOption, PageContent } from '../../../src/contract';
 import {
-  CORE, INSTALL_HARNESSES, LINKS, OFFER, STACK_NODES, STACK_PAGE, TRIAL, WORK_GROUPS,
+  CORE, INSTALL_HARNESSES, LINKS, OFFER, PRINCIPLE_EVIDENCE, STACK_NODES, STACK_PAGE, TRIAL, WORK_GROUPS,
 } from '../../../src/content/facts';
 import { call, guide, installLink, source } from '../shared';
 
 // Field notes from a studio that builds: the studio's own words, first person plural.
-// Offer terms, commands, the core, node counts and trial numbers come from facts.ts.
-// Every other specific is public and sourced in notes.md: the product sites and repos,
-// and the principle leaves' `prevents` records in mistystack c72698f, quoted in their own words.
+// Offer terms, commands, the core, node counts, correction counts and trial numbers come
+// from facts.ts. Every other specific is public and sourced in notes.md: the product sites
+// and repos, and mistystack c72698f.
 
 const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 const say = (n: number) => WORDS[n] ?? String(n);
@@ -23,11 +23,22 @@ function fromCore(clause: string): string {
   return `${clause}.`;
 }
 
+// A principle leaf's correction count from facts.ts, marked inferred when the source says
+// so. A missing leaf surfaces in the lab's console gate.
+function corrections(principle: string): string {
+  const evidence = PRINCIPLE_EVIDENCE.find((entry) => entry.id === principle);
+  if (!evidence) {
+    console.error(`r2-field-notes cites evidence that facts.ts does not hold: ${principle}`);
+    return 'operator corrections';
+  }
+  return `${evidence.corrections}${evidence.inferred ? ' inferred' : ''} operator corrections`;
+}
+
 const productNotes: Record<string, string> = {
   Poppycock: 'A free, untimed bluffing game for 3 to 12 friends. One answer is true. The rest are lies your friends wrote.',
   Linejam: 'A poetry game for 2 to 8 players. You write one line, seeing only the line before it. After nine rounds, everyone reads the poems aloud.',
   Parlor: 'Rooms, guest identity, presence and matches for Convex and React, MIT licensed. Linejam runs on it too.',
-  Landmark: "Turns tags and conventional commits into changelogs and release notes. The local preview needs no GitHub token and no LLM key. It prepares mistystack's changelog too.",
+  Landmark: 'Turns tags and conventional commits into changelogs and release notes. The local preview needs no GitHub token and no LLM key. It prepares mistystack\u2019s changelog too.',
   Cantrip: 'Local-first dictation for Linux. Press a shortcut, speak, press it again. It transcribes on your CPU, with telemetry off by default.',
 };
 
@@ -37,22 +48,22 @@ const nodeNotes: Record<string, string> = {
   playbooks: 'Bug fix, feature, refactor, investigation, incident, eval and authoring a skill.',
   skills: 'Specialist guidance, from research and verification to security audits, loaded when a task calls for it.',
   principles: 'Short leaves, each read when its trigger applies. Nothing fails silently is one: errors fail loudly, and no fallback hides them.',
-  oracle: 'The outside check, named before work starts. The principle behind it, prove it on the real path, cites 36 operator corrections in the initiative #533 audit.',
+  oracle: `The outside check, named before work starts. The principle behind it, prove it on the real path, cites ${corrections('principle-prove-it-on-the-real-path')} in the initiative #533 audit.`,
 };
 
 const studio: PageContent = {
   brand: 'Misty Step',
   nav: [
-    { label: "What we've built", href: '#work' },
+    { label: 'What we\u2019ve built', href: '#work' },
     { label: 'How it goes', href: '#process' },
     { label: 'Terms', href: '#terms' },
   ],
   navCta: call,
   hero: {
-    headline: 'Two weeks to see what is worth building.',
-    sub: `Bring us one process from your business. In those two weeks we ship one quick win and a plan that prices each project against what it should return. ${OFFER.discoveryPrice}, fixed.`,
+    headline: 'Two weeks to see what\u2019s worth building.',
+    sub: 'Bring us one business process and we\u2019ll put AI to work on it. In those two weeks we ship a quick win and a plan pricing each project against what it should return.',
     primary: call,
-    secondary: { label: "See what we've built", href: '#work' },
+    secondary: { label: 'See what we\u2019ve built', href: '#work' },
     proof: `Made here: ${WORK_GROUPS.flatMap((group) => group.items.map((item) => item.name)).join(', ')}.`,
   },
   sections: [
@@ -95,7 +106,7 @@ const studio: PageContent = {
     {
       type: 'points',
       id: 'terms',
-      title: "We'll tell you what not to build.",
+      title: 'We\u2019ll tell you what not to build.',
       intro: 'Discovery ends in a plan, and a plan can say no. Three rules hold from the first call.',
       items: [
         {
@@ -116,7 +127,7 @@ const studio: PageContent = {
       type: 'cta',
       id: 'contact',
       title: 'We only step where we can see.',
-      body: `The name comes from a spell: a short step through mist, to a place you can see. So we start with a free ${OFFER.callMinutes}-minute call about one process. If we're a fit, discovery comes next: ${say(OFFER.discoveryWeeks)} weeks at ${OFFER.discoveryPrice} fixed.`,
+      body: `The name comes from a spell: a short step through mist, to a place you can see. We start with a free ${OFFER.callMinutes}-minute call about one process. If we\u2019re a fit, discovery comes next: ${say(OFFER.discoveryWeeks)} weeks at ${OFFER.discoveryPrice} fixed.`,
       primary: call,
     },
   ],
@@ -168,7 +179,7 @@ const stack: PageContent = {
         },
         {
           title: fromCore('Finish the work you were given'),
-          body: 'If part of a task is blocked, the agent asks one precise question and finishes the rest. The principle behind it, finish the work, cites 11 operator corrections in initiative #533.',
+          body: `If part of a task is blocked, the agent asks one precise question and finishes the rest. The principle behind it, finish the work, cites ${corrections('principle-finish-the-work')} in initiative #533.`,
         },
         {
           title: fromCore('Label every claim'),
@@ -187,7 +198,7 @@ const stack: PageContent = {
       type: 'install',
       id: 'install',
       title: 'Install it where you already work.',
-      intro: "Pick your harness. Each command comes from that harness's note in the repository.",
+      intro: 'Pick your harness. Each command comes from that harness\u2019s note in the repository.',
       harnesses: INSTALL_HARNESSES,
     },
     {
@@ -218,13 +229,13 @@ export default {
   id: 'r2-field-notes',
   layer: 'copy',
   label: 'Field notes',
-  summary: "A studio's working notes in the first person plural: warm, and exact about what we built and what our method says word for word.",
+  summary: 'A studio\u2019s working notes in the first person plural: warm, and exact about what we built and what our method says word for word.',
   origin: 'r2',
   refs: [
     {
       name: 'Parlor',
       url: 'https://parlor.mistystep.io/',
-      what: "The studio's own warmest product writing: concrete nouns (rooms, guests, presence, matches) and a plural voice that makes room, as in \"You bring the game. We make room.\"",
+      what: 'The studio\u2019s own warmest product writing: concrete nouns (rooms, guests, presence, matches) and a plural voice that makes room, as in \u201cYou bring the game. We make room.\u201d',
     },
     {
       name: 'Earendil',

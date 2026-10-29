@@ -8,7 +8,7 @@ We write like a studio keeping notes as it builds: first person plural, warm and
 ## Headline candidates
 
 ### Studio
-1. **Two weeks to see what is worth building.** (hero) The spell's "only step where you can see", said in plain business words and true to the plan.
+1. **Two weeks to see what's worth building.** (hero) The spell's "only step where you can see", said in plain business words and true to the plan. The contraction, set with a typographic apostrophe, breaks as "TWO WEEKS TO SEE / WHAT'S WORTH BUILDING." at 1440, 390 and 320 (CopyEditor's probe).
 2. **We'll tell you what not to build.** (terms title) True to "no build when the plan says not to", and surprising from a studio that sells builds.
 3. **Poppycock needed rooms, so we built Parlor.** (work title) A real field note: Parlor's site says Poppycock is why Parlor exists.
 4. **We only step where we can see.** (close) The spell itself, owned by the studio; the body gives the name's origin, so it closes what the hero opens.
@@ -37,11 +37,11 @@ We write like a studio keeping notes as it builds: first person plural, warm and
 - Parlor: rooms, guest identity, presence and matches for Convex and React; MIT; "It's also why Parlor exists" (Poppycock). https://parlor.mistystep.io/
 - Landmark: tags and conventional commits into changelogs and release notes; the local preview needs no GitHub token and no LLM key. https://misty-step.github.io/landmark/get-started.html. It prepares mistystack's changelog: mistystack README, "Release".
 - Cantrip: press a shortcut, speak, press it again; transcribes on your CPU; telemetry off by default. https://github.com/misty-step/cantrip README.
-- Correction counts, in the source's words: `skills/principle-prove-it-on-the-real-path/SKILL.md` ("36 operator corrections in the initiative #533 audit") and `skills/principle-finish-the-work/SKILL.md` ("11 operator corrections in initiative #533"), mistystack c72698f.
+- Correction counts come from facts.ts `PRINCIPLE_EVIDENCE` (mistystack c72698f); the page adds "inferred" whenever the source marks a count as inferred. The surrounding words follow each leaf's record: "in the initiative #533 audit" for prove it on the real path, "in initiative #533" for finish the work.
 - Playbook names, the nothing-fails-silently principle and the guide's seven chapters: mistystack c72698f (`skills/misty/playbooks/`, `skills/misty/SKILL.md`, `docs/guide/`).
-- The name's origin, "a short step through mist, to a place you can see": brand truth from the round 2 brief. It is public only in this repo's preset note, not yet on mistystep.io, so Phaedrus should confirm it before launch.
+- The name's origin, "a short step through mist, to a place you can see": a proposal. Phaedrus has not confirmed that the name comes from the spell, and Main has added the question to his list. The close still reads if the sentence is cut: "We only step where we can see. We start with a free 30-minute call about one process."
 
-Numbers that facts.ts owns are derived, never retyped: the core's line count, the trial's task and arm counts, the call minutes, discovery weeks and price, and the native harness list. Core clauses set as titles are checked against CORE when the page loads; a mismatch logs a console error.
+Numbers that facts.ts owns are derived, never retyped: the core's line count, the correction counts, the trial's task and arm counts, the call minutes, discovery weeks and price, and the native harness list. Core clauses set as titles are checked against CORE when the page loads; a mismatch logs a console error.
 
 ## Facts we wished we had (questions for Phaedrus)
 1. One real quick win from a past discovery, anonymised: what shipped, and in which week. The hero promises that you will see something; one example would show it.
@@ -50,4 +50,3 @@ Numbers that facts.ts owns are derived, never retyped: the core's line count, th
 4. Whether "no hourly rates, tiers or free audits" may be published. Only "no open-ended retainer" is public.
 5. A typical build's size or duration, so step 3 could show what a build looks like.
 6. Cantrip's platforms: facts.ts says Linux, and the README now says Linux and macOS.
-7. Whether the principle leaves' correction counts should move into facts.ts so they have one home.
