@@ -32,6 +32,7 @@ async function mount() {
   const options = current!;
   for (const layer of LAYERS) root.dataset[layer] = state.picks[layer];
   root.dataset.page = state.page;
+  root.style.removeProperty('--display-advance');
   for (const [key, value] of Object.entries(options.type.tokens)) root.style.setProperty(key, value);
   style('lab-fonts', options.type.faces.map(face => `@font-face{font-family:${JSON.stringify(face.family)};src:url(${JSON.stringify(face.src)}) format('woff2');font-weight:${face.weight};font-style:${face.style ?? 'normal'};font-display:swap;${face.unicodeRange ? 'unicode-range:' + face.unicodeRange + ';' : ''}}`).join('\n'));
   style('lab-layout', options.layout.css);

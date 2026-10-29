@@ -24,7 +24,11 @@ export function render(content: PageContent, hero: HeroOption, ctx: HeroCtx, mar
     <nav class="nav-links" aria-label="Primary">${content.nav.map(a=>link(a)).join('')}</nav>
     <div class="nav-actions"><button class="theme-toggle" aria-label="Switch colour theme">◐</button>${content.navCta?link(content.navCta,'btn btn-primary btn-sm'):''}</div>
   </header>
-  <main id="main" tabindex="-1"><section class="hero" data-hero-root>${hero.render(ctx)}</section>${content.sections.map(section).join('')}</main>
+  <main id="main" tabindex="-1">
+    <section class="hero" data-hero-root>${hero.render(ctx)}</section>
+    <nav class="toc" aria-label="Contents"><ol>${content.sections.map(item => `<li>${link({ label: item.title, href: '#' + item.id })}</li>`).join('')}</ol></nav>
+    ${content.sections.map(section).join('')}
+  </main>
   <footer class="foot"><p class="foot-line">${esc(content.footer.line)}</p><nav class="foot-links" aria-label="Footer">${content.footer.links.map(a=>link(a)).join('')}</nav></footer>
   <button class="motion-toggle" aria-pressed="false">Pause motion</button>`;
 }

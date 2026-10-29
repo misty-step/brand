@@ -2,9 +2,12 @@
 .nav-links a.link,
 .foot-links a.link,
 .node-label a.link,
+.toc a.link,
 .s-evidence > a.link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
 }
 body { caret-color: var(--focus); }
+:root { --display-advance: .5; }
+.toc { display: none; }
