@@ -3,11 +3,11 @@ import type { ColorOption } from '../../../src/contract';
 // Strategy: Restrained UI, saturated signature. Navy carries the text and the night; magenta appears only on the primary action, links and focus.
 // contrast:begin (written by options/color/check.mjs --write; WCAG 2 ratios, 8-bit sRGB)
 // light on bg, bg-2, bg-3: ink 16.45 17.17 15.12; ink-2 8.05 8.40 7.39; ink-3 5.21 5.44 4.79; accent-2 5.87 6.12 5.39
-//       accent-ink on accent 5.21; accent on bg, bg-2, bg-3 4.99 5.21 4.59; focus 4.99 5.21 4.59; line-2 on bg, bg-2 3.19 3.33; line 1.18 1.23 1.09; ink on selection 13.47
-//       fields vs bg 1.13 1.31 1.65; ink on fields 14.56 12.51 9.98; ink-2 on field-1, field-2 7.12 6.12
+//       accent-ink on accent 5.21; accent on bg, bg-2, bg-3 4.99 5.21 4.59; line-2 on bg, bg-2 3.19 3.33; line 1.18 1.23 1.09; ink on selection 13.47
+//       fields vs bg 1.13 1.31 1.65; ink on fields 14.56 12.51 9.98; ink-2 on fields 7.12 6.12 4.88; focus on bg, bg-2, bg-3, fields 5.10 5.33 4.69 4.52 3.88 3.10
 // dark  on bg, bg-2, bg-3: ink 16.74 15.43 17.57; ink-2 10.08 9.30 10.58; ink-3 6.52 6.01 6.84; accent-2 8.86 8.17 9.30
-//       accent-ink on accent 5.01; accent on bg, bg-2, bg-3 3.65 3.37 3.83; focus 8.86 8.17 9.30; line-2 on bg, bg-2 3.57 3.29; line 1.33 1.23 1.40; ink on selection 10.19
-//       fields vs bg 1.10 1.29 1.66; ink on fields 15.27 12.95 10.11; ink-2 on field-1, field-2 9.20 7.80
+//       accent-ink on accent 5.01; accent on bg, bg-2, bg-3 3.65 3.37 3.83; line-2 on bg, bg-2 3.57 3.29; line 1.33 1.23 1.40; ink on selection 10.19
+//       fields vs bg 1.10 1.29 1.66; ink on fields 15.27 12.95 10.11; ink-2 on fields 9.20 7.80 6.09; focus on bg, bg-2, bg-3, fields 8.86 8.17 9.30 8.09 6.86 5.35
 // contrast:end
 export default {
   id: 'navy-magenta',
@@ -30,7 +30,7 @@ export default {
     '--accent': 'oklch(0.56 0.22 354)',
     '--accent-ink': 'oklch(0.996 0.001 255)',
     '--accent-2': 'oklch(0.52 0.205 354)',
-    '--focus': 'oklch(0.56 0.22 354)',
+    '--focus': 'oklch(0.555 0.22 354)',
     '--selection': 'oklch(0.92 0.04 350)',
     '--field-1': 'oklch(0.94 0.012 250)',
     '--field-2': 'oklch(0.89 0.02 252)',

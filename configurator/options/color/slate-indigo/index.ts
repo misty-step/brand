@@ -3,11 +3,11 @@ import type { ColorOption } from '../../../src/contract';
 // Strategy: Restrained. Indigo fills the primary action and marks links and focus; slate does everything else.
 // contrast:begin (written by options/color/check.mjs --write; WCAG 2 ratios, 8-bit sRGB)
 // light on bg, bg-2, bg-3: ink 13.82 14.41 12.90; ink-2 8.75 9.13 8.17; ink-3 5.01 5.23 4.68; accent-2 5.99 6.25 5.59
-//       accent-ink on accent 5.00; accent on bg, bg-2, bg-3 4.79 5.00 4.47; focus 4.79 5.00 4.47; line-2 on bg, bg-2 3.22 3.36; line 1.23 1.28 1.15; ink on selection 10.74
-//       fields vs bg 1.12 1.30 1.66; ink on fields 12.35 10.62 8.30; ink-2 on field-1, field-2 7.82 6.72
+//       accent-ink on accent 5.00; accent on bg, bg-2, bg-3 4.79 5.00 4.47; line-2 on bg, bg-2 3.22 3.36; line 1.23 1.28 1.15; ink on selection 10.74
+//       fields vs bg 1.12 1.30 1.66; ink on fields 12.35 10.62 8.30; ink-2 on fields 7.82 6.72 5.25; focus on bg, bg-2, bg-3, fields 5.13 5.35 4.78 4.58 3.94 3.08
 // dark  on bg, bg-2, bg-3: ink 17.84 16.59 18.26; ink-2 13.32 12.39 13.64; ink-3 6.34 5.90 6.49; accent-2 7.79 7.24 7.98
-//       accent-ink on accent 4.82; accent on bg, bg-2, bg-3 3.93 3.66 4.02; focus 7.79 7.24 7.98; line-2 on bg, bg-2 3.29 3.06; line 1.27 1.18 1.30; ink on selection 11.16
-//       fields vs bg 1.10 1.25 1.61; ink on fields 16.29 14.26 11.08; ink-2 on field-1, field-2 12.16 10.65
+//       accent-ink on accent 4.82; accent on bg, bg-2, bg-3 3.93 3.66 4.02; line-2 on bg, bg-2 3.29 3.06; line 1.27 1.18 1.30; ink on selection 11.16
+//       fields vs bg 1.10 1.25 1.61; ink on fields 16.29 14.26 11.08; ink-2 on fields 12.16 10.65 8.27; focus on bg, bg-2, bg-3, fields 7.79 7.24 7.98 7.11 6.23 4.84
 // contrast:end
 export default {
   id: 'slate-indigo',
@@ -30,7 +30,7 @@ export default {
     '--accent': 'oklch(0.55 0.16 275)',
     '--accent-ink': 'oklch(0.996 0.001 286)',
     '--accent-2': 'oklch(0.5 0.16 275)',
-    '--focus': 'oklch(0.55 0.16 275)',
+    '--focus': 'oklch(0.535 0.16 275)',
     '--selection': 'oklch(0.9 0.045 277)',
     '--field-1': 'oklch(0.945 0.006 280)',
     '--field-2': 'oklch(0.895 0.012 278)',
