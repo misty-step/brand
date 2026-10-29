@@ -1,4 +1,5 @@
 import type { MotionOption } from '../../../src/contract';
+import { heroEntranceCss } from '../_motionb/entrance';
 
 const S = 'html[data-motion="mist-step"]';
 
@@ -16,9 +17,10 @@ export default {
   // Lazy chunk by contract: the module never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero steps up into place in four 3 px steps at about 11 fps (settled by 680 ms); sections only resolve.
+    // The hero steps up into place in three 3 px steps at 10 fps, timed by CSS from render: h1, sub
+    // and action settle by 440 ms. Sections only resolve.
     css: `${S} [data-enter]{opacity:0;transition:opacity .24s steps(3,jump-none);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{transform:translateY(9px);transition:opacity .36s steps(4,jump-none),transform .36s steps(4,jump-none);transition-delay:calc(min(var(--enter-i,0),4) * 80ms)}
+${heroEntranceCss(S, { name: 'mb-mist-step-hero', from: 'opacity:0;transform:translateY(9px)', ms: 300, ease: 'steps(3,jump-start)', stagger: 70 })}
 ${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}

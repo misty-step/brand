@@ -1,4 +1,5 @@
 import type { MotionOption } from '../../../src/contract';
+import { heroEntranceCss } from '../_motionb/entrance';
 
 const S = 'html[data-motion="dot-globe"]';
 
@@ -17,9 +18,10 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // One focal sequence in the hero (settled by 760 ms); sections only resolve, with no travel.
+    // One focal sequence in the hero, timed by CSS from render: h1, sub and action settle by 520 ms.
+    // Sections only resolve, with no travel.
     css: `${S} [data-enter]{opacity:0;transition:opacity .36s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{transform:translateY(10px);transition:opacity .52s cubic-bezier(.16,1,.3,1),transform .52s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 60ms)}
+${heroEntranceCss(S, { name: 'mb-dot-globe-hero', from: 'opacity:0;transform:translateY(10px)', ms: 420, ease: 'cubic-bezier(.16,1,.3,1)', stagger: 50 })}
 ${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
