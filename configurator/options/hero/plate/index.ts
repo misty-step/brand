@@ -1,7 +1,7 @@
 import type { HeroCtx, HeroOption } from '../../../src/contract';
 import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
-import { title, sub, actions, proof, slot, enter, fit, EDGE, GUTTER } from '../shared';
+import { title, sub, actions, proof, slot, enter, fit, markPair, markPairCss, EDGE, GUTTER } from '../shared';
 
 const S = 'html[data-hero="plate"]';
 
@@ -30,7 +30,7 @@ export default {
     { name: 'Greptile', url: 'https://www.greptile.com', what: 'Content held in hairline-ruled cells that run edge to edge, so the frame itself carries the structure.' },
   ],
   motionHost: 'panel',
-  render: ctx => `<div class="pl-plate"><div class="pl-head"><span class="pl-brand" aria-hidden="true"><span class="pl-mark">${ctx.mark(32)}</span><span class="pl-name">${ctx.wordmark()}</span></span>${proof(ctx)}</div><div class="pl-main">${title(ctx)}${sub(ctx)}${actions(ctx)}</div><div class="pl-window" ${enter(4)}><div class="pl-emblem" aria-hidden="true">${ctx.mark(128)}</div>${slot()}</div><dl class="pl-spec" ${enter(5)}>${rows(ctx).map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('')}</dl></div>`,
+  render: ctx => `<div class="pl-plate"><div class="pl-head"><span class="pl-brand" aria-hidden="true"><span class="pl-mark">${ctx.mark(32)}</span><span class="pl-name">${ctx.wordmark()}</span></span>${proof(ctx)}</div><div class="pl-main">${title(ctx)}${sub(ctx)}${actions(ctx)}</div><div class="pl-window" ${enter(4)}><div class="pl-emblem" aria-hidden="true">${markPair(ctx, 128, 96)}</div>${slot()}</div><dl class="pl-spec" ${enter(5)}>${rows(ctx).map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('')}</dl></div>`,
   css: `${S} .hero{padding:clamp(24px,5vh,48px) ${EDGE} clamp(48px,9vh,96px)}
 ${S} .pl-plate{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);overflow:hidden;background:var(--bg-2);border:max(var(--rule,1px),2px) solid var(--ink);border-radius:var(--radius,0)}
 ${S} .pl-head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 32px;min-height:64px;padding:12px clamp(20px,2.4vw,32px);background:var(--ink);color:var(--bg)}
@@ -45,12 +45,13 @@ ${S} .hero-sub{margin-top:20px;max-width:min(var(--measure,60ch),100%);font-size
 ${S} .actions{margin-top:32px}
 ${S} .pl-window{position:relative;isolation:isolate;display:grid;place-items:center;min-height:320px;background:var(--bg-3);border-left:1px solid var(--line);color:var(--ink-2)}
 ${S} .pl-window>.hero-visual{position:absolute;inset:0;z-index:1;overflow:hidden}
-${S} .pl-emblem svg{display:block}
+${markPairCss(S)}
 ${S} .pl-window:has(.hero-visual>*) .pl-emblem{visibility:hidden}
-${S} .pl-spec{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));margin:0;border-top:1px solid var(--line)}
-${S} .pl-spec>div{padding:16px clamp(16px,2vw,28px) 20px;box-shadow:-1px 0 0 var(--line)}
+${S} .pl-spec{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,2fr);gap:1px;margin:0;background:var(--line);border-top:1px solid var(--line)}
+${S} .pl-spec>div{padding:16px clamp(16px,2vw,28px) 20px;background:var(--bg-2)}
 ${S} .pl-spec dt{font-size:var(--step--1);color:var(--ink-2)}
 ${S} .pl-spec dd{margin:6px 0 0;font-size:var(--step-1);line-height:1.3;font-variant-numeric:tabular-nums;text-wrap:balance}
+@media (max-width:1000px){${S} .pl-spec{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:700px){${S} .hero{padding:16px ${GUTTER} 48px}
 ${S} .pl-plate{grid-template-columns:minmax(0,1fr)}
 ${S} .pl-head{min-height:0;padding:12px 16px}
@@ -58,9 +59,7 @@ ${S} .hero-proof{text-align:left}
 ${S} .pl-main{padding:24px 16px 28px}
 ${S} .actions{flex-direction:column;align-items:stretch}
 ${S} .pl-window{min-height:0;aspect-ratio:16/9;border-left:0;border-top:1px solid var(--line)}
-${S} .pl-emblem{zoom:.75}
 ${S} .pl-spec{grid-template-columns:minmax(0,1fr)}
-${S} .pl-spec>div{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:12px;padding:12px 16px;box-shadow:none}
-${S} .pl-spec>div+div{border-top:1px solid var(--line)}
+${S} .pl-spec>div{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:12px;padding:12px 16px}
 ${S} .pl-spec dd{margin:0;font-size:var(--step-0)}}`,
 } satisfies HeroOption;

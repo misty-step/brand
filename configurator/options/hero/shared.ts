@@ -37,6 +37,38 @@ export const slot = () => '<div class="hero-visual" data-motion-slot aria-hidden
 export function fit(scope: string, sel = '.hero-title', max = 'var(--step-5)'): string {
   return `${scope} ${sel}{font-size:max(24px,min(${max},calc(100cqi / (var(--hl,32) * var(--display-advance,.55) * .6))))}`;
 }
+
+/**
+ * The mark at two native sizes, one per breakpoint. Scaling one SVG with CSS would put pixel marks
+ * off their cell grid (192px x 2/3 gives 5.33px cells on a 24-cell mark), so each size is requested
+ * from the mark layer, which snaps cells to whole pixels. Pair with markPairCss.
+ */
+export const markPair = (ctx: HeroCtx, desktop: number, phone: number) =>
+  `<span class="mk-lg">${ctx.mark(desktop)}</span><span class="mk-sm">${ctx.mark(phone)}</span>`;
+export const markPairCss = (scope: string) =>
+  `${scope} .mk-lg,${scope} .mk-lg svg,${scope} .mk-sm svg{display:block}${scope} .mk-sm{display:none}@media (max-width:700px){${scope} .mk-lg{display:none}${scope} .mk-sm{display:block}}`;
+
+/**
+ * The brand name at display scale, decorative (the nav and h1 carry it for assistive tech). A drawn
+ * wordmark keeps its viewBox ratio as --wm-r so CSS can cap its height and still align it left; a
+ * set name carries its length as --wm-n so CSS sizes it to the measure with --display-advance.
+ */
+export function bigName(ctx: HeroCtx, cls: string): string {
+  const mark = ctx.wordmark();
+  if (mark.trimStart().startsWith('<svg')) {
+    const vb = mark.match(/viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/);
+    const ratio = vb && +vb[2] > 0 ? +vb[1] / +vb[2] : 6;
+    return `<div class="${cls} bn-drawn" aria-hidden="true" style="--wm-r:${ratio.toFixed(3)}">${mark}</div>`;
+  }
+  return `<div class="${cls}" aria-hidden="true"><span class="bn-set" style="--wm-n:${[...ctx.brand].length}">${mark}</span></div>`;
+}
+/** CSS for bigName: `fill` is the share of the measure the name spans, `cap` the tallest it may get. */
+export function bigNameCss(scope: string, sel: string, fill: string, cap: string): string {
+  return `${scope} ${sel}{container-type:inline-size;overflow-x:clip;line-height:0}
+${scope} ${sel}.bn-drawn svg{display:block;width:min(100%,calc(${cap} * var(--wm-r)));height:auto}
+${scope} ${sel} .bn-set{display:block;width:max-content;margin-left:-.04em;padding-block:.04em .08em;font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-tracking);text-transform:var(--display-transform);line-height:.8;white-space:nowrap;font-size:min(${cap},calc(${fill} / (var(--wm-n) * var(--display-advance,.6))))}`;
+}
+
 /** Inline padding that lines the hero up with the layout's container (layouts set --edge). */
 export const EDGE = 'var(--edge,max(20px,(100% - 1280px) / 2))';
 export const GUTTER = 'var(--gutter,20px)';

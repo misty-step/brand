@@ -5,19 +5,18 @@ import { title, sub, actions, proof, slot, enter, fit, href, EDGE, GUTTER } from
 
 const S = 'html[data-hero="source"]';
 const core = FACTS.nodes.find(n => n.id === 'core');
-const oracle = FACTS.nodes.find(n => n.id === 'oracle');
 const corePath = core ? core.href.replace(/^.*\/blob\/[^/]+\//, '') : '';
 const coreLines = FACTS.core.split('\n');
-// The three rules a client of the studio would care about, verbatim. Missing lines are skipped.
-const excerpt = ['- Before work, name the check', '- Ship the smallest change', '- Ask Phaedrus before'].map(p => coreLines.find(l => l.startsWith(p))).filter((l): l is string => Boolean(l));
+// Two verbatim core rules a studio client cares about: scope stays fixed, claims say how they were known.
+// Kept to two short lines so the first viewport stays under the canon's word budget. Missing lines are skipped.
+const excerpt = ['- Ship the smallest change', '- Label every claim'].map(p => coreLines.find(l => l.startsWith(p))).filter((l): l is string => Boolean(l));
 const harnesses = FACTS.install;
 
-/** Studio: real lines of the always-on core, the Oracle line highlighted. */
+/** Studio: real lines of the always-on core, with their file and a link to the rest. */
 function coreCard(): string {
-  if (!core) return '';
-  const lines = excerpt.map(l => `<span class="ln"${l.startsWith('- Before work') ? ' data-mark' : ''}>${esc(l)}</span>`).join('\n');
-  const note = `${excerpt.length} of the ${coreLines.length} lines in the always-on core of mistystack, Misty Step's engineering method.${oracle ? ` Highlighted: the Oracle, ${esc(oracle.body.charAt(0).toLowerCase() + oracle.body.slice(1))}` : ''}`;
-  return `<figure class="src-card" ${enter(4)}><figcaption class="src-head"><code>${esc(corePath)}</code><a class="link" ${href(core.href)}>Read all ${coreLines.length} lines</a></figcaption><pre class="code"><code>${lines}</code></pre><p class="src-note">${note}</p></figure>`;
+  if (!core || !excerpt.length) return '';
+  const lines = excerpt.map(l => `<span class="ln">${esc(l)}</span>`).join('\n');
+  return `<figure class="src-card" ${enter(4)}><figcaption class="src-head"><code>${esc(corePath)}</code><a class="link" ${href(core.href)}>Read all ${coreLines.length} lines</a></figcaption><pre class="code"><code>${lines}</code></pre><p class="src-note">${excerpt.length} of the ${coreLines.length} lines of the always-on core in mistystack, Misty Step's engineering method.</p></figure>`;
 }
 
 /** Stack: the exact install lines per harness; radio buttons switch them without script, Copy uses the renderer's handler. */
@@ -50,13 +49,12 @@ ${S} .actions{margin-top:32px}
 ${S} .hero-proof{margin-top:24px;font-size:var(--step--1);color:var(--ink-2)}
 ${S} .hero>.hero-visual{grid-column:art-start/full-end;grid-row:1;align-self:stretch;position:relative;overflow:hidden;margin:clamp(-64px,-6vh,-40px) 0 clamp(-64px,-6vh,-40px) clamp(48px,6vw,96px);border-radius:var(--radius,0) 0 0 var(--radius,0)}
 ${S} .src-card{grid-column:art;grid-row:1;position:relative;z-index:1;margin:0;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius,0);padding:clamp(20px,2.2vw,32px)}
-${S} .src-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 24px;margin-bottom:16px;font-size:var(--step--1);color:var(--ink-2)}
+${S} .src-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 24px;max-width:none;margin:0 0 16px;font-size:var(--step--1);color:var(--ink-2)}
 ${S} .src-head code{font-family:var(--font-mono);color:var(--ink)}
 ${S} .src-head .link{display:inline-flex;align-items:center;min-height:44px}
-${S} .src-card .code{margin:0}
+${S} .src-card .code{margin:0;font-size:var(--step-0)}
 ${S} .src-card .ln{display:inline-block;width:100%;padding-left:2ch;text-indent:-2ch;vertical-align:top}
 ${S} .src-card .ln+.ln{margin-top:.5em}
-${S} .src-card .ln[data-mark]{background:var(--selection);box-shadow:-8px 0 0 var(--selection),8px 0 0 var(--selection)}
 ${S} .src-panel .ln::before{content:"$ ";color:var(--ink-2);user-select:none}
 ${S} .src-note{margin-top:16px;max-width:min(var(--measure,60ch),100%);font-size:var(--step--1);color:var(--ink-2)}
 ${S} .src-pick{display:flex;flex-wrap:wrap;gap:8px;min-inline-size:0;margin:0 0 20px;padding:0;border:0}
@@ -70,8 +68,9 @@ ${switches}
 ${S} .src-panel .copy{margin-top:12px}
 @supports not selector(:has(*)){${S} .src-panel{display:block}${S} .src-panel+.src-panel{margin-top:24px}}
 @media (max-width:899px){${S} .hero{grid-template-columns:[full-start] ${GUTTER} [copy-start art-start] minmax(0,1fr) [copy-end art-end] ${GUTTER} [full-end];row-gap:clamp(40px,7vh,64px);padding-block:40px 64px}
-${S} .src-card{grid-row:2}
-${S} .hero>.hero-visual{grid-column:full;grid-row:2;margin:-24px 0 45% 0;border-radius:0}}
+${S} .src-card{grid-row:2;margin-top:56px}
+${S} .hero>.hero-visual{grid-column:full;grid-row:2;align-self:start;height:clamp(160px,48vw,280px);margin:0;border-radius:0}}
 @media (max-width:700px){${S} .actions{flex-direction:column;align-items:stretch}
-${S} .src-card{padding:16px}}`,
+${S} .src-card{padding:16px}
+${S} .src-card .code{padding:16px}}`,
 } satisfies HeroOption;

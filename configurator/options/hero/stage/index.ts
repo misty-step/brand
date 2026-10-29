@@ -1,7 +1,7 @@
 import type { HeroCtx, HeroOption } from '../../../src/contract';
 import { FACTS } from '../../../src/content/facts';
 import { esc } from '../../../src/html';
-import { title, sub, actions, proof, slot, enter, fit, href, EDGE, GUTTER } from '../shared';
+import { title, sub, actions, proof, slot, enter, fit, href, markPair, markPairCss, EDGE, GUTTER } from '../shared';
 
 const S = 'html[data-hero="stage"]';
 const core = FACTS.nodes.find(n => n.id === 'core');
@@ -13,7 +13,7 @@ function artefact(ctx: HeroCtx): string {
     const lines = FACTS.core.split('\n').map(l => `<span class="ln">${esc(l)}</span>`).join('\n');
     return `<figure class="st-file"><figcaption class="st-file-head"><code>${esc(corePath)}</code><a class="link" ${href(core.href)}>Source on GitHub</a></figcaption><pre class="code"><code>${lines}</code></pre></figure>`;
   }
-  return `<div class="st-emblem" aria-hidden="true">${ctx.mark(192)}</div>`;
+  return `<div class="st-emblem" aria-hidden="true">${markPair(ctx, 192, 128)}</div>`;
 }
 
 export default {
@@ -39,20 +39,19 @@ ${S} .hero-proof{margin-top:20px;font-size:var(--step--1);color:var(--ink-2)}
 ${S} .st-stage{position:relative;isolation:isolate;align-self:stretch;display:flex;justify-content:center;align-items:flex-start;margin-top:clamp(48px,8vh,88px);min-height:clamp(340px,34vw,500px);padding:clamp(40px,5vw,72px) clamp(16px,4vw,64px) 120px}
 ${S} .st-stage>.hero-visual{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--bg-2);border-radius:var(--radius,0);-webkit-mask-image:linear-gradient(to bottom,var(--ink) 50%,transparent);mask-image:linear-gradient(to bottom,var(--ink) 50%,transparent)}
 ${S} .st-emblem{color:var(--ink);line-height:0}
-${S} .st-emblem svg{display:block}
-${S} .st-file{width:min(100%,780px);text-align:left;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius,0);overflow:hidden}
-${S} .st-file-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 20px;min-height:48px;border-bottom:1px solid var(--line);font-size:var(--step--1);color:var(--ink-2)}
-${S} .st-file .ln{display:inline-block;width:100%;padding-left:2ch;text-indent:-2ch;vertical-align:top}
-${S} .st-file .ln+.ln{margin-top:.45em}
-${S} .st-file .code{margin:0;border:0;border-radius:0;padding:20px 24px 24px}
+${markPairCss(S)}
+${S} .st-file{width:min(100%,780px);margin:0;text-align:left;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius,0);overflow:hidden}
+${S} .st-file-head{display:flex;justify-content:space-between;align-items:center;gap:16px;max-width:none;margin:0;padding:0 20px;min-height:48px;border-bottom:1px solid var(--line);font-size:var(--step--1);color:var(--ink-2)}
 ${S} .st-file-head code{color:var(--ink);font-family:var(--font-mono)}
 ${S} .st-file-head .link{display:inline-flex;align-items:center;min-height:44px}
+${S} .st-file .code{margin:0;border:0;border-radius:0;padding:20px 24px 24px}
+${S} .st-file .ln{display:inline-block;width:100%;padding-left:2ch;text-indent:-2ch;vertical-align:top}
+${S} .st-file .ln+.ln{margin-top:.45em}
 @media (max-width:700px){${S} .hero{align-items:stretch;text-align:left;padding:40px ${GUTTER} 0}
 ${S} .st-copy{align-items:flex-start;width:100%}
 ${S} .actions{flex-direction:column;align-items:stretch;align-self:stretch}
 ${S} .st-stage{margin:40px calc(-1 * ${GUTTER}) 0;min-height:300px;padding:40px ${GUTTER} 72px}
 ${S} .st-stage>.hero-visual{border-radius:0}
-${S} .st-emblem{zoom:.6667}
 ${S} .st-file-head{padding:0 16px}
 ${S} .st-file .code{padding:16px}}`,
 } satisfies HeroOption;

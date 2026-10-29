@@ -7,7 +7,7 @@ export default {
   layer: 'motion',
   renderer: 'webgl',
   label: 'Dotted globe',
-  summary: 'The world as square points that turn once every four minutes while one accent traveller crosses it a short hop at a time, the way a misty step covers ground: never in one leap.',
+  summary: 'The world in square points, turning once every four minutes and crossed by one accent traveller a short hop at a time, the way a misty step covers ground.',
   origin: 'new',
   refs: [
     { name: 'Stripe: designing the globe', url: 'https://stripe.com/blog/globe', what: 'A sunflower (Fibonacci) lattice keeps dot spacing even from pole to pole, land-only dots draw continents without borders, and arcs travel between points.' },
@@ -33,7 +33,7 @@ ${S} a.link,${S} .item-link{transition:text-decoration-thickness .15s ease,text-
   },
   budget: {
     gzipKB: 8.3,
-    frameMs: 'Main-thread JS 0.002 ms median, 0.015 ms p95 per frame (600 frames in Bun, GL stubbed). GPU time pending the conductor: no browser may run on this Mac.',
+    frameMs: '0.44 ms median, 0.80 ms p90 per frame at 1440x820, 0.28 ms for a 480x640 panel at DPR 2 (draw plus gl.finish over 120 frames in headless-gl 8.1.6: WebGL 1 on ANGLE, offscreen on this Mac, no browser). In-browser device trace pending the conductor.',
     note: 'Vite production chunks, gzip -9: 5.4 KB for this option (its land bits included) plus the 2.9 KB runtime shared by the MotionB options. Raw WebGL1, two point draws, 30 fps cap, DPR capped with whole-number upscaling. Tiers drop the ocean dots, then render at 1 CSS px. Without WebGL the same still is painted once on the CPU (3.6 ms at 1440x820).',
   },
 } satisfies MotionOption & { renderer: 'webgl' };
