@@ -2,7 +2,7 @@
 // once every four minutes, with one accent traveller hopping between land points a short arc
 // at a time. Raw WebGL1, two point draws per frame, no library.
 import type { MotionCtx } from '../../../src/contract';
-import { blend, crisp, mountStage, program, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
+import { KEEP_GLSL, blend, crisp, mountStage, program, setKeep, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
 import { LAND_24K, LAND_9K } from './land';
 
 type V3 = [number, number, number];
@@ -25,6 +25,7 @@ uniform vec2 uRes;
 uniform float uPx, uT;
 uniform vec3 uPtr, uF1, uF2, uF3, uInk, uAcc;
 varying vec4 vCol;
+${KEEP_GLSL}
 void main() {
   vec3 p = uRot * aPos;
   float kind = aMeta.x;
@@ -46,6 +47,7 @@ void main() {
     if (kind > 2.5) size += 1.0;
   }
   if (kind < 1.5) { col = mix(col, uF3, near * 0.8); size += near; }
+  a *= keep(css, fract(aMeta.y * 13.7 + 0.37)); // whole dots drop out near the hero copy
   vCol = vec4(col * a, a);
   vec2 clip = css / uRes * 2.0 - 1.0;
   gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
@@ -181,7 +183,7 @@ export function scene(): Scene {
     init(s) {
       const gl = s.gl;
       prog = program(gl, VS, FS);
-      U = uniforms(gl, prog, ['uRot', 'uGlobe', 'uRes', 'uPx', 'uT', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk', 'uAcc']);
+      U = uniforms(gl, prog, ['uRot', 'uGlobe', 'uRes', 'uPx', 'uT', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk', 'uAcc', 'uKeep[0]', 'uKeepN']);
       aPos = gl.getAttribLocation(prog, 'aPos'); aMeta = gl.getAttribLocation(prog, 'aMeta');
       for (const l of [big, small]) {
         l.buf = gl.createBuffer()!;
@@ -208,6 +210,7 @@ export function scene(): Scene {
       gl.uniform3f(U.uPtr, s.ptr.x, s.ptr.y, s.ptr.s);
       gl.uniform3fv(U.uF1, p.f1); gl.uniform3fv(U.uF2, p.f2); gl.uniform3fv(U.uF3, p.f3);
       gl.uniform3fv(U.uInk, p.ink); gl.uniform3fv(U.uAcc, p.accent);
+      setKeep(gl, U, s);
       // keep dot spacing near 6 CSS px: the 24k lattice spaces dots 0.0229 R apart
       const l = s.tier < 2 && R * 0.0229 >= 5 ? big : small;
       gl.bindBuffer(gl.ARRAY_BUFFER, l.buf!);

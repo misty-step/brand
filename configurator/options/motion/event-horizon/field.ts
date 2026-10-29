@@ -5,7 +5,7 @@
 // (one ink, dot density follows brightness, the ring a continuous line).
 // Raw WebGL1, one fullscreen triangle, one stipple cell per 2 CSS px, upscaled crisp.
 import type { MotionCtx } from '../../../src/contract';
-import { blend, cover, mountStage, program, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
+import { KEEP_GLSL, blend, cover, mountStage, program, setKeep, uniforms, type Frame, type RGB, type Scene } from '../_motionb/stage';
 
 const CELLS = [2, 3, 4];   // CSS px per stipple cell, per quality tier
 const STILL = 41;          // seconds: the composed frame used under reduced motion
@@ -23,6 +23,7 @@ precision mediump float;
 uniform vec2 uRes;
 uniform float uCell, uT, uLight;
 uniform vec3 uHole, uPtr, uF1, uF2, uF3, uInk;
+${KEEP_GLSL}
 float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float noise(vec2 p) {
   vec2 i = floor(p), f = fract(p), u = f * f * (3.0 - 2.0 * f);
@@ -39,8 +40,8 @@ float disc(float r, float a) {
 }
 void main() {
   vec2 cell = floor(gl_FragCoord.xy);
-  vec2 css = vec2(cell.x + 0.5, uRes.y - cell.y - 0.5) * uCell;
-  vec2 dp = css - uPtr.xy;
+  vec2 at = vec2(cell.x + 0.5, uRes.y - cell.y - 0.5) * uCell;
+  vec2 dp = at - uPtr.xy, css = at;
   css -= dp * uPtr.z * 700.0 / (dot(dp, dp) + 2600.0);    // the pointer is a small second mass
   vec2 q = (css - uHole.xy) / uHole.z;
   float ct = cos(${TILT}), st = sin(${TILT});
@@ -69,6 +70,7 @@ void main() {
     alpha = lv < 0.5 ? 0.0 : 1.0;
     if (ring > 0.5) { alpha = 1.0; col = mix(uF3, uInk, 0.15 + 0.4 * doppler); }
   }
+  alpha *= keep(at, th);                                    // thin away from the hero copy
   gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
@@ -126,7 +128,7 @@ export function scene(): Scene {
     init(s) {
       const gl = s.gl;
       prog = program(gl, VS, FS);
-      U = uniforms(gl, prog, ['uRes', 'uCell', 'uT', 'uLight', 'uHole', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk']);
+      U = uniforms(gl, prog, ['uRes', 'uCell', 'uT', 'uLight', 'uHole', 'uPtr', 'uF1', 'uF2', 'uF3', 'uInk', 'uKeep[0]', 'uKeepN']);
       loc = gl.getAttribLocation(prog, 'p');
       cover(gl);
     },
@@ -140,6 +142,7 @@ export function scene(): Scene {
       gl.uniform1f(U.uCell, 1 / s.px);
       gl.uniform1f(U.uT, t);
       gl.uniform1f(U.uLight, s.ctx.theme === 'light' ? 1 : 0);
+      setKeep(gl, U, s);
       gl.uniform3f(U.uHole, x, y, rs);
       gl.uniform3f(U.uPtr, s.ptr.x, s.ptr.y, s.ptr.s);
       gl.uniform3fv(U.uF1, p.f1); gl.uniform3fv(U.uF2, p.f2); gl.uniform3fv(U.uF3, p.f3); gl.uniform3fv(U.uInk, p.ink);

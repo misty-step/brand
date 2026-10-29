@@ -4,7 +4,7 @@
 // the destination in 320 ms, rising as it goes. The hero keeps a still bank of the same mist, which
 // clears once on arrival. Canvas 2D at 4 to 6 CSS px per cell: no WebGL context, nothing loops.
 import type { MotionCtx, MotionHandle } from '../../../src/contract';
-import { blend, composeAroundCopy, hostKind, observeLayout, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
+import { blend, composeAroundCopy, hostKind, keepAt, observeLayout, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
 
 const BANK_CELL = 4;       // CSS px per mist cell in the hero bank
 const VEIL_CELL = 6;       // CSS px per mist cell in the viewport veil
@@ -32,19 +32,30 @@ function mist(x: number, y: number) {
 /**
  * Density of the hero's mist bank per cell: thick on its floor, ragged on top, Bayer-dithered. The
  * floor is the host's lower edge, or the foot of the strip the hero copy leaves clear, so the copy
- * stands on clear ground; outside that strip the bank thins away sideways.
+ * stands on clear ground; outside that strip the bank thins away sideways. On full-bleed hosts it
+ * also thins out around the copy and over the host's last 48 px, so nothing ends in a straight cut.
  */
 export function bankField(f: Frame): Float32Array {
   const d = new Float32Array(f.w * f.h), b = f.band, k = f.px; // cells per CSS px
   const floor = b ? Math.min(f.h, (b.y + b.h) * k - 2) : f.h;
   const top = b ? (b.y + b.h * 0.3) * k : f.h * (f.kind === 'panel' ? 0.42 : 0.62);
   const x0 = b ? b.x * k : 0, x1 = b ? (b.x + b.w) * k : f.w, soft = Math.max(4, (x1 - x0) * 0.15);
+  // the foot: up to 48 px of thinning above the host's lower edge, less in a shallow strip
+  const foot = f.kind === 'panel' ? 0 : Math.min(48, 0.4 * (b ? b.h : f.cssH)) * k;
+  // edges that thin the bank (its foot, the copy) are roughened by a second mist so they read as
+  // fog parting and lifting, not as a ruled line
+  const ragged = (v: number, x: number, y: number) => {
+    const r = v + (mist(x * 1.7 + 41, y * 1.7 + 13) - 0.5) * 0.9;
+    return r <= 0 ? 0 : r >= 1 ? 1 : r * r * (3 - 2 * r);
+  };
   for (let y = 0; y < f.h; y++) {
     const g = Math.min(1, Math.max(0, (y - top) / Math.max(1, floor - top))), rise = g * g * (3 - 2 * g);
     const under = y > floor ? Math.max(0, 1 - (y - floor) / 6) : 1; // clear within 6 cells below the floor
     for (let x = 0; x < f.w; x++) {
       const side = Math.min(1, Math.max(0, Math.min(x - x0, x1 - x) / soft + 1));
-      d[y * f.w + x] = (mist(x, y) * 0.6 + rise * 0.62) * under * side + BAYER[(y & 3) * 4 + (x & 3)] * 0.22;
+      const ground = foot ? ragged((f.h - y - 0.5) / foot, x, y) : 1;
+      const clear = f.keep.length ? ragged(keepAt(f, (x + 0.5) / k, (y + 0.5) / k), x, y) : 1;
+      d[y * f.w + x] = (mist(x, y) * 0.6 + rise * 0.62) * under * side * ground * clear + BAYER[(y & 3) * 4 + (x & 3)] * 0.22;
     }
   }
   return d;
@@ -95,7 +106,7 @@ export function mount(host: HTMLElement, ctx0: MotionCtx): MotionHandle {
   if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
   host.append(bank);
   const b2 = bank.getContext('2d');
-  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1 / BANK_CELL, tier: 0, pal, ptr: { x: 0, y: 0, s: 0 }, ctx, band: null };
+  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1 / BANK_CELL, tier: 0, pal, ptr: { x: 0, y: 0, s: 0 }, ctx, band: null, keep: [] };
   let density: Float32Array = new Float32Array(0), relayout = true;
   const drawBank = (cover: number) => {
     if (!b2 || dead) return;
@@ -105,7 +116,7 @@ export function mount(host: HTMLElement, ctx0: MotionCtx): MotionHandle {
     if (relayout || w !== f.w || h !== f.h) {
       relayout = false;
       f.w = w; f.h = h; f.cssW = w * BANK_CELL; f.cssH = h * BANK_CELL;
-      composeAroundCopy(f, host, bank);
+      composeAroundCopy(f, host);
       bank.width = w; bank.height = h;
       bank.style.width = f.cssW + 'px'; bank.style.height = f.cssH + 'px';
       density = bankField(f);
