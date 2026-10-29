@@ -225,7 +225,7 @@ ${S} .s-cta > .actions { grid-area: actions; align-self: center; justify-self: e
 ${S} .foot {
   width: var(--frame); margin-inline: auto;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 24px;
-  padding: 16px var(--pad) 88px; border-inline: var(--rule) solid var(--line);
+  padding: 16px var(--pad); margin-bottom: 88px; border: var(--rule) solid var(--line); border-top: 0;
 }
 ${S} .foot-line { font-size: var(--step--1); color: var(--ink-2); }
 ${S} .foot-links { display: flex; flex-wrap: wrap; gap: 0; margin-right: -10px; }

@@ -239,20 +239,10 @@ ${S} .s-code figcaption {
   font-size: var(--step--1); color: var(--ink-2);
 }
 
-/* ---- Closing: one centred two-tone statement, the claim in ink running on into the terms ---- */
-${S} .s-cta {
-  padding-inline: max(var(--edge), calc((100% - 20em) / 2));
-  text-align: center; text-wrap: balance;
-  font-family: var(--font-display); font-size: var(--step-3); font-weight: var(--display-weight);
-  line-height: 1.12; letter-spacing: var(--display-tracking);
-}
-${S} .s-cta .s-title, ${S} .s-cta .s-intro {
-  display: inline; margin: 0; max-width: none;
-  font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit;
-}
-${S} .s-cta .s-title { color: var(--ink); }
-${S} .s-cta .s-title::after { content: " "; }
-${S} .s-cta .s-intro { font-family: var(--font-body); font-weight: var(--body-weight); letter-spacing: 0; color: var(--ink-2); }
+/* ---- Closing: one centred statement, the claim and then its terms ---- */
+${S} .s-cta { text-align: center; }
+${S} .s-cta .s-title { margin-inline: auto; max-width: 16em; font-size: var(--step-3); line-height: 1.08; letter-spacing: var(--display-tracking); color: var(--ink); }
+${S} .s-cta .s-intro { margin: 20px auto 0; max-width: 46ch; font-size: var(--step-1); line-height: 1.4; color: var(--ink-2); }
 ${S} .s-cta .actions { justify-content: center; margin-top: 40px; letter-spacing: 0; }
 
 /* ---- Footer ---- */
@@ -329,9 +319,7 @@ ${S} .s-install .tab:focus-visible, ${S} .s-install .copy:focus-visible { outlin
   ${S} .s-code .code { padding: 20px 18px; }
   ${S} .s-code figcaption { padding-inline: 18px; }
   ${S} .s-cta { text-align: left; }
-  ${S} .s-cta .s-title { display: block; }
-  ${S} .s-cta .s-title::after { content: none; }
-  ${S} .s-cta .s-intro { display: block; margin-top: 16px; font-size: var(--step-1); line-height: 1.35; }
+  ${S} .s-cta .s-title, ${S} .s-cta .s-intro { margin-inline: 0; }
   ${S} .s-cta .actions { flex-direction: column; align-items: stretch; }
   ${S} .s-cta .actions .btn { width: 100%; }
   ${S} .foot { flex-direction: column; align-items: flex-start; padding-top: 24px; }
