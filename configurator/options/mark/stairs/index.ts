@@ -47,6 +47,6 @@ export default {
     return settle(anims);
   },
   css: `
-html[data-mark="stairs"] .brand-mark svg { display: block; }
+html[data-mark="stairs"] .brand-mark svg { display: block; width: 32px; height: 32px; }
 `,
 } satisfies MarkOption & { css: string };

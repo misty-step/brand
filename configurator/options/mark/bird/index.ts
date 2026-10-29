@@ -91,6 +91,6 @@ export default {
   },
   css: `
 html[data-mark="bird"] .brand { gap: 10px; }
-html[data-mark="bird"] .brand-mark svg { display: block; overflow: visible; }
+html[data-mark="bird"] .brand-mark svg { display: block; overflow: visible; width: 30px; height: 22px; }
 `,
 } satisfies MarkOption & { css: string };

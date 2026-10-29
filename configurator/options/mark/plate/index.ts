@@ -69,7 +69,7 @@ export default {
   svg: ({ size }) => draw(size),
   css: `
 html[data-mark="plate"] .brand { gap: 10px; }
-html[data-mark="plate"] .brand-mark svg { display: block; }
+html[data-mark="plate"] .brand-mark svg { display: block; width: 32px; height: 32px; }
 html[data-mark="plate"] .brand-name { text-transform: uppercase; letter-spacing: 0.06em; }
 `,
 } satisfies MarkOption & { css: string };

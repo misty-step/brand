@@ -130,6 +130,6 @@ export default {
   css: `
 html[data-mark="lettered"] .brand-mark { display: none; }
 html[data-mark="lettered"] .brand-name { line-height: 0; }
-html[data-mark="lettered"] .brand-name svg { display: block; overflow: visible; }
+html[data-mark="lettered"] .brand-name svg { display: block; overflow: visible; width: auto; height: 26px; }
 `,
 } satisfies MarkOption & { css: string };
