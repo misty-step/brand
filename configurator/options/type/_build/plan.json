@@ -1,0 +1,266 @@
+{
+  "precise": [
+    {
+      "src": "gf/wixmadefordisplay/WixMadeforDisplay[wght].ttf",
+      "out": "madefor-display-latin.woff2",
+      "axes": {
+        "wght": [
+          480,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/wixmadefortext/WixMadeforText[wght].ttf",
+      "out": "madefor-text-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/jetbrainsmono/JetBrainsMono[wght].ttf",
+      "out": "jetbrains-mono-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          600
+        ]
+      }
+    }
+  ],
+  "geist-pixel": [
+    {
+      "src": "geist/GeistPixel-Square.ttf",
+      "out": "geist-pixel-square-latin.woff2"
+    },
+    {
+      "src": "gf/geist/Geist[wght].ttf",
+      "out": "geist-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/geistmono/GeistMono[wght].ttf",
+      "out": "geist-mono-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          600
+        ]
+      }
+    }
+  ],
+  "ledger": [
+    {
+      "src": "gf/monasans/MonaSans[wdth,wght].ttf",
+      "out": "ledger-sans-latin.woff2",
+      "axes": {
+        "wdth": 100,
+        "wght": [
+          300,
+          300,
+          700
+        ]
+      },
+      "rename": "Misty Ledger Sans"
+    },
+    {
+      "src": "gf/sourcecodepro/SourceCodePro[wght].ttf",
+      "out": "ledger-code-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          600
+        ]
+      },
+      "rename": "Misty Ledger Code"
+    }
+  ],
+  "folio": [
+    {
+      "src": "gf/brygada1918/Brygada1918-Italic[wght].ttf",
+      "out": "brygada-italic-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/brygada1918/Brygada1918[wght].ttf",
+      "out": "brygada-roman-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "commit/CommitMono-1.143/CommitMono-400-Regular.otf",
+      "out": "commit-mono-400-latin.woff2"
+    }
+  ],
+  "console": [
+    {
+      "src": "gf/martianmono/MartianMono[wdth,wght].ttf",
+      "out": "martian-mono-narrow-latin.woff2",
+      "axes": {
+        "wdth": 87.5,
+        "wght": [
+          500,
+          700
+        ]
+      },
+      "rename": "Martian Mono Narrow"
+    },
+    {
+      "src": "gf/martianmono/MartianMono[wdth,wght].ttf",
+      "out": "martian-mono-latin.woff2",
+      "axes": {
+        "wdth": 100,
+        "wght": [
+          400,
+          600
+        ]
+      },
+      "rename": "Martian Mono Std"
+    },
+    {
+      "src": "gf/hostgrotesk/HostGrotesk[wght].ttf",
+      "out": "host-grotesk-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    }
+  ],
+  "works": [
+    {
+      "src": "gf/sofiasansextracondensed/SofiaSansExtraCondensed[wght].ttf",
+      "out": "sofia-sans-extra-condensed-latin.woff2",
+      "axes": {
+        "wght": [
+          600,
+          800
+        ]
+      }
+    },
+    {
+      "src": "gf/sofiasans/SofiaSans[wght].ttf",
+      "out": "sofia-sans-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/kodemono/KodeMono[ROND,wdth,wght].ttf",
+      "out": "kode-mono-latin.woff2",
+      "axes": {
+        "ROND": 0,
+        "wdth": 100,
+        "wght": [
+          400,
+          600
+        ]
+      }
+    }
+  ],
+  "a-tiling": [
+    {
+      "src": "gf/schibstedgrotesk/SchibstedGrotesk[wght].ttf",
+      "out": "schibsted-grotesk-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          700
+        ]
+      }
+    },
+    {
+      "src": "gf/chivomono/ChivoMono[wght].ttf",
+      "out": "chivo-mono-latin.woff2",
+      "axes": {
+        "wght": [
+          400,
+          600
+        ]
+      }
+    }
+  ],
+  "b-atelier": [
+    {
+      "src": "gf/literata/Literata[opsz,wght].ttf",
+      "out": "literata-latin.woff2",
+      "axes": {
+        "opsz": [
+          12,
+          72
+        ],
+        "wght": [
+          380,
+          520
+        ]
+      }
+    },
+    {
+      "src": "departure/DepartureMono-1.500/DepartureMono-Regular.otf",
+      "out": "departure-mono-latin.woff2"
+    }
+  ],
+  "c-steps": [
+    {
+      "src": "gf/archivo/Archivo[wdth,wght].ttf",
+      "out": "archivo-expanded-latin.woff2",
+      "axes": {
+        "wdth": 112,
+        "wght": [
+          680,
+          760
+        ]
+      },
+      "rename": "Archivo Expanded Steps"
+    },
+    {
+      "src": "gf/archivo/Archivo[wdth,wght].ttf",
+      "out": "archivo-latin.woff2",
+      "axes": {
+        "wdth": 100,
+        "wght": [
+          380,
+          700
+        ]
+      },
+      "rename": "Archivo Steps"
+    },
+    {
+      "src": "gf/bitcountgridsingle/BitcountGridSingle[CRSV,ELSH,ELXP,slnt,wght].ttf",
+      "out": "bitcount-grid-single-digits.woff2",
+      "axes": {
+        "CRSV": 0.5,
+        "ELSH": 50,
+        "ELXP": 0,
+        "slnt": 0,
+        "wght": 400
+      },
+      "unicodes": "U+0030-0039,U+002F"
+    },
+    {
+      "src": "gf/fragmentmono/FragmentMono-Regular.ttf",
+      "out": "fragment-mono-latin.woff2"
+    }
+  ]
+}
