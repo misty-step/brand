@@ -149,6 +149,18 @@ async function checkState({ label, state, width, option, shot }) {
     });
     if (shape.h1 !== 1) errors.push(`Expected one h1.hero-title, got ${shape.h1}`);
     if (shape.width > shape.viewport + 1) errors.push(`Horizontal overflow: ${shape.width} > ${shape.viewport}`);
+    if (width === 390) {
+      const control = await page.evaluate(() => {
+        const button = document.querySelector('.motion-toggle'), r = button?.getBoundingClientRect();
+        if (!r?.width || !r.height) return null;
+        const overlapsCopy = ['.hero-title', '.hero-sub', '.hero .actions'].some(selector => {
+          const rect = document.querySelector(selector)?.getBoundingClientRect();
+          return rect && r.left < rect.right && r.right > rect.left && r.top < rect.bottom && r.bottom > rect.top;
+        });
+        return { height: r.height, overlapsCopy };
+      });
+      if (control && (control.height > 64 || control.overlapsCopy)) errors.push('Phone motion control stretches or covers hero copy: ' + JSON.stringify(control));
+    }
     if (option && shape.runtime.state.picks[option.layer] !== option.id) errors.push(`Deployed build did not resolve ${option.layer}/${option.id}`);
     if (config.webgl && option?.layer === 'motion' && !shape.runtime.motion) errors.push('Preview lacks renderer metadata. Deploy the current build before WebGL proof.');
     const renderer = shape.runtime.motion?.renderer ?? 'none';
@@ -209,6 +221,25 @@ try {
   await shell.goto(base, { waitUntil: 'networkidle' });
   await shell.waitForFunction(() => window.__LAB__?.ready);
   const shellInfo = await shell.evaluate(() => window.__LAB__);
+  const firstPreset = shellInfo.presets[0];
+  if (!layers.every(layer => shellInfo.state.picks[layer] === firstPreset.picks[layer])) errors.push('No-hash shell did not open the first preset');
+  const firstChip = shell.locator(`[data-preset="${firstPreset.id}"]`);
+  if (await firstChip.getAttribute('aria-pressed') !== 'true') errors.push('Initial preset chip is not active');
+  await shell.locator('[data-next="mark"]').click();
+  if (!(await firstChip.innerText()).includes('modified')) errors.push('Modified preset is not labelled');
+  await shell.reload({ waitUntil: 'networkidle' });
+  await shell.waitForFunction(() => window.__LAB__?.ready);
+  if (!(await firstChip.innerText()).includes('modified')) errors.push('Preset anchor did not survive hash reload');
+  await shell.locator('[data-preset="baseline"]').click();
+  if (!await shell.evaluate(() => Object.entries(window.__LAB__.state.picks).every(([layer, id]) => id === 'baseline-' + layer))) errors.push('Plain baseline chip did not restore controls');
+  await firstChip.click();
+  if (await shell.locator('.preset-group.previous [data-preset]').count() !== 3) errors.push('Previous-round presets are not a separate group');
+  if (!await shell.evaluate(() => [...document.querySelectorAll('select[data-layer]')].every(select => select.getAttribute('aria-label').includes(window.__LAB__.options.find(option => option.layer === select.dataset.layer && option.id === select.value).label)))) errors.push('A layer select lacks its full option name');
+  await shell.setViewportSize({ width: 1920, height: 1080 });
+  if (Math.abs(await shell.locator('.rail').evaluate(element => element.getBoundingClientRect().width) - 260) > 1) errors.push('Wide-screen rail is not 260px');
+  await shell.setViewportSize({ width: 390, height: 844 });
+  if (await shell.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)) errors.push('Shell overflows at 390');
+  await shell.setViewportSize({ width: 1440, height: 900 });
   await shell.locator('[data-action="save"]').click();
   await shell.locator('[data-action="save"]').click();
   await shell.locator('[data-action="shortlist"]').click();

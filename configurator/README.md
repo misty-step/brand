@@ -56,6 +56,12 @@ Pause is shown only for ambient WebGL-background options, not static/Canvas2D-on
 
 The shell is the single state owner. Programmatic iframe updates are one-way; previews report only actual theme/pause control deltas, so the two frames cannot echo stale configurations back and forth. Spec export includes layout geometry tokens resolved independently in the desktop and phone frames, as well as type/colour tokens, font licences and motion capability/budget.
 
+With no hash the shell starts from the first house preset. Plain baseline remains a chip. The selected preset is highlighted and its chip says “modified” after a layer diverges; the preset anchor is stored in the hash. The eight directions and three previous-round presets are separate groups. At 1600px and above the rail widens to 260px; layer select accessible names always include the full option label.
+
+On phones the motion control is an in-flow hero row. Heroes with empty explicit grid rows must place `.hero-motion-controls` in a row after the copy, and it must not stretch over the field.
+
+Core-file excerpts are prose and may wrap within a layout or hero; install commands preserve preformatted lines and scroll internally.
+
 ## Markup the renderer emits (layouts and heroes style exactly this)
 ```html
 <html data-page data-theme data-reduced-motion data-mark data-type data-color data-layout data-hero data-motion data-copy>

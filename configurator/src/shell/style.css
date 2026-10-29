@@ -47,8 +47,11 @@ button.primary:hover { background: #4c5d41; }
 .view-controls label { display: flex; align-items: center; gap: 5px; }
 .view-controls input { accent-color: #4c653a; }
 .presets { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid #ced7c5; }
-.presets > span { font-size: 12px; color: #6a765f; margin-right: 4px; }
+.preset-group { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.preset-group > span { font-size: 12px; color: #6a765f; margin-right: 4px; }
+.preset-group.previous { border-left: 1px solid #b8c6ac; padding-left: 12px; margin-left: 6px; }
 .presets button { min-height: 28px; font-size: 12px; padding: 3px 8px; background: transparent; }
+.presets button[aria-pressed="true"] { background: #dce7d2; border-color: #8b9e7d; color: #283d1c; }
 .frames { display: flex; align-items: flex-start; gap: 16px; }
 .frame-wrap { min-width: 0; }
 .frame-wrap.desktop { flex: 1; }
@@ -92,6 +95,9 @@ dialog::backdrop { background: #1c291780; }
 .compare-window { height: 560px; overflow: hidden; border: 1px solid #bfd0b1; }
 .compare-window iframe { width: 1440px; height: 2200px; border: 0; transform-origin: top left; }
 .share-input { width: 100%; padding: 12px; border: 1px solid #b8cba7; background: #f9fcf5; }
+@media (min-width: 1600px) {
+  .workspace { grid-template-columns: 260px minmax(0, 1fr); }
+}
 @media (min-width: 1800px) {
   .frame-wrap.phone { width: 293px; }
   .stage { padding-inline: 20px; }
@@ -121,6 +127,7 @@ dialog::backdrop { background: #1c291780; }
   .toolbar { align-items: flex-start; }
   .view-controls { flex-wrap: wrap; }
   .view-controls label, .page-switch button, .view-controls button, .presets button { min-height: 44px; }
+  .preset-group.previous { width: 100%; border-left: 0; border-top: 1px solid #b8c6ac; padding: 8px 0 0; margin: 4px 0 0; }
   .frames { gap: 10px; }
   .frame-wrap.phone { width: 35%; }
   .frame-top { font-size: 12px; flex-wrap: wrap; }

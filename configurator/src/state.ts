@@ -1,6 +1,6 @@
 import type { Layer } from './contract';
 import { LAYERS, optionIds } from './options';
-export interface LabState { v: 1; page: 'studio'|'stack'; theme: 'light'|'dark'; reducedMotion: boolean; paused: boolean; fullPreview?: boolean; picks: Record<Layer,string>; locks: Layer[] }
+export interface LabState { v: 1; page: 'studio'|'stack'; theme: 'light'|'dark'; reducedMotion: boolean; paused: boolean; fullPreview?: boolean; preset?: string; picks: Record<Layer,string>; locks: Layer[] }
 export function baseline(): LabState { return { v: 1, page: 'studio', theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light', reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches, paused: localStorage.getItem('lab-motion-paused') === 'true', picks: Object.fromEntries(LAYERS.map(l => [l, 'baseline-' + l])) as Record<Layer,string>, locks: [] }; }
 export const encode = (state: LabState) => '#' + encodeURIComponent(JSON.stringify(state));
 export function decode(hash: string): LabState {
@@ -12,6 +12,7 @@ export function decode(hash: string): LabState {
     state.reducedMotion = value.reducedMotion === true;
     state.paused = value.paused === true;
     state.fullPreview = value.fullPreview === true;
+    if (typeof value.preset === 'string') state.preset = value.preset;
     state.locks = Array.isArray(value.locks) ? value.locks.filter((layer: Layer) => LAYERS.includes(layer)) : [];
     for (const layer of LAYERS) {
       if (optionIds(layer).includes(value.picks?.[layer])) state.picks[layer] = value.picks[layer];

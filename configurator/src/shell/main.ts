@@ -9,6 +9,8 @@ interface Saved { id: string; date: string; state: LabState; note: string }
 const storageKey = 'misty-brand-lab:shortlist:v1';
 const selected = new Set<string>();
 let state = decode(location.hash);
+if (!location.hash && presets[0]) state = { ...state, preset: presets[0].id, picks: { ...presets[0].picks } };
+const previousPresetIds: Record<string, true> = { 'a-tiling': true, 'b-atelier': true, 'c-steps': true };
 let options: Option[] = [];
 let saved: Saved[] = [];
 try { saved = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch { saved = []; }
@@ -42,7 +44,7 @@ app.innerHTML = `
         <div class="page-switch" aria-label="Page"><button data-page="studio">mistystep.io</button><button data-page="stack">stack.mistystep.io</button></div>
         <div class="view-controls"><button data-action="theme">Light theme</button><label><input id="reduced" type="checkbox"> Reduced motion</label><button data-action="pause">Pause</button></div>
       </div>
-      <div class="presets"><span>Start from</span><button data-preset="baseline">Plain baseline</button><span id="preset-options" style="display:contents"></span></div>
+      <div class="presets"><div class="preset-group" role="group" aria-label="Directions"><span>Start from</span><button data-preset="baseline">Plain baseline</button><span id="preset-options" style="display:contents"></span></div><div class="preset-group previous" role="group" aria-label="Previous round"><span>Previous round</span><span id="previous-presets" style="display:contents"></span></div></div>
       <div class="frames">
         <section class="frame-wrap desktop" aria-label="Desktop preview">
           <div class="frame-top"><span>Desktop / 1440</span><a id="open-desktop" target="_blank" rel="noopener">Open actual size ↗</a></div>
@@ -92,7 +94,7 @@ function paint() {
   for (const layer of LAYERS) {
     const option = resolved(layer);
     const select = document.querySelector<HTMLSelectElement>(`select[data-layer="${layer}"]`);
-    if (select) { select.value = state.picks[layer]; select.title = option?.label ?? ''; }
+    if (select) { select.value = state.picks[layer]; select.title = option?.label ?? ''; select.setAttribute('aria-label', `${layerLabel(layer)}: ${option?.label ?? ''}`); }
     const lock = document.querySelector<HTMLButtonElement>(`[data-lock="${layer}"]`);
     const locked = state.locks.includes(layer);
     if (lock) {
@@ -116,8 +118,19 @@ function paint() {
   const pause = document.querySelector('[data-action="pause"]')!;
   pause.textContent = state.paused ? 'Resume' : 'Pause';
   pause.setAttribute('aria-pressed', String(state.paused));
-  const preset = presets.find(p => LAYERS.every(layer => p.picks[layer] === state.picks[layer]));
-  document.getElementById('combination-name')!.textContent = preset?.label ?? (LAYERS.every(layer => state.picks[layer] === 'baseline-' + layer) ? 'Plain baseline' : 'Custom combination');
+  const exact = presets.find(p => LAYERS.every(layer => p.picks[layer] === state.picks[layer]));
+  const plain = LAYERS.every(layer => state.picks[layer] === 'baseline-' + layer);
+  const anchor = presets.find(p => p.id === state.preset) ?? exact;
+  const activeId = state.preset === 'baseline' ? 'baseline' : anchor?.id ?? (plain ? 'baseline' : undefined);
+  const modified = activeId === 'baseline' ? !plain : !!anchor && !LAYERS.every(layer => anchor.picks[layer] === state.picks[layer]);
+  const label = activeId === 'baseline' ? 'Plain baseline' : anchor?.label ?? 'Custom combination';
+  document.getElementById('combination-name')!.textContent = label + (modified ? ', modified' : '');
+  document.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => {
+    const active = button.dataset.preset === activeId;
+    const original = button.dataset.preset === 'baseline' ? 'Plain baseline' : presets.find(p => p.id === button.dataset.preset)!.label;
+    button.setAttribute('aria-pressed', String(active));
+    button.textContent = original + (active && modified ? ', modified' : '');
+  });
   resize();
 }
 function commit(next = state) {
@@ -230,6 +243,7 @@ document.addEventListener('click', event => {
   if (button.dataset.preset) {
     const preset = presets.find(item => item.id === button.dataset.preset);
     state.picks = button.dataset.preset === 'baseline' ? baseline().picks : { ...preset!.picks };
+    state.preset = button.dataset.preset;
     commit(); return;
   }
   if (button.dataset.load) { commit(structuredClone(saved.find(item => item.id === button.dataset.load)!.state)); dialog.close(); return; }
@@ -299,12 +313,14 @@ document.getElementById('layers')!.innerHTML = LAYERS.map(layer => `
   <section class="layer">
     <div class="layer-row">
       <details class="layer-info"><summary id="label-${layer}">${layerLabel(layer)}</summary><div class="layer-description"><h2 id="detail-title-${layer}"></h2><p class="summary" id="summary-${layer}"></p><div class="refs" id="refs-${layer}"></div><button data-random="${layer}">Shuffle this layer</button></div></details>
-      <select id="pick-${layer}" aria-labelledby="label-${layer}" data-layer="${layer}">${options.filter(option => option.layer === layer).map(option => `<option value="${option.id}">${esc(option.label)}${option.origin === 'baseline' ? ' (plain)' : ''}</option>`).join('')}</select>
+      <select id="pick-${layer}" aria-label="${layerLabel(layer)}" data-layer="${layer}">${options.filter(option => option.layer === layer).map(option => `<option value="${option.id}">${esc(option.label)}${option.origin === 'baseline' ? ' (plain)' : ''}</option>`).join('')}</select>
       <button data-prev="${layer}" aria-label="Previous ${layer}">‹</button><button data-next="${layer}" aria-label="Next ${layer}">›</button><button data-lock="${layer}" aria-pressed="false" aria-label="Lock ${layer}">○</button>
     </div>
   </section>`).join('');
 document.getElementById('option-count')!.textContent = options.length + ' options';
-document.getElementById('preset-options')!.innerHTML = presets.map(preset => `<button data-preset="${preset.id}" title="${esc(preset.note)}">${esc(preset.label)}</button>`).join('');
+const chip = (preset: typeof presets[number]) => `<button data-preset="${preset.id}" title="${esc(preset.note)}">${esc(preset.label)}</button>`;
+document.getElementById('preset-options')!.innerHTML = presets.filter(preset => !previousPresetIds[preset.id]).map(chip).join('');
+document.getElementById('previous-presets')!.innerHTML = presets.filter(preset => previousPresetIds[preset.id]).map(chip).join('');
 paint();
 syncFrames(true);
 commit();
