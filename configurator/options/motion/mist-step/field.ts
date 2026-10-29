@@ -4,7 +4,7 @@
 // the destination in 320 ms, rising as it goes. The hero keeps a still bank of the same mist, which
 // clears once on arrival. Canvas 2D at 4 to 6 CSS px per cell: no WebGL context, nothing loops.
 import type { MotionCtx, MotionHandle } from '../../../src/contract';
-import { blend, hostKind, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
+import { blend, clearBand, hostKind, observeLayout, palette, type Frame, type Palette, type Pixels, type RGB } from '../_motionb/stage';
 
 const BANK_CELL = 4;       // CSS px per mist cell in the hero bank
 const VEIL_CELL = 6;       // CSS px per mist cell in the viewport veil
@@ -29,12 +29,23 @@ function mist(x: number, y: number) {
   return 0.55 * noise(x / 22, y / 14) + 0.3 * noise(x / 9 + 17.3, y / 6 + 4.1) + 0.15 * noise(x / 4 + 3.7, y / 3 + 9.2);
 }
 
-/** Density of the hero's mist bank per cell: thick at the ground, ragged on top, Bayer-dithered. */
+/**
+ * Density of the hero's mist bank per cell: thick on its floor, ragged on top, Bayer-dithered. The
+ * floor is the host's lower edge, or the foot of the strip the hero copy leaves clear, so the copy
+ * stands on clear ground; outside that strip the bank thins away sideways.
+ */
 export function bankField(f: Frame): Float32Array {
-  const low = f.kind === 'panel' ? 0.42 : 0.62, d = new Float32Array(f.w * f.h);
+  const d = new Float32Array(f.w * f.h), b = f.band, k = f.px; // cells per CSS px
+  const floor = b ? Math.min(f.h, (b.y + b.h) * k - 2) : f.h;
+  const top = b ? (b.y + b.h * 0.3) * k : f.h * (f.kind === 'panel' ? 0.42 : 0.62);
+  const x0 = b ? b.x * k : 0, x1 = b ? (b.x + b.w) * k : f.w, soft = Math.max(4, (x1 - x0) * 0.15);
   for (let y = 0; y < f.h; y++) {
-    const g = Math.min(1, Math.max(0, (y / f.h - low) / (1 - low))), ground = g * g * (3 - 2 * g);
-    for (let x = 0; x < f.w; x++) d[y * f.w + x] = mist(x, y) * 0.6 + ground * 0.62 + BAYER[(y & 3) * 4 + (x & 3)] * 0.22;
+    const g = Math.min(1, Math.max(0, (y - top) / Math.max(1, floor - top))), rise = g * g * (3 - 2 * g);
+    const under = y > floor ? Math.max(0, 1 - (y - floor) / 6) : 1; // clear within 6 cells below the floor
+    for (let x = 0; x < f.w; x++) {
+      const side = Math.min(1, Math.max(0, Math.min(x - x0, x1 - x) / soft + 1));
+      d[y * f.w + x] = (mist(x, y) * 0.6 + rise * 0.62) * under * side + BAYER[(y & 3) * 4 + (x & 3)] * 0.22;
+    }
   }
   return d;
 }
@@ -79,15 +90,17 @@ export function mount(host: HTMLElement, ctx0: MotionCtx): MotionHandle {
   if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
   host.append(bank);
   const b2 = bank.getContext('2d');
-  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1 / BANK_CELL, tier: 0, pal, ptr: { x: 0, y: 0, s: 0 }, ctx };
-  let density: Float32Array = new Float32Array(0);
+  const f: Frame = { kind: hostKind(host), w: 1, h: 1, cssW: 1, cssH: 1, px: 1 / BANK_CELL, tier: 0, pal, ptr: { x: 0, y: 0, s: 0 }, ctx, band: null };
+  let density: Float32Array = new Float32Array(0), relayout = true;
   const drawBank = (cover: number) => {
     if (!b2 || dead) return;
     const r = host.getBoundingClientRect();
     const w = Math.max(1, Math.floor(r.width / BANK_CELL)), h = Math.max(1, Math.floor(r.height / BANK_CELL));
     f.pal = pal; f.ctx = ctx;
-    if (w !== f.w || h !== f.h || density.length !== w * h) {
+    if (relayout || w !== f.w || h !== f.h) {
+      relayout = false;
       f.w = w; f.h = h; f.cssW = w * BANK_CELL; f.cssH = h * BANK_CELL;
+      f.band = f.kind === 'panel' ? null : clearBand(host, f.cssW, f.cssH);
       bank.width = w; bank.height = h;
       bank.style.width = f.cssW + 'px'; bank.style.height = f.cssH + 'px';
       density = bankField(f);
@@ -113,8 +126,8 @@ export function mount(host: HTMLElement, ctx0: MotionCtx): MotionHandle {
   };
   const io = new IntersectionObserver((e) => { visible = e.some((x) => x.isIntersecting); show(); });
   io.observe(bank);
-  const ro = new ResizeObserver(() => { dirty = true; show(); });
-  ro.observe(host);
+  const ro = new ResizeObserver(() => { dirty = true; relayout = true; show(); });
+  observeLayout(ro, host);
 
   // the step
   let veil: HTMLCanvasElement | null = null, stepRaf = 0, pending: HTMLElement | null = null, jumped = false;

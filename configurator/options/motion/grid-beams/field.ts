@@ -49,18 +49,21 @@ function world(seed0: number): World {
 
   const spawn = (f: Frame, m: number, ox: number, oy: number) => {
     const cols = Math.floor((f.cssW - ox) / m), rows = Math.floor((f.cssH - oy) / m);
-    if (cols < 3 || rows < 2) return;
-    // keep the climb off the copy: right half on wide full-bleed hosts, lower band on phones
-    const wide = f.kind !== 'panel' && f.cssW >= 700, phone = f.kind !== 'panel' && f.cssW < 700;
-    const c0 = wide ? Math.ceil(cols * 0.5) : 0;
-    let cx = c0 + Math.floor(rand() * Math.max(1, cols - c0 - 2));
-    let cy = phone ? rows - Math.floor(rand() * 2) : Math.max(2, rows - Math.floor(rand() * Math.ceil(rows * 0.6)));
-    const top = phone ? Math.max(1, rows - 4) : 0;
+    // the cells a climb may use: the strip the hero copy leaves clear; without one, the right half
+    // of wide full-bleed hosts, the bottom rows on phones, the whole of a panel
+    const b = f.band, wide = f.kind !== 'panel' && f.cssW >= 700, phone = f.kind !== 'panel' && f.cssW < 700;
+    const c0 = b ? Math.max(0, Math.ceil((b.x - ox) / m)) : wide ? Math.ceil(cols * 0.5) : 0;
+    const c1 = b ? Math.min(cols, Math.floor((b.x + b.w - ox) / m)) : cols;
+    const r0 = b ? Math.max(0, Math.ceil((b.y - oy) / m)) : phone ? Math.max(0, rows - 5) : 0;
+    const r1 = b ? Math.min(rows, Math.floor((b.y + b.h - oy) / m)) : rows;
+    if (c1 - c0 < 3 || r1 - r0 < 2) return;
+    let cx = c0 + Math.floor(rand() * Math.max(1, c1 - c0 - 2));
+    let cy = Math.max(r0 + 2, r1 - Math.floor(rand() * Math.ceil((r1 - r0) * 0.6)));
     const path: [number, number][] = [[ox + cx * m, oy + cy * m]];
-    // climb inside the host: every staircase ends on a step you can see
-    for (let step = 0; step < 9 && cx < cols - 1 && cy > top + 1; step++) {
+    // climb inside the region: every staircase ends on a step you can see
+    for (let step = 0; step < 9 && cx < c1 - 1 && cy > r0 + 1; step++) {
       const run = 1 + Math.floor(rand() * 2);
-      cx = Math.min(cols - 1, cx + run); path.push([ox + cx * m, oy + cy * m]);
+      cx = Math.min(c1 - 1, cx + run); path.push([ox + cx * m, oy + cy * m]);
       cy -= 1; path.push([ox + cx * m, oy + cy * m]);
     }
     if (path.length < 3) return;
