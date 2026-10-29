@@ -16,7 +16,7 @@ export default {
   summary: 'Warm stone greys with one tangerine fill that carries dark text: an infrastructure palette that reads as dependable and awake rather than playful.',
   origin: 'new',
   refs: [
-    { name: 'Cloudflare', url: 'https://www.cloudflare.com', what: 'Its orange (#f6821f brand, #ff5e1f in the UI) takes dark text (#1f1f1f on-accent), never white, over near-black #1a1a1a type, warm off-white sections (#fffbf5) and beige wells (#f0e3de). The ground here stays just under the warm-cream threshold so the page reads as stone.' },
+    { name: 'Cloudflare', url: 'https://www.cloudflare.com', what: 'Its Kumo brand token #f6821f, chosen over the redder UI orange #ff5e1f, which would sit beside safety orange. Like the site, it carries dark text (#1f1f1f on-accent; white on #ff5e1f is only 3.06:1). Near-black #262626 ink, the warm off-white and beige tones in its stylesheet (#fffbf5, #f0e3de) for the neutrals, and Kumo’s OKLCH light-dark() pairs (dark neutrals at 15 to 17% L) for the night. The ground stays just under the warm-cream threshold so the page reads as stone.' },
   ],
   light: {
     '--bg': 'oklch(0.975 0.003 70)',
