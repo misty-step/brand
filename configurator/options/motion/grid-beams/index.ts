@@ -16,10 +16,12 @@ export default {
   // Lazy chunk by contract: the field never loads on the critical path.
   background: { load: () => import('./field') },
   entrance: {
-    // The hero is scanned in from the left like a beam crossing it (settled by 840 ms); sections only resolve.
+    // The hero arrives from the left along the rails, like a beam (settled by 840 ms); sections only resolve.
+    // Hidden states use opacity and transform only: a clip-path on an observed element hides it from the
+    // renderer's IntersectionObserver, which then never adds .is-in.
     css: `${S} [data-enter]{opacity:0;transition:opacity .32s cubic-bezier(.23,1,.32,1);transition-delay:calc(min(var(--enter-i,0),3) * 40ms)}
-${S} .hero [data-enter]{opacity:1;clip-path:inset(-24px 100% -24px -24px);transition:clip-path .56s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
-${S} [data-enter].is-in{opacity:1;clip-path:inset(-24px)}
+${S} .hero [data-enter]{transform:translateX(-12px);transition:opacity .56s cubic-bezier(.16,1,.3,1),transform .56s cubic-bezier(.16,1,.3,1);transition-delay:calc(min(var(--enter-i,0),4) * 70ms)}
+${S} [data-enter].is-in{opacity:1;transform:none}
 ${S} .s-items>[data-enter]:nth-child(2),${S} .diagram>[data-enter]:nth-child(2){--enter-i:1}
 ${S} .s-items>[data-enter]:nth-child(3),${S} .diagram>[data-enter]:nth-child(3){--enter-i:2}
 ${S} .s-items>[data-enter]:nth-child(n+4),${S} .diagram>[data-enter]:nth-child(n+4){--enter-i:3}`,
