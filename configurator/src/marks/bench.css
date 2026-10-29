@@ -1,0 +1,95 @@
+/* Mark bench chrome, set in the chosen baseline's own tokens. Every class is mb- so the layout's
+   .nav, .brand and .btn rules apply only to the real nav and lockups. */
+body.mb { padding-bottom: 96px; }
+.mb .mb-cap { margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 1.4; color: var(--ink-2); letter-spacing: 0; text-transform: none; font-weight: 400; }
+figcaption.mb-cap { margin-bottom: 14px; }
+.mb code { font-family: var(--font-mono); font-size: 13px; }
+
+.mb-top { display: grid; gap: 14px; padding: 56px var(--edge) 40px; }
+.mb-title { font-size: var(--step-5); }
+.mb-lede { max-width: 78ch; color: var(--ink-2); }
+.mb-params { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--ink-2); }
+.mb-error { padding: 12px 16px; border: 1px solid var(--ink); font-family: var(--font-mono); font-size: 13px; }
+
+.mb-sils { padding: 0 var(--edge) 56px; }
+.mb-sils > .mb-cap { margin-bottom: 14px; }
+.mb-sil-row { display: flex; flex-wrap: wrap; background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.mb-sil-row + .mb-sil-row { border-top: 0; }
+.mb-sil { display: grid; justify-items: center; align-content: start; gap: 10px; width: 112px; padding: 16px 8px 12px; color: inherit; text-decoration: none; }
+.mb-sil .mb-cap { text-align: center; overflow-wrap: anywhere; color: var(--ink-2); }
+.mb-px { display: block; image-rendering: pixelated; }
+
+.mb-mark { padding: 28px 0 88px; border-top: 2px solid var(--ink); }
+.mb-head, .mb-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; padding-inline: var(--edge); }
+.mb-head { align-items: start; row-gap: 16px; margin-bottom: 32px; }
+.mb-name { grid-column: 1 / span 5; display: grid; gap: 6px; }
+.mb-id { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; color: var(--ink-2); font-family: var(--font-mono); font-size: 13px; }
+.mb-id code { color: var(--ink); }
+.mb-label { font-size: var(--step-3); }
+.mb-about { grid-column: 6 / -1; display: grid; gap: 12px; }
+.mb-summary { max-width: 72ch; color: var(--ink-2); }
+.mb-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; font-size: var(--step--1); }
+.mb-link { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: .24em; }
+.mb-replay { min-height: 36px; padding: 6px 12px; font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line-2); border-radius: 4px; cursor: pointer; }
+
+.mb-navs { margin-bottom: 48px; border-top: 1px solid var(--line); }
+.mb-strip { position: relative; border-bottom: 1px solid var(--line); }
+.mb-strip-cap { position: absolute; top: 6px; left: var(--edge); }
+
+.mb-grid { row-gap: 56px; align-items: start; }
+.mb-cell { margin: 0; min-width: 0; }
+.mb-c7 { grid-column: span 7; }
+.mb-c5 { grid-column: span 5; }
+
+/* Browser tab strip: a generic Chromium-style frame, light and dark. */
+.mb-chromes { display: grid; justify-items: start; gap: 12px; }
+.mb-chrome { --frame: #dfe3e8; --tab: #ffffff; --tab-ink: #1f1f1f; --tab-ink-2: #474b50; display: flex; align-items: flex-end; max-width: 100%; padding: 8px 8px 0; background: var(--frame); font: 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; letter-spacing: 0; overflow: hidden; }
+.mb-chrome[data-scheme="dark"] { --frame: #1f2023; --tab: #35363a; --tab-ink: #e8eaed; --tab-ink-2: #a8adb3; }
+.mb-tab { position: relative; display: flex; align-items: center; gap: 8px; width: 196px; height: 34px; padding: 0 10px 0 12px; border-radius: 8px 8px 0 0; color: var(--tab-ink-2); }
+.mb-tab[aria-current] { background: var(--tab); color: var(--tab-ink); }
+.mb-tab:not([aria-current]) + .mb-tab:not([aria-current])::before { content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; border-left: 1px solid color-mix(in srgb, var(--tab-ink-2) 45%, transparent); }
+.mb-tab img { flex: none; display: block; width: 16px; height: 16px; }
+.mb-tab-blank { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--tab-ink-2); opacity: .55; }
+.mb-tab-title { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mb-tab-x { flex: none; font-size: 14px; opacity: .7; }
+
+.mb-phones { display: grid; justify-items: start; gap: 12px; }
+.mb-phone { display: block; border: 1px solid var(--line); background: var(--bg); }
+
+.mb-proofs { display: grid; gap: 12px; }
+.mb-proof-row { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.mb-proof { display: grid; gap: 8px; width: 96px; }
+.mb-proof .mb-cap { font-size: 11px; color: var(--ink-2); }
+
+.mb-ladder { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; color: var(--ink); }
+.mb-rung { display: grid; justify-items: start; gap: 10px; }
+
+.mb-lockups { display: grid; gap: 16px; }
+.mb-lk { position: relative; display: grid; justify-items: start; align-content: center; gap: 18px; padding: 32px; border: 1px solid var(--line); color: var(--ink); overflow: hidden; }
+.mb-lk-stacked { justify-items: center; }
+.mb-zoom { position: relative; z-index: 1; }
+.mb-zoom .brand { color: var(--ink); }
+.mb-stacked { flex-direction: column; text-align: center; }
+.mb-zoom .brand-name { white-space: nowrap; }
+.mb-guides { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.mb-g { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid oklch(0.62 0.21 27 / .75); }
+.mb-g-mark { border-top-style: dashed; border-top-color: oklch(0.6 0.16 250 / .8); }
+.mb-probe { display: inline-block; width: 0; height: 1em; vertical-align: baseline; }
+
+.mb-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; }
+.mb-tile { display: grid; justify-items: start; gap: 24px; padding: 28px; background: var(--bg); color: var(--ink); }
+.mb-tile .brand { color: var(--ink); }
+.mb-tile .mb-cap { color: var(--ink-2); }
+
+.mb-field { position: relative; height: 360px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+.mb-field-host { position: absolute; inset: 0; }
+.mb-field-over { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 32px 32px; }
+.mb-field-over .brand { align-self: flex-start; color: var(--ink); }
+.mb-field-sizes { display: flex; align-items: flex-end; gap: 40px; }
+
+body.mb-frame { margin: 0; background: var(--bg); color: var(--ink); overflow: hidden; }
+body.mb-frame .nav + .nav { border-top: 1px solid var(--line); }
+
+@media (max-width: 1020px) {
+  .mb-name, .mb-about, .mb-c5, .mb-c7 { grid-column: 1 / -1; }
+}
