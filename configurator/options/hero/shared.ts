@@ -85,15 +85,18 @@ export const markPairCss = (scope: string) =>
  * The brand name at display scale, decorative (the nav and h1 carry it for assistive tech). A drawn
  * wordmark keeps its viewBox ratio as --wm-r so CSS can cap its height and still align it left; a
  * set name carries its length as --wm-n so CSS sizes it to the measure with --display-advance.
+ * Pass `i` when the name stands on its own in a full-bleed hero: it joins the focal sequence, and
+ * motion fields that measure open space count [data-enter] as content to keep clear.
  */
-export function bigName(ctx: HeroCtx, cls: string): string {
+export function bigName(ctx: HeroCtx, cls: string, i?: number): string {
   const mark = ctx.wordmark();
+  const attrs = (style: string) => (i === undefined ? (style ? `style="${style}"` : '') : enter(i, style));
   if (mark.trimStart().startsWith('<svg')) {
     const vb = mark.match(/viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/);
     const ratio = vb && +vb[2] > 0 ? +vb[1] / +vb[2] : 6;
-    return `<div class="${cls} bn-drawn" aria-hidden="true" style="--wm-r:${ratio.toFixed(3)}">${mark}</div>`;
+    return `<div class="${cls} bn-drawn" aria-hidden="true" ${attrs(`--wm-r:${ratio.toFixed(3)}`)}>${mark}</div>`;
   }
-  return `<div class="${cls}" aria-hidden="true"><span class="bn-set" style="--wm-n:${Math.round(displayLength(ctx.brand) * 100) / 100}">${mark}</span></div>`;
+  return `<div class="${cls}" aria-hidden="true" ${attrs('')}><span class="bn-set" style="--wm-n:${Math.round(displayLength(ctx.brand) * 100) / 100}">${mark}</span></div>`;
 }
 /** CSS for bigName: `fill` is the share of the measure the name spans, `cap` the tallest it may get. */
 export function bigNameCss(scope: string, sel: string, fill: string, cap: string): string {
