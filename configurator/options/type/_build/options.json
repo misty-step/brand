@@ -605,7 +605,7 @@
     "build": "b-atelier",
     "label": "Atelier (B)",
     "origin": "B",
-    "comment": "Round B's type, ported: display clamp(2.375rem, 0.9rem + 4.6vw, 5rem) at 400 and -0.022em, body 18 -> 19px, Literata's opsz axis follows the size (optical sizing auto). Departure Mono is drawn on an 11px grid: crisp at 22px.",
+    "comment": "Round B's type, ported: display clamp(2.375rem, 0.9rem + 4.6vw, 5rem) at 400 and -0.022em, body 18 -> 19px, small 16px, Literata's opsz axis follows the size (optical sizing auto). Departure Mono is drawn on an 11px grid: crisp at 22px, and never set under 16px here.",
     "summary": "Round B's type, ported: Literata on its optical-size axis for headlines and reading, and Departure Mono for controls and code; the editorial book with a pixel mono.",
     "refs": [
       {
@@ -655,7 +655,7 @@
     },
     "steps": {
       "--step--1": [
-        15,
+        16,
         16
       ],
       "--step-0": "clamp(1.125rem, 1.07rem + 0.2vw, 1.1875rem)",
