@@ -196,6 +196,15 @@ export const STACK_NODES = [
   }
 ];
 
+// Why four of the principles exist, from each leaf's `prevents` metadata at mistystack c72698f.
+// "corrections" counts operator corrections recorded in initiative #533; deep-modules marks its count as inferred.
+export const PRINCIPLE_EVIDENCE = [
+  { "id": "principle-prove-it-on-the-real-path", "prevents": "Fix still fails or regresses", "corrections": 36, "inferred": false, "href": "https://github.com/misty-step/mistystack/blob/c72698fa0cac6241f7c7bb5fc4f587c2e4445d82/skills/principle-prove-it-on-the-real-path/SKILL.md" },
+  { "id": "principle-deep-modules", "prevents": "Overengineering and special-case growth", "corrections": 16, "inferred": true, "href": "https://github.com/misty-step/mistystack/blob/c72698fa0cac6241f7c7bb5fc4f587c2e4445d82/skills/principle-deep-modules/SKILL.md" },
+  { "id": "principle-one-home-per-fact", "prevents": "Data-fidelity loss and duplicates", "corrections": 15, "inferred": false, "href": "https://github.com/misty-step/mistystack/blob/c72698fa0cac6241f7c7bb5fc4f587c2e4445d82/skills/principle-one-home-per-fact/SKILL.md" },
+  { "id": "principle-finish-the-work", "prevents": "Half-finished work handed back or parked", "corrections": 11, "inferred": false, "href": "https://github.com/misty-step/mistystack/blob/c72698fa0cac6241f7c7bb5fc4f587c2e4445d82/skills/principle-finish-the-work/SKILL.md" }
+];
+
 export const TRIAL = {
   "title": "Six tasks. Directional evidence.",
   "rows": [
