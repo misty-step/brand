@@ -50,6 +50,7 @@ ${S} .hero-proof{margin-top:24px;font-size:var(--step--1);color:var(--ink-2)}
 ${S}>.hero-visual{grid-column:art-start/full-end;grid-row:1;align-self:stretch;position:relative;overflow:hidden;margin:clamp(-64px,-6vh,-40px) 0 clamp(-64px,-6vh,-40px) clamp(48px,6vw,96px);border-radius:var(--radius,0) 0 0 var(--radius,0)}
 ${S} .src-card{grid-column:art;grid-row:1;position:relative;z-index:1;margin:0;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius,0);padding:clamp(20px,2.2vw,32px)}
 ${S} .src-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 24px;max-width:none;margin:0 0 16px;font-size:var(--step--1);color:var(--ink-2)}
+${S} figure.src-card .code{white-space:pre-wrap;overflow-wrap:anywhere}
 ${S} .src-head code{font-family:var(--font-mono);color:var(--ink)}
 ${S} .src-head .link{display:inline-flex;align-items:center;min-height:44px}
 ${S} .src-card .code{margin:0;font-size:var(--step-0)}
