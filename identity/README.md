@@ -115,7 +115,7 @@ It owns this behaviour:
 
 - **Entrances.** Each `[data-enter]` element gets `.is-in` as it scrolls into view. Under reduced motion, or while paused, all of them get it at once.
 - **Ground fog field.** After first paint, it loads `field.js` and mounts the field into the hero's `.hero-motion-host`, but only while the hero is visible. The field stops offscreen and in hidden tabs.
-- **Still frame.** Under reduced motion or Save-Data, the field draws one finished still frame and stops. Without WebGL, the field draws nothing. In all three cases nothing loops.
+- **Still frame.** Under reduced motion or Save-Data, the field draws one finished still frame and stops. Without the WebGL API, the runtime never loads the field. If a browser has the API but cannot create a context (a blocklisted GPU), the field draws nothing. In each case nothing loops and the pause control stays hidden.
 - **Pause control.** The `.motion-toggle` sets `aria-pressed`, its label and `data-paused`, and remembers the choice in localStorage (`brand-motion-paused`). It is hidden while there is nothing to pause. At 700 px and narrower it moves into a `.hero-motion-controls` row inside the hero, so it never covers copy. Above 700 px, and on `destroy()`, it returns to where the page rendered it.
 - **Theme.** A change to `data-theme` re-colours the field in place.
 - **Mark.** The Mist sign plays its entrance on `.brand-mark` once per page load. It never plays under reduced motion.

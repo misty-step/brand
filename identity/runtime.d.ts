@@ -39,7 +39,7 @@ export interface BrandHandle {
 
 /**
  * Runs the identity on a page that emits the contract markup: entrances, the Ground fog field in the hero
- * (lazy, only while visible, one still frame under reduced motion, Save-Data or without WebGL), the pause control,
+ * (lazy, only while visible, one still frame under reduced motion or Save-Data, none without WebGL), the pause control,
  * theme changes and the mark's entrance. Call it in the browser after hydration, and again after client-side
  * navigation; starting again destroys the previous handle.
  */

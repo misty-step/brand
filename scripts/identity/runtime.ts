@@ -10,10 +10,19 @@ interface StartBrandOptions { root?: Document; motion?: boolean; params?: Record
 interface BrandHandle { destroy(): void }
 
 const PAUSE_ITEM = 'brand-motion-paused'; // localStorage item that remembers the pause control
-// Lazy by contract: the field (about 11 KB gzip) must stay off the critical path, so it is a separate file.
-const FIELD = { background: { load: async () => (await import('./field.js')).load() } } as unknown as MotionOption;
 let markPlayed = false;
 let active: BrandHandle | undefined;
+let drawable: boolean | undefined;
+
+/** Whether this browser can create a WebGL context (a blocklisted GPU has the API but no context). Probed once, on a throwaway canvas. */
+function canDraw(doc: Document): boolean {
+  if (drawable === undefined) {
+    const gl = doc.createElement('canvas').getContext('webgl');
+    drawable = gl !== null;
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+  }
+  return drawable;
+}
 
 function storedPause(): boolean {
   try {
@@ -32,11 +41,24 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
   const reduce = view.matchMedia('(prefers-reduced-motion: reduce)');
   const dark = view.matchMedia('(prefers-color-scheme: dark)');
   const phone = view.matchMedia('(max-width: 700px)');
-  // Save-Data or no WebGL: the field draws at most one still frame, so there is nothing to pause.
-  const still = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true
-    || typeof view.WebGLRenderingContext !== 'function';
+  // Save-Data: the field draws one still frame. Without WebGL there is no field at all. Either way, nothing to pause.
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
   const hero = doc.querySelector<HTMLElement>('[data-hero-root]');
-  const field = options.motion !== false && hero !== null;
+  const field = options.motion !== false && hero !== null && typeof view.WebGLRenderingContext === 'function';
+  let blind = false; // the field loaded, but this browser cannot create a WebGL context
+  // Lazy by contract: the field (about 11 KB gzip) must stay off the critical path, so it is a separate file.
+  const fieldOption = {
+    background: {
+      load: async () => {
+        const module = await (await import('./field.js')).load();
+        if (!canDraw(doc)) {
+          blind = true;
+          apply();
+        }
+        return module;
+      },
+    },
+  } as unknown as MotionOption;
   const button = doc.querySelector<HTMLButtonElement>('.motion-toggle');
   const home = button?.parentNode ? { parent: button.parentNode, next: button.nextSibling } : undefined;
   let paused = storedPause();
@@ -58,7 +80,7 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
     const css = view.getComputedStyle(html);
     const value = (name: string) => css.getPropertyValue(name).trim();
     return {
-      ...context(), reducedMotion: reduce.matches || still, dprCap: 1.5, tune: options.params,
+      ...context(), reducedMotion: reduce.matches || saveData, dprCap: 1.5, tune: options.params,
       colors: { bg: value('--bg'), ink: value('--ink'), accent: value('--accent'), field1: value('--field-1'), field2: value('--field-2'), field3: value('--field-3') },
     };
   };
@@ -86,7 +108,7 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
     if (button) {
       button.textContent = paused ? 'Resume motion' : 'Pause motion';
       button.setAttribute('aria-pressed', String(paused));
-      button.hidden = !field || reduce.matches || still;
+      button.hidden = !field || blind || reduce.matches || saveData;
     }
     place();
     if (paused || reduce.matches) {
@@ -109,7 +131,7 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
   };
 
   apply();
-  if (field) lifecycle = new MotionLifecycle(FIELD, { motionHost: MOTION_HOST } as HeroOption, motionContext(), paused, doc);
+  if (field) lifecycle = new MotionLifecycle(fieldOption, { motionHost: MOTION_HOST } as HeroOption, motionContext(), paused, doc);
   const brandMark = doc.querySelector('.brand-mark');
   if (!markPlayed && brandMark && mark.animateIn && !reduce.matches && !paused) {
     markPlayed = true;

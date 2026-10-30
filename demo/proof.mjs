@@ -187,8 +187,8 @@ try {
   try {
     const { page, context, errors } = await open(browser, '/demo/dist/studio.html');
     await page.waitForTimeout(2500);
-    const state = await page.evaluate(() => ({ title: document.querySelector('h1.hero-title')?.getBoundingClientRect().height > 0, drawnCanvas: document.querySelector('.hero-motion-host canvas')?.style.opacity === '1' }));
-    check('without WebGL: the page renders, the field draws nothing and nothing loops', state.title && !state.drawnCanvas && (await framesIn(page, 1000)) <= 1, state);
+    const state = await page.evaluate(() => ({ title: document.querySelector('h1.hero-title')?.getBoundingClientRect().height > 0, drawnCanvas: document.querySelector('.hero-motion-host canvas')?.style.opacity === '1', webglApi: typeof WebGLRenderingContext === 'function', pauseHidden: document.querySelector('.motion-toggle').hidden }));
+    check('without WebGL: the page renders, the field draws nothing, nothing loops, no pause control', state.title && !state.drawnCanvas && state.pauseHidden && (await framesIn(page, 1000)) <= 1, state);
     check('no console errors (no WebGL)', errors.length === 0, errors);
     await context.close();
   } finally {
