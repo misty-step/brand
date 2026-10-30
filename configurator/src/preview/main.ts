@@ -4,7 +4,7 @@ import { LAYERS, loadOption } from '../options';
 import { decode, encode, type LabState } from '../state';
 import { esc } from '../html';
 import { render } from './render';
-import { MotionLifecycle } from './motion';
+import { MotionLifecycle, observeEntrances } from './motion';
 let state=decode(location.hash), serial=0, motion:MotionLifecycle|undefined, entrances:IntersectionObserver|undefined, disposeMark:(()=>void)|undefined;
 let current:{mark:MarkOption;type:TypeOption;color:ColorOption;layout:LayoutOption;hero:HeroOption;motion:MotionOption;copy:CopyOption}|undefined;
 const root=document.documentElement;
@@ -119,16 +119,7 @@ async function mount() {
   if (!state.reducedMotion && !state.paused && options.mark.animateIn) {
     disposeMark = options.mark.animateIn(document.querySelector('.brand-mark')!, context());
   }
-  entrances = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-in');
-      entrances?.unobserve(entry.target);
-    }
-  }), { threshold: .05 });
-  document.querySelectorAll('[data-enter]').forEach(element => {
-    if (state.reducedMotion || state.paused) element.classList.add('is-in');
-    else entrances?.observe(element);
-  });
+  entrances = observeEntrances(document, state.reducedMotion || state.paused);
   publish();
 }
 window.addEventListener('hashchange',()=>{const next=decode(location.hash);const rerender=state.page!==next.page||LAYERS.some(l=>state.picks[l]!==next.picks[l]);state=next;if(rerender)void mount();else{applyTheme();publish();}});

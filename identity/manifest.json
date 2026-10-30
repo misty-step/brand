@@ -1,0 +1,20 @@
+{
+  "note": "Source hashes of the rendered images. generate.mjs renders the icons; og.mjs renders the social cards on a Linux worker.",
+  "locked": {
+    "mark": "r2-a-mist",
+    "type": "industrial-condensed",
+    "color": "mono",
+    "layout": "editorial",
+    "hero": "horizon",
+    "motion": "r2-mist-ground",
+    "copy": "r2-cut"
+  },
+  "rasters": {
+    "icons/favicon-32.png": "76b8aba8e1ab2f8b63996eccdadeffa287ce1ed02360e6dcc38fa906434e4de9",
+    "icons/apple-touch-icon.png": "1433522c98ceebfc5aba4372ca9be9ce17eff5b644687f3c2b993630a6602d9f",
+    "icons/icon-192.png": "e1be5ff41d52d279573307215662061032a642164363dab2c90f8a36e94cdb4c",
+    "icons/icon-512.png": "017af9d2a1ebbfdbda550a0e8a25c4b4826cbeeb815cbfb09386600c8dec02e6",
+    "og/studio.png": null,
+    "og/stack.png": null
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "@misty-step/brand",
+  "version": "0.1.0",
+  "description": "Misty Step's locked identity: one stylesheet, the html attributes, a small runtime and the Mist sign, generated from the brand configurator.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misty-step/brand.git"
+  },
+  "type": "module",
+  "files": [
+    "identity/"
+  ],
+  "exports": {
+    "./brand.css": "./identity/brand.css",
+    "./attrs": {
+      "types": "./identity/attrs.d.ts",
+      "default": "./identity/attrs.js"
+    },
+    "./runtime": {
+      "types": "./identity/runtime.d.ts",
+      "default": "./identity/runtime.js"
+    },
+    "./mark": {
+      "types": "./identity/mark.d.ts",
+      "default": "./identity/mark.js"
+    },
+    "./identity/icons/*": "./identity/icons/*",
+    "./identity/og/*": "./identity/og/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "identity": "node scripts/identity/generate.mjs",
+    "identity:check": "node scripts/identity/generate.mjs --check",
+    "identity:og": "node scripts/identity/og.mjs",
+    "demo": "node demo/build.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  }
+}
