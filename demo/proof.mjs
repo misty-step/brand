@@ -59,9 +59,14 @@ async function changes(page, ms) {
   await page.waitForTimeout(ms);
   return Buffer.compare(a, await page.screenshot({ clip })) !== 0;
 }
-/** Lightest and darkest channel value in the field band. */
+/**
+ * Lightest and darkest channel value in the fog, sampled where no words or controls sit: between the hero
+ * proof (left) and the pause control (right), below the actions.
+ */
 async function levels(page) {
-  const png = await page.screenshot({ clip: await fieldClip(page) });
+  const box = await page.locator('.hero-motion-host').boundingBox();
+  const clip = { x: box.x + box.width * 0.28, y: box.y + box.height * 0.62, width: box.width * 0.58, height: box.height * 0.3 };
+  const png = await page.screenshot({ clip });
   return page.evaluate(async b64 => {
     const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
     const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
