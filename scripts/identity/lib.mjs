@@ -286,7 +286,7 @@ function stylesheet(data, fonts) {
 }
 
 /** The social card for one page: the lockup, the page's headline and a Ground fog still, 1200 x 630. */
-export const OG = { width: 1200, height: 630, theme: 'dark', pages: ['studio', 'stack'] };
+export const OG = { width: 1200, height: 630, theme: 'light', pages: ['studio', 'stack'] };
 export function ogPage(data, page) {
   const { picks, options: o } = data;
   const entry = brandNames(o)[o.copy.pages[page].brand.toUpperCase()];
@@ -303,12 +303,12 @@ html{${decl(tokens)}}
 html,body{margin:0;width:${OG.width}px;height:${OG.height}px;overflow:hidden;background:var(--bg);color:var(--ink)}
 .card{position:relative;width:100%;height:100%;isolation:isolate}
 .hero-motion-host{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.brand{position:absolute;left:40px;top:44px;display:flex;align-items:center;gap:5px 12px;zoom:2}
+.brand{position:absolute;left:40px;top:32px;display:flex;align-items:center;gap:5px 12px;zoom:2}
 .brand-mark{display:block;position:relative;top:-5px}
 .brand-mark svg{display:block;width:32px;height:32px}
 .brand-name{display:block;line-height:0}
 .brand-name svg{display:block;height:14px;width:auto}
-.hero-title{position:absolute;left:80px;top:176px;margin:0;max-width:1040px;font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-tracking);line-height:var(--display-leading);text-transform:var(--display-transform);text-wrap:balance;font-size:min(128px,calc(1040px / (var(--h2) * var(--display-advance) * 1.1)))}
+.hero-title{position:absolute;left:80px;top:168px;margin:0;max-width:1040px;font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-tracking);line-height:var(--display-leading);text-transform:var(--display-transform);text-wrap:balance;font-size:min(112px,calc(1040px / (var(--h2) * var(--display-advance) * 1.1)))}
 </style></head>
 <body><div class="card" data-hero-root><div class="hero-motion-host" aria-hidden="true"></div><div class="brand"><span class="brand-mark">${o.mark.svg({ size: 32, title: '' })}</span><span class="brand-name">${entry.wordmark}</span></div><h1 class="hero-title" style="--h2:${data.twoLineLength(headline)}">${esc(headline)}</h1></div>
 <script type="module">import { startBrand } from '/runtime.js'; startBrand();</script>
