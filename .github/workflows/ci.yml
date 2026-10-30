@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  configurator:
+    name: Configurator build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: configurator
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: configurator/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+
+  identity:
+    name: Identity package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: identity/ matches the configurator's Locked preset
+        run: npm run identity:check
+      - name: Runtime sources and published declarations type-check
+        run: npx tsc -p scripts/identity
