@@ -82,6 +82,16 @@ const toggleState = page => page.evaluate(() => {
   const button = document.querySelector('.motion-toggle');
   return { paused: document.documentElement.dataset.paused, pressed: button.getAttribute('aria-pressed'), text: button.textContent, hidden: button.hidden, stored: localStorage.getItem('brand-motion-paused'), parent: button.parentElement.className || button.parentElement.tagName };
 });
+/** Pause and resume from the keyboard; true when both presses toggle the state and focus never leaves the control. */
+async function keyboardToggle(page) {
+  await page.focus('.motion-toggle');
+  const steps = [];
+  for (const expected of ['1', '0']) {
+    await page.keyboard.press('Enter');
+    steps.push(await page.evaluate(want => document.documentElement.dataset.paused === want && document.activeElement === document.querySelector('.motion-toggle'), expected));
+  }
+  return steps.every(Boolean);
+}
 
 const browser = await chromium.launch({ headless: true, args: GL });
 try {
@@ -90,6 +100,7 @@ try {
     await drawn(page);
     check('field mounts in the server-rendered .hero-motion-host', await page.evaluate(() => document.querySelectorAll('.hero-motion-host').length === 1 && document.querySelectorAll('canvas').length === 1));
     check('field animates', (await framesIn(page, 1000)) > 10 && (await changes(page, 700)));
+    check('keyboard: Enter on the pause control pauses and resumes it, and focus stays on it', await keyboardToggle(page));
     await page.click('.motion-toggle');
     const paused = await toggleState(page);
     check('Pause sets data-paused, aria-pressed, label and storage', paused.paused === '1' && paused.pressed === 'true' && paused.text === 'Resume motion' && paused.stored === 'true', paused);
@@ -163,6 +174,7 @@ try {
       return { holder: button.parentElement.className, inHero: button.parentElement.parentElement.matches('[data-hero-root]'), visible: !button.hidden && !button.parentElement.hidden };
     });
     check('phone: the pause control sits in the hero row', phone.holder === 'hero-motion-controls' && phone.inHero && phone.visible, phone);
+    check('phone keyboard: Enter on the pause control keeps focus on it', await keyboardToggle(page));
     const after = await page.evaluate(() => {
       window.brand.destroy();
       return { parent: document.querySelector('.motion-toggle').parentElement.tagName, holders: document.querySelectorAll('.hero-motion-controls').length };

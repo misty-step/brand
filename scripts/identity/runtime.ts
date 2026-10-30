@@ -84,8 +84,9 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
       colors: { bg: value('--bg'), ink: value('--ink'), accent: value('--accent'), field1: value('--field-1'), field2: value('--field-2'), field3: value('--field-3') },
     };
   };
+  // Moving a node removes it first, which drops keyboard focus: the control moves only when its parent changes.
   const restore = () => {
-    if (button && home) home.parent.insertBefore(button, home.next?.parentNode === home.parent ? home.next : null);
+    if (button && home && button.parentNode !== home.parent) home.parent.insertBefore(button, home.next?.parentNode === home.parent ? home.next : null);
     holder?.remove();
   };
   // As in the lab: at phone widths the pause control is an in-flow row inside the hero, so it never
@@ -98,7 +99,7 @@ export function startBrand(options: StartBrandOptions = {}): BrandHandle {
       holder.className = 'hero-motion-controls';
     }
     if (holder.parentNode !== hero) hero.append(holder);
-    holder.append(button);
+    if (button.parentNode !== holder) holder.append(button);
     holder.hidden = button.hidden;
   };
   // The lab's applyTheme: attributes, the pause control, settled entrances, then the field.
